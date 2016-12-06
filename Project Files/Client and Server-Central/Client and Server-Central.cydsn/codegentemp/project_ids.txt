@@ -1,0 +1,5 @@
+C:\Users\msuro\Documents\Manhattan College\Fall 2016\Embedded Systems\Project\Project Files\Client and Server-Central\Client and Server-Central.cydsn\Client and Server-Central.cyprj|3e675a60-e4f2-4fa6-a964-a6debdad0987
+C:\Program Files (x86)\Cypress\PSoC Creator\3.1\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|3460fcf9-f3be-4c01-bb78-484cf081734d
+C:\Program Files (x86)\Cypress\PSoC Creator\3.1\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|6d5c8339-2a80-4a4e-bf83-4e8579581387
+C:\Program Files (x86)\Cypress\PSoC Creator\3.1\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|c3438493-d1d5-4163-b00d-42fd4aef28b3
+C:\Program Files (x86)\Cypress\PSoC Creator\3.1\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|604466c4-21e0-4e7e-9cb0-819c6878dd33

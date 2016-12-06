@@ -1,0 +1,3347 @@
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"tps.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.rodata
+  18              		.align	2
+  19              	.LC0:
+  20 0000 4E6F7469 		.ascii	"Notification received. Tx Power Level:%d dBm\015\012"
+  20      66696361 
+  20      74696F6E 
+  20      20726563 
+  20      65697665 
+  21 002e 00       		.ascii	"\000"
+  22 002f 00       		.align	2
+  23              	.LC2:
+  24 0030 52656164 		.ascii	"Read Char Response. Tx Power Level: %d dBm\015\012\000"
+  24      20436861 
+  24      72205265 
+  24      73706F6E 
+  24      73652E20 
+  25 005d 000000   		.align	2
+  26              	.LC4:
+  27 0060 57726974 		.ascii	"Write Descr Response\015\000"
+  27      65204465 
+  27      73637220 
+  27      52657370 
+  27      6F6E7365 
+  28 0076 0000     		.align	2
+  29              	.LC6:
+  30 0078 4572726F 		.ascii	"Error Rsp\015\000"
+  30      72205273 
+  30      700D00
+  31 0083 00       		.align	2
+  32              	.LC8:
+  33 0084 64656661 		.ascii	"default:\015\000"
+  33      756C743A 
+  33      0D00
+  34 008e 0000     		.section	.text.TpsServiceAppEventHandler,"ax",%progbits
+  35              		.align	2
+  36              		.global	TpsServiceAppEventHandler
+  37              		.code	16
+  38              		.thumb_func
+  39              		.type	TpsServiceAppEventHandler, %function
+  40              	TpsServiceAppEventHandler:
+  41              	.LFB35:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 2
+
+
+  42              		.file 1 ".\\tps.c"
+   1:.\tps.c       **** /*******************************************************************************
+   2:.\tps.c       **** * File Name: tps.c
+   3:.\tps.c       **** *
+   4:.\tps.c       **** * Description:
+   5:.\tps.c       **** *  This file contains Tx Power Service callback handler function.
+   6:.\tps.c       **** * 
+   7:.\tps.c       **** ********************************************************************************
+   8:.\tps.c       **** * Copyright 2014, Cypress Semiconductor Corporation.  All rights reserved.
+   9:.\tps.c       **** * You may use this file only in accordance with the license, terms, conditions,
+  10:.\tps.c       **** * disclaimers, and limitations in the end user license agreement accompanying
+  11:.\tps.c       **** * the software package with which this file was provided.
+  12:.\tps.c       **** *******************************************************************************/
+  13:.\tps.c       **** 
+  14:.\tps.c       **** #include <common.h>
+  15:.\tps.c       **** #include <stdio.h>
+  16:.\tps.c       **** 
+  17:.\tps.c       **** 
+  18:.\tps.c       **** /*******************************************************************************
+  19:.\tps.c       **** * Function Name: TpsServiceAppEventHandler
+  20:.\tps.c       **** ********************************************************************************
+  21:.\tps.c       **** *
+  22:.\tps.c       **** * Summary:
+  23:.\tps.c       **** *  This is an event callback function to receive events from the BLE Component,
+  24:.\tps.c       **** *  which are specific to Tx Power Service.
+  25:.\tps.c       **** *
+  26:.\tps.c       **** * Parameters:
+  27:.\tps.c       **** *  uint8 event:       Write Command event from the CYBLE component.
+  28:.\tps.c       **** *  void* eventParams: A structure instance of CYBLE_GATT_HANDLE_VALUE_PAIR_T
+  29:.\tps.c       **** *                     type.
+  30:.\tps.c       **** *
+  31:.\tps.c       **** * Return:
+  32:.\tps.c       **** *  None
+  33:.\tps.c       **** *
+  34:.\tps.c       **** *******************************************************************************/
+  35:.\tps.c       **** void TpsServiceAppEventHandler(uint32 event, void *eventParam)
+  36:.\tps.c       **** {
+  43              		.loc 1 36 0
+  44              		.cfi_startproc
+  45 0000 80B5     		push	{r7, lr}
+  46              		.cfi_def_cfa_offset 8
+  47              		.cfi_offset 7, -8
+  48              		.cfi_offset 14, -4
+  49 0002 84B0     		sub	sp, sp, #16
+  50              		.cfi_def_cfa_offset 24
+  51 0004 00AF     		add	r7, sp, #0
+  52              		.cfi_def_cfa_register 7
+  53 0006 7860     		str	r0, [r7, #4]
+  54 0008 3960     		str	r1, [r7]
+  37:.\tps.c       ****     
+  38:.\tps.c       ****     CYBLE_TPS_CHAR_VALUE_T CharValue;
+  39:.\tps.c       ****    
+  40:.\tps.c       ****     switch(event)
+  55              		.loc 1 40 0
+  56 000a 7B68     		ldr	r3, [r7, #4]
+  57 000c B422     		mov	r2, #180
+  58 000e FF32     		add	r2, r2, #255
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 3
+
+
+  59 0010 9342     		cmp	r3, r2
+  60 0012 0FD0     		beq	.L3
+  61 0014 B422     		mov	r2, #180
+  62 0016 FF32     		add	r2, r2, #255
+  63 0018 9342     		cmp	r3, r2
+  64 001a 02D8     		bhi	.L4
+  65 001c 402B     		cmp	r3, #64
+  66 001e 32D0     		beq	.L5
+  67 0020 36E0     		b	.L2
+  68              	.L4:
+  69 0022 DA22     		mov	r2, #218
+  70 0024 5200     		lsl	r2, r2, #1
+  71 0026 9342     		cmp	r3, r2
+  72 0028 16D0     		beq	.L6
+  73 002a DB22     		mov	r2, #219
+  74 002c 5200     		lsl	r2, r2, #1
+  75 002e 9342     		cmp	r3, r2
+  76 0030 24D0     		beq	.L7
+  77 0032 2DE0     		b	.L2
+  78              	.L3:
+  41:.\tps.c       ****     {
+  42:.\tps.c       ****     
+  43:.\tps.c       ****     /***************************************
+  44:.\tps.c       ****     *        TPS Client events
+  45:.\tps.c       ****     ***************************************/
+  46:.\tps.c       ****     case CYBLE_EVT_TPSC_NOTIFICATION:
+  47:.\tps.c       ****             CharValue=*(CYBLE_TPS_CHAR_VALUE_T*)eventParam;
+  79              		.loc 1 47 0
+  80 0034 3B1C     		mov	r3, r7
+  81 0036 0833     		add	r3, r3, #8
+  82 0038 3A68     		ldr	r2, [r7]
+  83 003a 03CA     		ldmia	r2!, {r0, r1}
+  84 003c 03C3     		stmia	r3!, {r0, r1}
+  48:.\tps.c       ****             printf("Notification received. Tx Power Level:%d dBm\r\n",(int8)(CharValue.value->val[0
+  85              		.loc 1 48 0
+  86 003e 3B1C     		mov	r3, r7
+  87 0040 0833     		add	r3, r3, #8
+  88 0042 5B68     		ldr	r3, [r3, #4]
+  89 0044 1B68     		ldr	r3, [r3]
+  90 0046 1B78     		ldrb	r3, [r3]
+  91 0048 DBB2     		uxtb	r3, r3
+  92 004a 5BB2     		sxtb	r3, r3
+  93 004c 144A     		ldr	r2, .L9
+  94 004e 101C     		mov	r0, r2
+  95 0050 191C     		mov	r1, r3
+  96 0052 FFF7FEFF 		bl	printf
+  49:.\tps.c       ****         break;
+  97              		.loc 1 49 0
+  98 0056 20E0     		b	.L1
+  99              	.L6:
+  50:.\tps.c       ****             
+  51:.\tps.c       ****     case CYBLE_EVT_TPSC_READ_CHAR_RESPONSE:
+  52:.\tps.c       ****             CharValue=*(CYBLE_TPS_CHAR_VALUE_T*)eventParam;
+ 100              		.loc 1 52 0
+ 101 0058 3B1C     		mov	r3, r7
+ 102 005a 0833     		add	r3, r3, #8
+ 103 005c 3A68     		ldr	r2, [r7]
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 4
+
+
+ 104 005e 03CA     		ldmia	r2!, {r0, r1}
+ 105 0060 03C3     		stmia	r3!, {r0, r1}
+  53:.\tps.c       ****             printf("Read Char Response. Tx Power Level: %d dBm\r\n",(int8)(CharValue.value->val[0])
+ 106              		.loc 1 53 0
+ 107 0062 3B1C     		mov	r3, r7
+ 108 0064 0833     		add	r3, r3, #8
+ 109 0066 5B68     		ldr	r3, [r3, #4]
+ 110 0068 1B68     		ldr	r3, [r3]
+ 111 006a 1B78     		ldrb	r3, [r3]
+ 112 006c DBB2     		uxtb	r3, r3
+ 113 006e 5BB2     		sxtb	r3, r3
+ 114 0070 0C4A     		ldr	r2, .L9+4
+ 115 0072 101C     		mov	r0, r2
+ 116 0074 191C     		mov	r1, r3
+ 117 0076 FFF7FEFF 		bl	printf
+  54:.\tps.c       ****         break;
+ 118              		.loc 1 54 0
+ 119 007a 0EE0     		b	.L1
+ 120              	.L7:
+  55:.\tps.c       ****                       
+  56:.\tps.c       ****     case CYBLE_EVT_TPSC_WRITE_DESCR_RESPONSE:
+  57:.\tps.c       ****              printf("Write Descr Response\r\n");
+ 121              		.loc 1 57 0
+ 122 007c 0A4B     		ldr	r3, .L9+8
+ 123 007e 181C     		mov	r0, r3
+ 124 0080 FFF7FEFF 		bl	puts
+  58:.\tps.c       ****         break;
+ 125              		.loc 1 58 0
+ 126 0084 09E0     		b	.L1
+ 127              	.L5:
+  59:.\tps.c       ****             
+  60:.\tps.c       ****      case CYBLE_EVT_GATTC_ERROR_RSP:
+  61:.\tps.c       ****              printf("Error Rsp\r\n");
+ 128              		.loc 1 61 0
+ 129 0086 094B     		ldr	r3, .L9+12
+ 130 0088 181C     		mov	r0, r3
+ 131 008a FFF7FEFF 		bl	puts
+  62:.\tps.c       ****         break;
+ 132              		.loc 1 62 0
+ 133 008e 04E0     		b	.L1
+ 134              	.L2:
+  63:.\tps.c       ****      
+  64:.\tps.c       ****     default:                 
+  65:.\tps.c       ****              printf("default:\r\n");            
+ 135              		.loc 1 65 0
+ 136 0090 074B     		ldr	r3, .L9+16
+ 137 0092 181C     		mov	r0, r3
+ 138 0094 FFF7FEFF 		bl	puts
+  66:.\tps.c       ****         break;
+ 139              		.loc 1 66 0
+ 140 0098 C046     		mov	r8, r8
+ 141              	.L1:
+  67:.\tps.c       ****     }
+  68:.\tps.c       **** }
+ 142              		.loc 1 68 0
+ 143 009a BD46     		mov	sp, r7
+ 144 009c 04B0     		add	sp, sp, #16
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 5
+
+
+ 145              		@ sp needed
+ 146 009e 80BD     		pop	{r7, pc}
+ 147              	.L10:
+ 148              		.align	2
+ 149              	.L9:
+ 150 00a0 00000000 		.word	.LC0
+ 151 00a4 30000000 		.word	.LC2
+ 152 00a8 60000000 		.word	.LC4
+ 153 00ac 78000000 		.word	.LC6
+ 154 00b0 84000000 		.word	.LC8
+ 155              		.cfi_endproc
+ 156              	.LFE35:
+ 157              		.size	TpsServiceAppEventHandler, .-TpsServiceAppEventHandler
+ 158              		.text
+ 159              	.Letext0:
+ 160              		.file 2 ".\\Generated_Source\\PSoC4/cytypes.h"
+ 161              		.file 3 ".\\Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 162              		.file 4 ".\\Generated_Source\\PSoC4/BLE_Stack.h"
+ 163              		.file 5 ".\\Generated_Source\\PSoC4/BLE_tps.h"
+ 164              		.file 6 ".\\Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 165              		.section	.debug_info,"",%progbits
+ 166              	.Ldebug_info0:
+ 167 0000 95080000 		.4byte	0x895
+ 168 0004 0400     		.2byte	0x4
+ 169 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 170 000a 04       		.byte	0x4
+ 171 000b 01       		.uleb128 0x1
+ 172 000c 18130000 		.4byte	.LASF281
+ 173 0010 01       		.byte	0x1
+ 174 0011 4C0D0000 		.4byte	.LASF282
+ 175 0015 CD170000 		.4byte	.LASF283
+ 176 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 177 001d 00000000 		.4byte	0
+ 178 0021 00000000 		.4byte	.Ldebug_line0
+ 179 0025 02       		.uleb128 0x2
+ 180 0026 01       		.byte	0x1
+ 181 0027 06       		.byte	0x6
+ 182 0028 9B070000 		.4byte	.LASF0
+ 183 002c 02       		.uleb128 0x2
+ 184 002d 01       		.byte	0x1
+ 185 002e 08       		.byte	0x8
+ 186 002f 2D080000 		.4byte	.LASF1
+ 187 0033 02       		.uleb128 0x2
+ 188 0034 02       		.byte	0x2
+ 189 0035 05       		.byte	0x5
+ 190 0036 4B1C0000 		.4byte	.LASF2
+ 191 003a 02       		.uleb128 0x2
+ 192 003b 02       		.byte	0x2
+ 193 003c 07       		.byte	0x7
+ 194 003d 59200000 		.4byte	.LASF3
+ 195 0041 02       		.uleb128 0x2
+ 196 0042 04       		.byte	0x4
+ 197 0043 05       		.byte	0x5
+ 198 0044 50060000 		.4byte	.LASF4
+ 199 0048 02       		.uleb128 0x2
+ 200 0049 04       		.byte	0x4
+ 201 004a 07       		.byte	0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 6
+
+
+ 202 004b 530E0000 		.4byte	.LASF5
+ 203 004f 02       		.uleb128 0x2
+ 204 0050 08       		.byte	0x8
+ 205 0051 05       		.byte	0x5
+ 206 0052 9E100000 		.4byte	.LASF6
+ 207 0056 02       		.uleb128 0x2
+ 208 0057 08       		.byte	0x8
+ 209 0058 07       		.byte	0x7
+ 210 0059 81170000 		.4byte	.LASF7
+ 211 005d 03       		.uleb128 0x3
+ 212 005e 04       		.byte	0x4
+ 213 005f 05       		.byte	0x5
+ 214 0060 696E7400 		.ascii	"int\000"
+ 215 0064 02       		.uleb128 0x2
+ 216 0065 04       		.byte	0x4
+ 217 0066 07       		.byte	0x7
+ 218 0067 7E120000 		.4byte	.LASF8
+ 219 006b 04       		.uleb128 0x4
+ 220 006c FE1B0000 		.4byte	.LASF9
+ 221 0070 02       		.byte	0x2
+ 222 0071 A1       		.byte	0xa1
+ 223 0072 2C000000 		.4byte	0x2c
+ 224 0076 04       		.uleb128 0x4
+ 225 0077 41220000 		.4byte	.LASF10
+ 226 007b 02       		.byte	0x2
+ 227 007c A2       		.byte	0xa2
+ 228 007d 3A000000 		.4byte	0x3a
+ 229 0081 04       		.uleb128 0x4
+ 230 0082 EA010000 		.4byte	.LASF11
+ 231 0086 02       		.byte	0x2
+ 232 0087 A3       		.byte	0xa3
+ 233 0088 48000000 		.4byte	0x48
+ 234 008c 04       		.uleb128 0x4
+ 235 008d D3040000 		.4byte	.LASF12
+ 236 0091 02       		.byte	0x2
+ 237 0092 A4       		.byte	0xa4
+ 238 0093 25000000 		.4byte	0x25
+ 239 0097 02       		.uleb128 0x2
+ 240 0098 04       		.byte	0x4
+ 241 0099 04       		.byte	0x4
+ 242 009a F1110000 		.4byte	.LASF13
+ 243 009e 02       		.uleb128 0x2
+ 244 009f 08       		.byte	0x8
+ 245 00a0 04       		.byte	0x4
+ 246 00a1 36110000 		.4byte	.LASF14
+ 247 00a5 02       		.uleb128 0x2
+ 248 00a6 01       		.byte	0x1
+ 249 00a7 08       		.byte	0x8
+ 250 00a8 8D090000 		.4byte	.LASF15
+ 251 00ac 02       		.uleb128 0x2
+ 252 00ad 04       		.byte	0x4
+ 253 00ae 07       		.byte	0x7
+ 254 00af 47000000 		.4byte	.LASF16
+ 255 00b3 05       		.uleb128 0x5
+ 256 00b4 04       		.byte	0x4
+ 257 00b5 06       		.uleb128 0x6
+ 258 00b6 01       		.byte	0x1
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 7
+
+
+ 259 00b7 04       		.byte	0x4
+ 260 00b8 58       		.byte	0x58
+ 261 00b9 25020000 		.4byte	0x225
+ 262 00bd 07       		.uleb128 0x7
+ 263 00be CD090000 		.4byte	.LASF17
+ 264 00c2 00       		.sleb128 0
+ 265 00c3 07       		.uleb128 0x7
+ 266 00c4 E7060000 		.4byte	.LASF18
+ 267 00c8 01       		.sleb128 1
+ 268 00c9 07       		.uleb128 0x7
+ 269 00ca 98170000 		.4byte	.LASF19
+ 270 00ce 02       		.sleb128 2
+ 271 00cf 07       		.uleb128 0x7
+ 272 00d0 CA070000 		.4byte	.LASF20
+ 273 00d4 03       		.sleb128 3
+ 274 00d5 07       		.uleb128 0x7
+ 275 00d6 FF200000 		.4byte	.LASF21
+ 276 00da 04       		.sleb128 4
+ 277 00db 07       		.uleb128 0x7
+ 278 00dc 831F0000 		.4byte	.LASF22
+ 279 00e0 05       		.sleb128 5
+ 280 00e1 07       		.uleb128 0x7
+ 281 00e2 691D0000 		.4byte	.LASF23
+ 282 00e6 20       		.sleb128 32
+ 283 00e7 07       		.uleb128 0x7
+ 284 00e8 BC040000 		.4byte	.LASF24
+ 285 00ec 21       		.sleb128 33
+ 286 00ed 07       		.uleb128 0x7
+ 287 00ee 0E100000 		.4byte	.LASF25
+ 288 00f2 22       		.sleb128 34
+ 289 00f3 07       		.uleb128 0x7
+ 290 00f4 8D140000 		.4byte	.LASF26
+ 291 00f8 23       		.sleb128 35
+ 292 00f9 07       		.uleb128 0x7
+ 293 00fa 540D0000 		.4byte	.LASF27
+ 294 00fe 24       		.sleb128 36
+ 295 00ff 07       		.uleb128 0x7
+ 296 0100 940D0000 		.4byte	.LASF28
+ 297 0104 25       		.sleb128 37
+ 298 0105 07       		.uleb128 0x7
+ 299 0106 8E1B0000 		.4byte	.LASF29
+ 300 010a 26       		.sleb128 38
+ 301 010b 07       		.uleb128 0x7
+ 302 010c 8D010000 		.4byte	.LASF30
+ 303 0110 27       		.sleb128 39
+ 304 0111 07       		.uleb128 0x7
+ 305 0112 BA210000 		.4byte	.LASF31
+ 306 0116 28       		.sleb128 40
+ 307 0117 07       		.uleb128 0x7
+ 308 0118 2C160000 		.4byte	.LASF32
+ 309 011c 29       		.sleb128 41
+ 310 011d 07       		.uleb128 0x7
+ 311 011e 620F0000 		.4byte	.LASF33
+ 312 0122 2A       		.sleb128 42
+ 313 0123 07       		.uleb128 0x7
+ 314 0124 0D140000 		.4byte	.LASF34
+ 315 0128 2B       		.sleb128 43
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 8
+
+
+ 316 0129 07       		.uleb128 0x7
+ 317 012a C31F0000 		.4byte	.LASF35
+ 318 012e 2C       		.sleb128 44
+ 319 012f 07       		.uleb128 0x7
+ 320 0130 961C0000 		.4byte	.LASF36
+ 321 0134 C000     		.sleb128 64
+ 322 0136 07       		.uleb128 0x7
+ 323 0137 AC010000 		.4byte	.LASF37
+ 324 013b C100     		.sleb128 65
+ 325 013d 07       		.uleb128 0x7
+ 326 013e 14210000 		.4byte	.LASF38
+ 327 0142 C200     		.sleb128 66
+ 328 0144 07       		.uleb128 0x7
+ 329 0145 8E160000 		.4byte	.LASF39
+ 330 0149 C300     		.sleb128 67
+ 331 014b 07       		.uleb128 0x7
+ 332 014c 3B080000 		.4byte	.LASF40
+ 333 0150 C400     		.sleb128 68
+ 334 0152 07       		.uleb128 0x7
+ 335 0153 E3070000 		.4byte	.LASF41
+ 336 0157 C500     		.sleb128 69
+ 337 0159 07       		.uleb128 0x7
+ 338 015a 201A0000 		.4byte	.LASF42
+ 339 015e C600     		.sleb128 70
+ 340 0160 07       		.uleb128 0x7
+ 341 0161 021A0000 		.4byte	.LASF43
+ 342 0165 C700     		.sleb128 71
+ 343 0167 07       		.uleb128 0x7
+ 344 0168 41090000 		.4byte	.LASF44
+ 345 016c C800     		.sleb128 72
+ 346 016e 07       		.uleb128 0x7
+ 347 016f B3140000 		.4byte	.LASF45
+ 348 0173 C900     		.sleb128 73
+ 349 0175 07       		.uleb128 0x7
+ 350 0176 1C0A0000 		.4byte	.LASF46
+ 351 017a CA00     		.sleb128 74
+ 352 017c 07       		.uleb128 0x7
+ 353 017d AE090000 		.4byte	.LASF47
+ 354 0181 CB00     		.sleb128 75
+ 355 0183 07       		.uleb128 0x7
+ 356 0184 50140000 		.4byte	.LASF48
+ 357 0188 CC00     		.sleb128 76
+ 358 018a 07       		.uleb128 0x7
+ 359 018b 351B0000 		.4byte	.LASF49
+ 360 018f CD00     		.sleb128 77
+ 361 0191 07       		.uleb128 0x7
+ 362 0192 0E060000 		.4byte	.LASF50
+ 363 0196 CE00     		.sleb128 78
+ 364 0198 07       		.uleb128 0x7
+ 365 0199 8B120000 		.4byte	.LASF51
+ 366 019d CF00     		.sleb128 79
+ 367 019f 07       		.uleb128 0x7
+ 368 01a0 4A1D0000 		.4byte	.LASF52
+ 369 01a4 D000     		.sleb128 80
+ 370 01a6 07       		.uleb128 0x7
+ 371 01a7 800A0000 		.4byte	.LASF53
+ 372 01ab D100     		.sleb128 81
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 9
+
+
+ 373 01ad 07       		.uleb128 0x7
+ 374 01ae 9B040000 		.4byte	.LASF54
+ 375 01b2 D200     		.sleb128 82
+ 376 01b4 07       		.uleb128 0x7
+ 377 01b5 1A1F0000 		.4byte	.LASF55
+ 378 01b9 D300     		.sleb128 83
+ 379 01bb 07       		.uleb128 0x7
+ 380 01bc FC210000 		.4byte	.LASF56
+ 381 01c0 D400     		.sleb128 84
+ 382 01c2 07       		.uleb128 0x7
+ 383 01c3 88030000 		.4byte	.LASF57
+ 384 01c7 D500     		.sleb128 85
+ 385 01c9 07       		.uleb128 0x7
+ 386 01ca E71F0000 		.4byte	.LASF58
+ 387 01ce F000     		.sleb128 112
+ 388 01d0 07       		.uleb128 0x7
+ 389 01d1 A00C0000 		.4byte	.LASF59
+ 390 01d5 F100     		.sleb128 113
+ 391 01d7 07       		.uleb128 0x7
+ 392 01d8 41070000 		.4byte	.LASF60
+ 393 01dc F200     		.sleb128 114
+ 394 01de 07       		.uleb128 0x7
+ 395 01df 2C1D0000 		.4byte	.LASF61
+ 396 01e3 F300     		.sleb128 115
+ 397 01e5 07       		.uleb128 0x7
+ 398 01e6 08150000 		.4byte	.LASF62
+ 399 01ea F400     		.sleb128 116
+ 400 01ec 07       		.uleb128 0x7
+ 401 01ed D20F0000 		.4byte	.LASF63
+ 402 01f1 F500     		.sleb128 117
+ 403 01f3 07       		.uleb128 0x7
+ 404 01f4 20090000 		.4byte	.LASF64
+ 405 01f8 F600     		.sleb128 118
+ 406 01fa 07       		.uleb128 0x7
+ 407 01fb 63180000 		.4byte	.LASF65
+ 408 01ff F700     		.sleb128 119
+ 409 0201 07       		.uleb128 0x7
+ 410 0202 AC030000 		.4byte	.LASF66
+ 411 0206 F800     		.sleb128 120
+ 412 0208 07       		.uleb128 0x7
+ 413 0209 BD080000 		.4byte	.LASF67
+ 414 020d F900     		.sleb128 121
+ 415 020f 07       		.uleb128 0x7
+ 416 0210 58210000 		.4byte	.LASF68
+ 417 0214 FA00     		.sleb128 122
+ 418 0216 07       		.uleb128 0x7
+ 419 0217 3D110000 		.4byte	.LASF69
+ 420 021b FA01     		.sleb128 250
+ 421 021d 07       		.uleb128 0x7
+ 422 021e FF130000 		.4byte	.LASF70
+ 423 0222 FF01     		.sleb128 255
+ 424 0224 00       		.byte	0
+ 425 0225 08       		.uleb128 0x8
+ 426 0226 04       		.byte	0x4
+ 427 0227 6B000000 		.4byte	0x6b
+ 428 022b 09       		.uleb128 0x9
+ 429 022c 02       		.byte	0x2
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 10
+
+
+ 430 022d 03       		.byte	0x3
+ 431 022e 5501     		.2byte	0x155
+ 432 0230 4F020000 		.4byte	0x24f
+ 433 0234 0A       		.uleb128 0xa
+ 434 0235 54050000 		.4byte	.LASF71
+ 435 0239 03       		.byte	0x3
+ 436 023a 5C01     		.2byte	0x15c
+ 437 023c 6B000000 		.4byte	0x6b
+ 438 0240 00       		.byte	0
+ 439 0241 0A       		.uleb128 0xa
+ 440 0242 F9200000 		.4byte	.LASF72
+ 441 0246 03       		.byte	0x3
+ 442 0247 6201     		.2byte	0x162
+ 443 0249 6B000000 		.4byte	0x6b
+ 444 024d 01       		.byte	0x1
+ 445 024e 00       		.byte	0
+ 446 024f 0B       		.uleb128 0xb
+ 447 0250 00050000 		.4byte	.LASF73
+ 448 0254 03       		.byte	0x3
+ 449 0255 6401     		.2byte	0x164
+ 450 0257 2B020000 		.4byte	0x22b
+ 451 025b 09       		.uleb128 0x9
+ 452 025c 08       		.byte	0x8
+ 453 025d 03       		.byte	0x3
+ 454 025e 7901     		.2byte	0x179
+ 455 0260 8C020000 		.4byte	0x28c
+ 456 0264 0C       		.uleb128 0xc
+ 457 0265 76616C00 		.ascii	"val\000"
+ 458 0269 03       		.byte	0x3
+ 459 026a 7C01     		.2byte	0x17c
+ 460 026c 25020000 		.4byte	0x225
+ 461 0270 00       		.byte	0
+ 462 0271 0C       		.uleb128 0xc
+ 463 0272 6C656E00 		.ascii	"len\000"
+ 464 0276 03       		.byte	0x3
+ 465 0277 7F01     		.2byte	0x17f
+ 466 0279 76000000 		.4byte	0x76
+ 467 027d 04       		.byte	0x4
+ 468 027e 0A       		.uleb128 0xa
+ 469 027f 8F200000 		.4byte	.LASF74
+ 470 0283 03       		.byte	0x3
+ 471 0284 8601     		.2byte	0x186
+ 472 0286 76000000 		.4byte	0x76
+ 473 028a 06       		.byte	0x6
+ 474 028b 00       		.byte	0
+ 475 028c 0B       		.uleb128 0xb
+ 476 028d CF030000 		.4byte	.LASF75
+ 477 0291 03       		.byte	0x3
+ 478 0292 8801     		.2byte	0x188
+ 479 0294 5B020000 		.4byte	0x25b
+ 480 0298 06       		.uleb128 0x6
+ 481 0299 01       		.byte	0x1
+ 482 029a 05       		.byte	0x5
+ 483 029b 25       		.byte	0x25
+ 484 029c AD020000 		.4byte	0x2ad
+ 485 02a0 07       		.uleb128 0x7
+ 486 02a1 E70E0000 		.4byte	.LASF76
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 11
+
+
+ 487 02a5 00       		.sleb128 0
+ 488 02a6 07       		.uleb128 0x7
+ 489 02a7 070A0000 		.4byte	.LASF77
+ 490 02ab 01       		.sleb128 1
+ 491 02ac 00       		.byte	0
+ 492 02ad 04       		.uleb128 0x4
+ 493 02ae C5020000 		.4byte	.LASF78
+ 494 02b2 05       		.byte	0x5
+ 495 02b3 28       		.byte	0x28
+ 496 02b4 98020000 		.4byte	0x298
+ 497 02b8 0D       		.uleb128 0xd
+ 498 02b9 08       		.byte	0x8
+ 499 02ba 05       		.byte	0x5
+ 500 02bb 32       		.byte	0x32
+ 501 02bc E5020000 		.4byte	0x2e5
+ 502 02c0 0E       		.uleb128 0xe
+ 503 02c1 8B190000 		.4byte	.LASF79
+ 504 02c5 05       		.byte	0x5
+ 505 02c6 34       		.byte	0x34
+ 506 02c7 4F020000 		.4byte	0x24f
+ 507 02cb 00       		.byte	0
+ 508 02cc 0E       		.uleb128 0xe
+ 509 02cd C7000000 		.4byte	.LASF80
+ 510 02d1 05       		.byte	0x5
+ 511 02d2 35       		.byte	0x35
+ 512 02d3 AD020000 		.4byte	0x2ad
+ 513 02d7 02       		.byte	0x2
+ 514 02d8 0E       		.uleb128 0xe
+ 515 02d9 82180000 		.4byte	.LASF81
+ 516 02dd 05       		.byte	0x5
+ 517 02de 36       		.byte	0x36
+ 518 02df E5020000 		.4byte	0x2e5
+ 519 02e3 04       		.byte	0x4
+ 520 02e4 00       		.byte	0
+ 521 02e5 08       		.uleb128 0x8
+ 522 02e6 04       		.byte	0x4
+ 523 02e7 8C020000 		.4byte	0x28c
+ 524 02eb 04       		.uleb128 0x4
+ 525 02ec 7D1E0000 		.4byte	.LASF82
+ 526 02f0 05       		.byte	0x5
+ 527 02f1 37       		.byte	0x37
+ 528 02f2 B8020000 		.4byte	0x2b8
+ 529 02f6 06       		.uleb128 0x6
+ 530 02f7 02       		.byte	0x2
+ 531 02f8 06       		.byte	0x6
+ 532 02f9 80       		.byte	0x80
+ 533 02fa 5C080000 		.4byte	0x85c
+ 534 02fe 07       		.uleb128 0x7
+ 535 02ff 94130000 		.4byte	.LASF83
+ 536 0303 8002     		.sleb128 256
+ 537 0305 07       		.uleb128 0x7
+ 538 0306 7C210000 		.4byte	.LASF84
+ 539 030a 8102     		.sleb128 257
+ 540 030c 07       		.uleb128 0x7
+ 541 030d C5060000 		.4byte	.LASF85
+ 542 0311 8202     		.sleb128 258
+ 543 0313 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 12
+
+
+ 544 0314 32210000 		.4byte	.LASF86
+ 545 0318 8302     		.sleb128 259
+ 546 031a 07       		.uleb128 0x7
+ 547 031b 5E170000 		.4byte	.LASF87
+ 548 031f 8402     		.sleb128 260
+ 549 0321 07       		.uleb128 0x7
+ 550 0322 551C0000 		.4byte	.LASF88
+ 551 0326 8502     		.sleb128 261
+ 552 0328 07       		.uleb128 0x7
+ 553 0329 E0080000 		.4byte	.LASF89
+ 554 032d 8602     		.sleb128 262
+ 555 032f 07       		.uleb128 0x7
+ 556 0330 5D070000 		.4byte	.LASF90
+ 557 0334 8702     		.sleb128 263
+ 558 0336 07       		.uleb128 0x7
+ 559 0337 33200000 		.4byte	.LASF91
+ 560 033b 8802     		.sleb128 264
+ 561 033d 07       		.uleb128 0x7
+ 562 033e 62030000 		.4byte	.LASF92
+ 563 0342 8902     		.sleb128 265
+ 564 0344 07       		.uleb128 0x7
+ 565 0345 F1010000 		.4byte	.LASF93
+ 566 0349 8A02     		.sleb128 266
+ 567 034b 07       		.uleb128 0x7
+ 568 034c 23190000 		.4byte	.LASF94
+ 569 0350 8B02     		.sleb128 267
+ 570 0352 07       		.uleb128 0x7
+ 571 0353 CE100000 		.4byte	.LASF95
+ 572 0357 8C02     		.sleb128 268
+ 573 0359 07       		.uleb128 0x7
+ 574 035a 6C160000 		.4byte	.LASF96
+ 575 035e 8D02     		.sleb128 269
+ 576 0360 07       		.uleb128 0x7
+ 577 0361 82020000 		.4byte	.LASF97
+ 578 0365 8E02     		.sleb128 270
+ 579 0367 07       		.uleb128 0x7
+ 580 0368 5B110000 		.4byte	.LASF98
+ 581 036c 8F02     		.sleb128 271
+ 582 036e 07       		.uleb128 0x7
+ 583 036f D8040000 		.4byte	.LASF99
+ 584 0373 9002     		.sleb128 272
+ 585 0375 07       		.uleb128 0x7
+ 586 0376 B81E0000 		.4byte	.LASF100
+ 587 037a 9102     		.sleb128 273
+ 588 037c 07       		.uleb128 0x7
+ 589 037d 2C140000 		.4byte	.LASF101
+ 590 0381 9202     		.sleb128 274
+ 591 0383 07       		.uleb128 0x7
+ 592 0384 8A220000 		.4byte	.LASF102
+ 593 0388 9302     		.sleb128 275
+ 594 038a 07       		.uleb128 0x7
+ 595 038b 121D0000 		.4byte	.LASF103
+ 596 038f 9402     		.sleb128 276
+ 597 0391 07       		.uleb128 0x7
+ 598 0392 9E210000 		.4byte	.LASF104
+ 599 0396 9502     		.sleb128 277
+ 600 0398 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 13
+
+
+ 601 0399 C50E0000 		.4byte	.LASF105
+ 602 039d 9602     		.sleb128 278
+ 603 039f 07       		.uleb128 0x7
+ 604 03a0 C60C0000 		.4byte	.LASF106
+ 605 03a4 9702     		.sleb128 279
+ 606 03a6 07       		.uleb128 0x7
+ 607 03a7 25030000 		.4byte	.LASF107
+ 608 03ab 9802     		.sleb128 280
+ 609 03ad 07       		.uleb128 0x7
+ 610 03ae F4160000 		.4byte	.LASF108
+ 611 03b2 9902     		.sleb128 281
+ 612 03b4 07       		.uleb128 0x7
+ 613 03b5 000F0000 		.4byte	.LASF109
+ 614 03b9 9A02     		.sleb128 282
+ 615 03bb 07       		.uleb128 0x7
+ 616 03bc 96190000 		.4byte	.LASF110
+ 617 03c0 9B02     		.sleb128 283
+ 618 03c2 07       		.uleb128 0x7
+ 619 03c3 B01C0000 		.4byte	.LASF111
+ 620 03c7 9C02     		.sleb128 284
+ 621 03c9 07       		.uleb128 0x7
+ 622 03ca F41D0000 		.4byte	.LASF112
+ 623 03ce 9D02     		.sleb128 285
+ 624 03d0 07       		.uleb128 0x7
+ 625 03d1 A7070000 		.4byte	.LASF113
+ 626 03d5 9E02     		.sleb128 286
+ 627 03d7 07       		.uleb128 0x7
+ 628 03d8 CC1C0000 		.4byte	.LASF114
+ 629 03dc 9F02     		.sleb128 287
+ 630 03de 07       		.uleb128 0x7
+ 631 03df 42040000 		.4byte	.LASF115
+ 632 03e3 A002     		.sleb128 288
+ 633 03e5 07       		.uleb128 0x7
+ 634 03e6 CF120000 		.4byte	.LASF116
+ 635 03ea A102     		.sleb128 289
+ 636 03ec 07       		.uleb128 0x7
+ 637 03ed B61B0000 		.4byte	.LASF117
+ 638 03f1 A202     		.sleb128 290
+ 639 03f3 07       		.uleb128 0x7
+ 640 03f4 010B0000 		.4byte	.LASF118
+ 641 03f8 A302     		.sleb128 291
+ 642 03fa 07       		.uleb128 0x7
+ 643 03fb B7130000 		.4byte	.LASF119
+ 644 03ff A402     		.sleb128 292
+ 645 0401 07       		.uleb128 0x7
+ 646 0402 410C0000 		.4byte	.LASF120
+ 647 0406 A502     		.sleb128 293
+ 648 0408 07       		.uleb128 0x7
+ 649 0409 64040000 		.4byte	.LASF121
+ 650 040d A602     		.sleb128 294
+ 651 040f 07       		.uleb128 0x7
+ 652 0410 6B010000 		.4byte	.LASF122
+ 653 0414 A702     		.sleb128 295
+ 654 0416 07       		.uleb128 0x7
+ 655 0417 82050000 		.4byte	.LASF123
+ 656 041b A802     		.sleb128 296
+ 657 041d 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 14
+
+
+ 658 041e A4180000 		.4byte	.LASF124
+ 659 0422 A902     		.sleb128 297
+ 660 0424 07       		.uleb128 0x7
+ 661 0425 13110000 		.4byte	.LASF125
+ 662 0429 AA02     		.sleb128 298
+ 663 042b 07       		.uleb128 0x7
+ 664 042c 941E0000 		.4byte	.LASF126
+ 665 0430 AB02     		.sleb128 299
+ 666 0432 07       		.uleb128 0x7
+ 667 0433 5D050000 		.4byte	.LASF127
+ 668 0437 AC02     		.sleb128 300
+ 669 0439 07       		.uleb128 0x7
+ 670 043a 7D150000 		.4byte	.LASF128
+ 671 043e AD02     		.sleb128 301
+ 672 0440 07       		.uleb128 0x7
+ 673 0441 0D200000 		.4byte	.LASF129
+ 674 0445 AE02     		.sleb128 302
+ 675 0447 07       		.uleb128 0x7
+ 676 0448 DB1E0000 		.4byte	.LASF130
+ 677 044c AF02     		.sleb128 303
+ 678 044e 07       		.uleb128 0x7
+ 679 044f 6A000000 		.4byte	.LASF131
+ 680 0453 B002     		.sleb128 304
+ 681 0455 07       		.uleb128 0x7
+ 682 0456 791C0000 		.4byte	.LASF132
+ 683 045a B102     		.sleb128 305
+ 684 045c 07       		.uleb128 0x7
+ 685 045d 8B0F0000 		.4byte	.LASF133
+ 686 0461 B202     		.sleb128 306
+ 687 0463 07       		.uleb128 0x7
+ 688 0464 DA1B0000 		.4byte	.LASF134
+ 689 0468 B302     		.sleb128 307
+ 690 046a 07       		.uleb128 0x7
+ 691 046b 671A0000 		.4byte	.LASF135
+ 692 046f B402     		.sleb128 308
+ 693 0471 07       		.uleb128 0x7
+ 694 0472 16010000 		.4byte	.LASF136
+ 695 0476 B502     		.sleb128 309
+ 696 0478 07       		.uleb128 0x7
+ 697 0479 BB190000 		.4byte	.LASF137
+ 698 047d B602     		.sleb128 310
+ 699 047f 07       		.uleb128 0x7
+ 700 0480 7D080000 		.4byte	.LASF138
+ 701 0484 B702     		.sleb128 311
+ 702 0486 07       		.uleb128 0x7
+ 703 0487 C8050000 		.4byte	.LASF139
+ 704 048b B802     		.sleb128 312
+ 705 048d 07       		.uleb128 0x7
+ 706 048e A5050000 		.4byte	.LASF140
+ 707 0492 B902     		.sleb128 313
+ 708 0494 07       		.uleb128 0x7
+ 709 0495 59080000 		.4byte	.LASF141
+ 710 0499 BA02     		.sleb128 314
+ 711 049b 07       		.uleb128 0x7
+ 712 049c 57100000 		.4byte	.LASF142
+ 713 04a0 BB02     		.sleb128 315
+ 714 04a2 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 15
+
+
+ 715 04a3 D7200000 		.4byte	.LASF143
+ 716 04a7 BC02     		.sleb128 316
+ 717 04a9 07       		.uleb128 0x7
+ 718 04aa C20A0000 		.4byte	.LASF144
+ 719 04ae BD02     		.sleb128 317
+ 720 04b0 07       		.uleb128 0x7
+ 721 04b1 88180000 		.4byte	.LASF145
+ 722 04b5 BE02     		.sleb128 318
+ 723 04b7 07       		.uleb128 0x7
+ 724 04b8 CC140000 		.4byte	.LASF146
+ 725 04bc BF02     		.sleb128 319
+ 726 04be 07       		.uleb128 0x7
+ 727 04bf D1000000 		.4byte	.LASF147
+ 728 04c3 C002     		.sleb128 320
+ 729 04c5 07       		.uleb128 0x7
+ 730 04c6 3F0F0000 		.4byte	.LASF148
+ 731 04ca C102     		.sleb128 321
+ 732 04cc 07       		.uleb128 0x7
+ 733 04cd 85000000 		.4byte	.LASF149
+ 734 04d1 C202     		.sleb128 322
+ 735 04d3 07       		.uleb128 0x7
+ 736 04d4 2C060000 		.4byte	.LASF150
+ 737 04d8 C302     		.sleb128 323
+ 738 04da 07       		.uleb128 0x7
+ 739 04db 3B1F0000 		.4byte	.LASF151
+ 740 04df C402     		.sleb128 324
+ 741 04e1 07       		.uleb128 0x7
+ 742 04e2 1C0C0000 		.4byte	.LASF152
+ 743 04e6 C502     		.sleb128 325
+ 744 04e8 07       		.uleb128 0x7
+ 745 04e9 6D0B0000 		.4byte	.LASF153
+ 746 04ed C602     		.sleb128 326
+ 747 04ef 07       		.uleb128 0x7
+ 748 04f0 E2030000 		.4byte	.LASF154
+ 749 04f4 C702     		.sleb128 327
+ 750 04f6 07       		.uleb128 0x7
+ 751 04f7 59060000 		.4byte	.LASF155
+ 752 04fb C802     		.sleb128 328
+ 753 04fd 07       		.uleb128 0x7
+ 754 04fe C9110000 		.4byte	.LASF156
+ 755 0502 C902     		.sleb128 329
+ 756 0504 07       		.uleb128 0x7
+ 757 0505 F30F0000 		.4byte	.LASF157
+ 758 0509 CA02     		.sleb128 330
+ 759 050b 07       		.uleb128 0x7
+ 760 050c 37050000 		.4byte	.LASF158
+ 761 0510 CB02     		.sleb128 331
+ 762 0512 07       		.uleb128 0x7
+ 763 0513 80040000 		.4byte	.LASF159
+ 764 0517 CC02     		.sleb128 332
+ 765 0519 07       		.uleb128 0x7
+ 766 051a F3000000 		.4byte	.LASF160
+ 767 051e CD02     		.sleb128 333
+ 768 0520 07       		.uleb128 0x7
+ 769 0521 AE0F0000 		.4byte	.LASF161
+ 770 0525 CE02     		.sleb128 334
+ 771 0527 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 16
+
+
+ 772 0528 1D220000 		.4byte	.LASF162
+ 773 052c CF02     		.sleb128 335
+ 774 052e 07       		.uleb128 0x7
+ 775 052f 66190000 		.4byte	.LASF163
+ 776 0533 D002     		.sleb128 336
+ 777 0535 07       		.uleb128 0x7
+ 778 0536 930B0000 		.4byte	.LASF164
+ 779 053a D102     		.sleb128 337
+ 780 053c 07       		.uleb128 0x7
+ 781 053d AA120000 		.4byte	.LASF165
+ 782 0541 D202     		.sleb128 338
+ 783 0543 07       		.uleb128 0x7
+ 784 0544 E4180000 		.4byte	.LASF166
+ 785 0548 D302     		.sleb128 339
+ 786 054a 07       		.uleb128 0x7
+ 787 054b 60020000 		.4byte	.LASF167
+ 788 054f D402     		.sleb128 340
+ 789 0551 07       		.uleb128 0x7
+ 790 0552 AA170000 		.4byte	.LASF168
+ 791 0556 D502     		.sleb128 341
+ 792 0558 07       		.uleb128 0x7
+ 793 0559 E50D0000 		.4byte	.LASF169
+ 794 055d D602     		.sleb128 342
+ 795 055f 07       		.uleb128 0x7
+ 796 0560 E6140000 		.4byte	.LASF170
+ 797 0564 D702     		.sleb128 343
+ 798 0566 07       		.uleb128 0x7
+ 799 0567 F01C0000 		.4byte	.LASF171
+ 800 056b D802     		.sleb128 344
+ 801 056d 07       		.uleb128 0x7
+ 802 056e 00190000 		.4byte	.LASF172
+ 803 0572 D902     		.sleb128 345
+ 804 0574 07       		.uleb128 0x7
+ 805 0575 3A170000 		.4byte	.LASF173
+ 806 0579 DA02     		.sleb128 346
+ 807 057b 07       		.uleb128 0x7
+ 808 057c EF100000 		.4byte	.LASF174
+ 809 0580 DB02     		.sleb128 347
+ 810 0582 07       		.uleb128 0x7
+ 811 0583 3B010000 		.4byte	.LASF175
+ 812 0587 DC02     		.sleb128 348
+ 813 0589 07       		.uleb128 0x7
+ 814 058a 63150000 		.4byte	.LASF176
+ 815 058e DD02     		.sleb128 349
+ 816 0590 07       		.uleb128 0x7
+ 817 0591 BD200000 		.4byte	.LASF177
+ 818 0595 DE02     		.sleb128 350
+ 819 0597 07       		.uleb128 0x7
+ 820 0598 161E0000 		.4byte	.LASF178
+ 821 059c DF02     		.sleb128 351
+ 822 059e 07       		.uleb128 0x7
+ 823 059f 4F1B0000 		.4byte	.LASF179
+ 824 05a3 E002     		.sleb128 352
+ 825 05a5 07       		.uleb128 0x7
+ 826 05a6 C7010000 		.4byte	.LASF180
+ 827 05aa E102     		.sleb128 353
+ 828 05ac 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 17
+
+
+ 829 05ad E4090000 		.4byte	.LASF181
+ 830 05b1 E202     		.sleb128 354
+ 831 05b3 07       		.uleb128 0x7
+ 832 05b4 F61E0000 		.4byte	.LASF182
+ 833 05b8 E302     		.sleb128 355
+ 834 05ba 07       		.uleb128 0x7
+ 835 05bb C9220000 		.4byte	.LASF183
+ 836 05bf E402     		.sleb128 356
+ 837 05c1 07       		.uleb128 0x7
+ 838 05c2 36120000 		.4byte	.LASF184
+ 839 05c6 E502     		.sleb128 357
+ 840 05c8 07       		.uleb128 0x7
+ 841 05c9 DC210000 		.4byte	.LASF185
+ 842 05cd E602     		.sleb128 358
+ 843 05cf 07       		.uleb128 0x7
+ 844 05d0 14120000 		.4byte	.LASF186
+ 845 05d4 E702     		.sleb128 359
+ 846 05d6 07       		.uleb128 0x7
+ 847 05d7 83070000 		.4byte	.LASF187
+ 848 05db E802     		.sleb128 360
+ 849 05dd 07       		.uleb128 0x7
+ 850 05de AE0D0000 		.4byte	.LASF188
+ 851 05e2 E902     		.sleb128 361
+ 852 05e4 07       		.uleb128 0x7
+ 853 05e5 5B0C0000 		.4byte	.LASF189
+ 854 05e9 EA02     		.sleb128 362
+ 855 05eb 07       		.uleb128 0x7
+ 856 05ec 48220000 		.4byte	.LASF190
+ 857 05f0 EB02     		.sleb128 363
+ 858 05f2 07       		.uleb128 0x7
+ 859 05f3 8B1A0000 		.4byte	.LASF191
+ 860 05f7 EC02     		.sleb128 364
+ 861 05f9 07       		.uleb128 0x7
+ 862 05fa 2F0E0000 		.4byte	.LASF192
+ 863 05fe ED02     		.sleb128 365
+ 864 0600 07       		.uleb128 0x7
+ 865 0601 E6150000 		.4byte	.LASF193
+ 866 0605 EE02     		.sleb128 366
+ 867 0607 07       		.uleb128 0x7
+ 868 0608 00030000 		.4byte	.LASF194
+ 869 060c EF02     		.sleb128 367
+ 870 060e 07       		.uleb128 0x7
+ 871 060f DC0A0000 		.4byte	.LASF195
+ 872 0613 F002     		.sleb128 368
+ 873 0615 07       		.uleb128 0x7
+ 874 0616 280D0000 		.4byte	.LASF196
+ 875 061a F102     		.sleb128 369
+ 876 061c 07       		.uleb128 0x7
+ 877 061d 12230000 		.4byte	.LASF197
+ 878 0621 F202     		.sleb128 370
+ 879 0623 07       		.uleb128 0x7
+ 880 0624 A2150000 		.4byte	.LASF198
+ 881 0628 F302     		.sleb128 371
+ 882 062a 07       		.uleb128 0x7
+ 883 062b 0A160000 		.4byte	.LASF199
+ 884 062f F402     		.sleb128 372
+ 885 0631 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 18
+
+
+ 886 0632 14050000 		.4byte	.LASF200
+ 887 0636 F502     		.sleb128 373
+ 888 0638 07       		.uleb128 0x7
+ 889 0639 F90B0000 		.4byte	.LASF201
+ 890 063d F602     		.sleb128 374
+ 891 063f 07       		.uleb128 0x7
+ 892 0640 F71A0000 		.4byte	.LASF202
+ 893 0644 F702     		.sleb128 375
+ 894 0646 07       		.uleb128 0x7
+ 895 0647 1D070000 		.4byte	.LASF203
+ 896 064b F802     		.sleb128 376
+ 897 064d 07       		.uleb128 0x7
+ 898 064e 22000000 		.4byte	.LASF204
+ 899 0652 F902     		.sleb128 377
+ 900 0654 07       		.uleb128 0x7
+ 901 0655 AF1D0000 		.4byte	.LASF205
+ 902 0659 FA02     		.sleb128 378
+ 903 065b 07       		.uleb128 0x7
+ 904 065c 3A0A0000 		.4byte	.LASF206
+ 905 0660 FB02     		.sleb128 379
+ 906 0662 07       		.uleb128 0x7
+ 907 0663 EE220000 		.4byte	.LASF207
+ 908 0667 FC02     		.sleb128 380
+ 909 0669 07       		.uleb128 0x7
+ 910 066a 48030000 		.4byte	.LASF208
+ 911 066e FD02     		.sleb128 381
+ 912 0670 07       		.uleb128 0x7
+ 913 0671 82100000 		.4byte	.LASF209
+ 914 0675 FE02     		.sleb128 382
+ 915 0677 07       		.uleb128 0x7
+ 916 0678 AF220000 		.4byte	.LASF210
+ 917 067c FF02     		.sleb128 383
+ 918 067e 07       		.uleb128 0x7
+ 919 067f 041C0000 		.4byte	.LASF211
+ 920 0683 8003     		.sleb128 384
+ 921 0685 07       		.uleb128 0x7
+ 922 0686 DC130000 		.4byte	.LASF212
+ 923 068a 8103     		.sleb128 385
+ 924 068c 07       		.uleb128 0x7
+ 925 068d 26150000 		.4byte	.LASF213
+ 926 0691 8203     		.sleb128 386
+ 927 0693 07       		.uleb128 0x7
+ 928 0694 9F1F0000 		.4byte	.LASF214
+ 929 0698 8303     		.sleb128 387
+ 930 069a 07       		.uleb128 0x7
+ 931 069b 650E0000 		.4byte	.LASF215
+ 932 069f 8403     		.sleb128 388
+ 933 06a1 07       		.uleb128 0x7
+ 934 06a2 DB0B0000 		.4byte	.LASF216
+ 935 06a6 8503     		.sleb128 389
+ 936 06a8 07       		.uleb128 0x7
+ 937 06a9 A7110000 		.4byte	.LASF217
+ 938 06ad 8603     		.sleb128 390
+ 939 06af 07       		.uleb128 0x7
+ 940 06b0 5A1E0000 		.4byte	.LASF218
+ 941 06b4 8703     		.sleb128 391
+ 942 06b6 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 19
+
+
+ 943 06b7 44190000 		.4byte	.LASF219
+ 944 06bb 8803     		.sleb128 392
+ 945 06bd 07       		.uleb128 0x7
+ 946 06be 3D020000 		.4byte	.LASF220
+ 947 06c2 8903     		.sleb128 393
+ 948 06c4 07       		.uleb128 0x7
+ 949 06c5 D0160000 		.4byte	.LASF221
+ 950 06c9 8A03     		.sleb128 394
+ 951 06cb 07       		.uleb128 0x7
+ 952 06cc EA050000 		.4byte	.LASF222
+ 953 06d0 8B03     		.sleb128 395
+ 954 06d2 07       		.uleb128 0x7
+ 955 06d3 32100000 		.4byte	.LASF223
+ 956 06d7 8C03     		.sleb128 396
+ 957 06d9 07       		.uleb128 0x7
+ 958 06da 1B1B0000 		.4byte	.LASF224
+ 959 06de 8D03     		.sleb128 397
+ 960 06e0 07       		.uleb128 0x7
+ 961 06e1 05040000 		.4byte	.LASF225
+ 962 06e5 8E03     		.sleb128 398
+ 963 06e7 07       		.uleb128 0x7
+ 964 06e8 C8180000 		.4byte	.LASF226
+ 965 06ec 8F03     		.sleb128 399
+ 966 06ee 07       		.uleb128 0x7
+ 967 06ef 18170000 		.4byte	.LASF227
+ 968 06f3 9003     		.sleb128 400
+ 969 06f5 07       		.uleb128 0x7
+ 970 06f6 7D0C0000 		.4byte	.LASF228
+ 971 06fa 9103     		.sleb128 401
+ 972 06fc 07       		.uleb128 0x7
+ 973 06fd 6C200000 		.4byte	.LASF229
+ 974 0701 9203     		.sleb128 402
+ 975 0703 07       		.uleb128 0x7
+ 976 0704 83110000 		.4byte	.LASF230
+ 977 0708 9303     		.sleb128 403
+ 978 070a 07       		.uleb128 0x7
+ 979 070b 49160000 		.4byte	.LASF231
+ 980 070f 9403     		.sleb128 404
+ 981 0711 07       		.uleb128 0x7
+ 982 0712 830E0000 		.4byte	.LASF232
+ 983 0716 9503     		.sleb128 405
+ 984 0718 07       		.uleb128 0x7
+ 985 0719 411A0000 		.4byte	.LASF233
+ 986 071d 9603     		.sleb128 406
+ 987 071f 07       		.uleb128 0x7
+ 988 0720 240F0000 		.4byte	.LASF234
+ 989 0724 9703     		.sleb128 407
+ 990 0726 07       		.uleb128 0x7
+ 991 0727 A80E0000 		.4byte	.LASF235
+ 992 072b 9803     		.sleb128 408
+ 993 072d 07       		.uleb128 0x7
+ 994 072e 1F040000 		.4byte	.LASF236
+ 995 0732 9903     		.sleb128 409
+ 996 0734 07       		.uleb128 0x7
+ 997 0735 7D060000 		.4byte	.LASF237
+ 998 0739 9A03     		.sleb128 410
+ 999 073b 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 20
+
+
+ 1000 073c 700D0000 		.4byte	.LASF238
+ 1001 0740 9B03     		.sleb128 411
+ 1002 0742 07       		.uleb128 0x7
+ 1003 0743 261C0000 		.4byte	.LASF239
+ 1004 0747 9C03     		.sleb128 412
+ 1005 0749 07       		.uleb128 0x7
+ 1006 074a 65220000 		.4byte	.LASF240
+ 1007 074e 9D03     		.sleb128 413
+ 1008 0750 07       		.uleb128 0x7
+ 1009 0751 090E0000 		.4byte	.LASF241
+ 1010 0755 9E03     		.sleb128 414
+ 1011 0757 07       		.uleb128 0x7
+ 1012 0758 0A080000 		.4byte	.LASF242
+ 1013 075c 9F03     		.sleb128 415
+ 1014 075e 07       		.uleb128 0x7
+ 1015 075f B70B0000 		.4byte	.LASF243
+ 1016 0763 A003     		.sleb128 416
+ 1017 0765 07       		.uleb128 0x7
+ 1018 0766 BE150000 		.4byte	.LASF244
+ 1019 076a A103     		.sleb128 417
+ 1020 076c 07       		.uleb128 0x7
+ 1021 076d AA020000 		.4byte	.LASF245
+ 1022 0771 A203     		.sleb128 418
+ 1023 0773 07       		.uleb128 0x7
+ 1024 0774 711B0000 		.4byte	.LASF246
+ 1025 0778 A303     		.sleb128 419
+ 1026 077a 07       		.uleb128 0x7
+ 1027 077b A2080000 		.4byte	.LASF247
+ 1028 077f A403     		.sleb128 420
+ 1029 0781 07       		.uleb128 0x7
+ 1030 0782 FA060000 		.4byte	.LASF248
+ 1031 0786 A503     		.sleb128 421
+ 1032 0788 07       		.uleb128 0x7
+ 1033 0789 250B0000 		.4byte	.LASF249
+ 1034 078d A603     		.sleb128 422
+ 1035 078f 07       		.uleb128 0x7
+ 1036 0790 5F1F0000 		.4byte	.LASF250
+ 1037 0794 A703     		.sleb128 423
+ 1038 0796 07       		.uleb128 0x7
+ 1039 0797 18020000 		.4byte	.LASF251
+ 1040 079b A803     		.sleb128 424
+ 1041 079d 07       		.uleb128 0x7
+ 1042 079e A8000000 		.4byte	.LASF252
+ 1043 07a2 A903     		.sleb128 425
+ 1044 07a4 07       		.uleb128 0x7
+ 1045 07a5 5D0A0000 		.4byte	.LASF253
+ 1046 07a9 AA03     		.sleb128 426
+ 1047 07ab 07       		.uleb128 0x7
+ 1048 07ac FB080000 		.4byte	.LASF254
+ 1049 07b0 AB03     		.sleb128 427
+ 1050 07b2 07       		.uleb128 0x7
+ 1051 07b3 F2120000 		.4byte	.LASF255
+ 1052 07b7 AC03     		.sleb128 428
+ 1053 07b9 07       		.uleb128 0x7
+ 1054 07ba 321E0000 		.4byte	.LASF256
+ 1055 07be AD03     		.sleb128 429
+ 1056 07c0 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 21
+
+
+ 1057 07c1 F7110000 		.4byte	.LASF257
+ 1058 07c5 AE03     		.sleb128 430
+ 1059 07c7 07       		.uleb128 0x7
+ 1060 07c8 D31A0000 		.4byte	.LASF258
+ 1061 07cc AF03     		.sleb128 431
+ 1062 07ce 07       		.uleb128 0x7
+ 1063 07cf 68090000 		.4byte	.LASF259
+ 1064 07d3 B003     		.sleb128 432
+ 1065 07d5 07       		.uleb128 0x7
+ 1066 07d6 99200000 		.4byte	.LASF260
+ 1067 07da B103     		.sleb128 433
+ 1068 07dc 07       		.uleb128 0x7
+ 1069 07dd AE1A0000 		.4byte	.LASF261
+ 1070 07e1 B203     		.sleb128 434
+ 1071 07e3 07       		.uleb128 0x7
+ 1072 07e4 92090000 		.4byte	.LASF262
+ 1073 07e8 B303     		.sleb128 435
+ 1074 07ea 07       		.uleb128 0x7
+ 1075 07eb AC100000 		.4byte	.LASF263
+ 1076 07ef B403     		.sleb128 436
+ 1077 07f1 07       		.uleb128 0x7
+ 1078 07f2 DF190000 		.4byte	.LASF264
+ 1079 07f6 B503     		.sleb128 437
+ 1080 07f8 07       		.uleb128 0x7
+ 1081 07f9 490B0000 		.4byte	.LASF265
+ 1082 07fd B603     		.sleb128 438
+ 1083 07ff 07       		.uleb128 0x7
+ 1084 0800 8D1D0000 		.4byte	.LASF266
+ 1085 0804 B703     		.sleb128 439
+ 1086 0806 07       		.uleb128 0x7
+ 1087 0807 9F0A0000 		.4byte	.LASF267
+ 1088 080b B803     		.sleb128 440
+ 1089 080d 07       		.uleb128 0x7
+ 1090 080e A1060000 		.4byte	.LASF268
+ 1091 0812 B903     		.sleb128 441
+ 1092 0814 07       		.uleb128 0x7
+ 1093 0815 AC160000 		.4byte	.LASF269
+ 1094 0819 BA03     		.sleb128 442
+ 1095 081b 07       		.uleb128 0x7
+ 1096 081c E90C0000 		.4byte	.LASF270
+ 1097 0820 BB03     		.sleb128 443
+ 1098 0822 07       		.uleb128 0x7
+ 1099 0823 0E0D0000 		.4byte	.LASF271
+ 1100 0827 BC03     		.sleb128 444
+ 1101 0829 07       		.uleb128 0x7
+ 1102 082a 50000000 		.4byte	.LASF272
+ 1103 082e BD03     		.sleb128 445
+ 1104 0830 07       		.uleb128 0x7
+ 1105 0831 62120000 		.4byte	.LASF273
+ 1106 0835 BE03     		.sleb128 446
+ 1107 0837 07       		.uleb128 0x7
+ 1108 0838 00000000 		.4byte	.LASF274
+ 1109 083c BF03     		.sleb128 447
+ 1110 083e 07       		.uleb128 0x7
+ 1111 083f 6A140000 		.4byte	.LASF275
+ 1112 0843 C003     		.sleb128 448
+ 1113 0845 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 22
+
+
+ 1114 0846 D11D0000 		.4byte	.LASF276
+ 1115 084a C103     		.sleb128 449
+ 1116 084c 07       		.uleb128 0x7
+ 1117 084d DC020000 		.4byte	.LASF277
+ 1118 0851 C203     		.sleb128 450
+ 1119 0853 07       		.uleb128 0x7
+ 1120 0854 49150000 		.4byte	.LASF278
+ 1121 0858 80C003   		.sleb128 57344
+ 1122 085b 00       		.byte	0
+ 1123 085c 0F       		.uleb128 0xf
+ 1124 085d CB0D0000 		.4byte	.LASF284
+ 1125 0861 01       		.byte	0x1
+ 1126 0862 23       		.byte	0x23
+ 1127 0863 00000000 		.4byte	.LFB35
+ 1128 0867 B4000000 		.4byte	.LFE35-.LFB35
+ 1129 086b 01       		.uleb128 0x1
+ 1130 086c 9C       		.byte	0x9c
+ 1131 086d 10       		.uleb128 0x10
+ 1132 086e 5C120000 		.4byte	.LASF279
+ 1133 0872 01       		.byte	0x1
+ 1134 0873 23       		.byte	0x23
+ 1135 0874 81000000 		.4byte	0x81
+ 1136 0878 02       		.uleb128 0x2
+ 1137 0879 91       		.byte	0x91
+ 1138 087a 6C       		.sleb128 -20
+ 1139 087b 10       		.uleb128 0x10
+ 1140 087c 60010000 		.4byte	.LASF280
+ 1141 0880 01       		.byte	0x1
+ 1142 0881 23       		.byte	0x23
+ 1143 0882 B3000000 		.4byte	0xb3
+ 1144 0886 02       		.uleb128 0x2
+ 1145 0887 91       		.byte	0x91
+ 1146 0888 68       		.sleb128 -24
+ 1147 0889 11       		.uleb128 0x11
+ 1148 088a 78100000 		.4byte	.LASF285
+ 1149 088e 01       		.byte	0x1
+ 1150 088f 26       		.byte	0x26
+ 1151 0890 EB020000 		.4byte	0x2eb
+ 1152 0894 02       		.uleb128 0x2
+ 1153 0895 91       		.byte	0x91
+ 1154 0896 70       		.sleb128 -16
+ 1155 0897 00       		.byte	0
+ 1156 0898 00       		.byte	0
+ 1157              		.section	.debug_abbrev,"",%progbits
+ 1158              	.Ldebug_abbrev0:
+ 1159 0000 01       		.uleb128 0x1
+ 1160 0001 11       		.uleb128 0x11
+ 1161 0002 01       		.byte	0x1
+ 1162 0003 25       		.uleb128 0x25
+ 1163 0004 0E       		.uleb128 0xe
+ 1164 0005 13       		.uleb128 0x13
+ 1165 0006 0B       		.uleb128 0xb
+ 1166 0007 03       		.uleb128 0x3
+ 1167 0008 0E       		.uleb128 0xe
+ 1168 0009 1B       		.uleb128 0x1b
+ 1169 000a 0E       		.uleb128 0xe
+ 1170 000b 55       		.uleb128 0x55
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 23
+
+
+ 1171 000c 17       		.uleb128 0x17
+ 1172 000d 11       		.uleb128 0x11
+ 1173 000e 01       		.uleb128 0x1
+ 1174 000f 10       		.uleb128 0x10
+ 1175 0010 17       		.uleb128 0x17
+ 1176 0011 00       		.byte	0
+ 1177 0012 00       		.byte	0
+ 1178 0013 02       		.uleb128 0x2
+ 1179 0014 24       		.uleb128 0x24
+ 1180 0015 00       		.byte	0
+ 1181 0016 0B       		.uleb128 0xb
+ 1182 0017 0B       		.uleb128 0xb
+ 1183 0018 3E       		.uleb128 0x3e
+ 1184 0019 0B       		.uleb128 0xb
+ 1185 001a 03       		.uleb128 0x3
+ 1186 001b 0E       		.uleb128 0xe
+ 1187 001c 00       		.byte	0
+ 1188 001d 00       		.byte	0
+ 1189 001e 03       		.uleb128 0x3
+ 1190 001f 24       		.uleb128 0x24
+ 1191 0020 00       		.byte	0
+ 1192 0021 0B       		.uleb128 0xb
+ 1193 0022 0B       		.uleb128 0xb
+ 1194 0023 3E       		.uleb128 0x3e
+ 1195 0024 0B       		.uleb128 0xb
+ 1196 0025 03       		.uleb128 0x3
+ 1197 0026 08       		.uleb128 0x8
+ 1198 0027 00       		.byte	0
+ 1199 0028 00       		.byte	0
+ 1200 0029 04       		.uleb128 0x4
+ 1201 002a 16       		.uleb128 0x16
+ 1202 002b 00       		.byte	0
+ 1203 002c 03       		.uleb128 0x3
+ 1204 002d 0E       		.uleb128 0xe
+ 1205 002e 3A       		.uleb128 0x3a
+ 1206 002f 0B       		.uleb128 0xb
+ 1207 0030 3B       		.uleb128 0x3b
+ 1208 0031 0B       		.uleb128 0xb
+ 1209 0032 49       		.uleb128 0x49
+ 1210 0033 13       		.uleb128 0x13
+ 1211 0034 00       		.byte	0
+ 1212 0035 00       		.byte	0
+ 1213 0036 05       		.uleb128 0x5
+ 1214 0037 0F       		.uleb128 0xf
+ 1215 0038 00       		.byte	0
+ 1216 0039 0B       		.uleb128 0xb
+ 1217 003a 0B       		.uleb128 0xb
+ 1218 003b 00       		.byte	0
+ 1219 003c 00       		.byte	0
+ 1220 003d 06       		.uleb128 0x6
+ 1221 003e 04       		.uleb128 0x4
+ 1222 003f 01       		.byte	0x1
+ 1223 0040 0B       		.uleb128 0xb
+ 1224 0041 0B       		.uleb128 0xb
+ 1225 0042 3A       		.uleb128 0x3a
+ 1226 0043 0B       		.uleb128 0xb
+ 1227 0044 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 24
+
+
+ 1228 0045 0B       		.uleb128 0xb
+ 1229 0046 01       		.uleb128 0x1
+ 1230 0047 13       		.uleb128 0x13
+ 1231 0048 00       		.byte	0
+ 1232 0049 00       		.byte	0
+ 1233 004a 07       		.uleb128 0x7
+ 1234 004b 28       		.uleb128 0x28
+ 1235 004c 00       		.byte	0
+ 1236 004d 03       		.uleb128 0x3
+ 1237 004e 0E       		.uleb128 0xe
+ 1238 004f 1C       		.uleb128 0x1c
+ 1239 0050 0D       		.uleb128 0xd
+ 1240 0051 00       		.byte	0
+ 1241 0052 00       		.byte	0
+ 1242 0053 08       		.uleb128 0x8
+ 1243 0054 0F       		.uleb128 0xf
+ 1244 0055 00       		.byte	0
+ 1245 0056 0B       		.uleb128 0xb
+ 1246 0057 0B       		.uleb128 0xb
+ 1247 0058 49       		.uleb128 0x49
+ 1248 0059 13       		.uleb128 0x13
+ 1249 005a 00       		.byte	0
+ 1250 005b 00       		.byte	0
+ 1251 005c 09       		.uleb128 0x9
+ 1252 005d 13       		.uleb128 0x13
+ 1253 005e 01       		.byte	0x1
+ 1254 005f 0B       		.uleb128 0xb
+ 1255 0060 0B       		.uleb128 0xb
+ 1256 0061 3A       		.uleb128 0x3a
+ 1257 0062 0B       		.uleb128 0xb
+ 1258 0063 3B       		.uleb128 0x3b
+ 1259 0064 05       		.uleb128 0x5
+ 1260 0065 01       		.uleb128 0x1
+ 1261 0066 13       		.uleb128 0x13
+ 1262 0067 00       		.byte	0
+ 1263 0068 00       		.byte	0
+ 1264 0069 0A       		.uleb128 0xa
+ 1265 006a 0D       		.uleb128 0xd
+ 1266 006b 00       		.byte	0
+ 1267 006c 03       		.uleb128 0x3
+ 1268 006d 0E       		.uleb128 0xe
+ 1269 006e 3A       		.uleb128 0x3a
+ 1270 006f 0B       		.uleb128 0xb
+ 1271 0070 3B       		.uleb128 0x3b
+ 1272 0071 05       		.uleb128 0x5
+ 1273 0072 49       		.uleb128 0x49
+ 1274 0073 13       		.uleb128 0x13
+ 1275 0074 38       		.uleb128 0x38
+ 1276 0075 0B       		.uleb128 0xb
+ 1277 0076 00       		.byte	0
+ 1278 0077 00       		.byte	0
+ 1279 0078 0B       		.uleb128 0xb
+ 1280 0079 16       		.uleb128 0x16
+ 1281 007a 00       		.byte	0
+ 1282 007b 03       		.uleb128 0x3
+ 1283 007c 0E       		.uleb128 0xe
+ 1284 007d 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 25
+
+
+ 1285 007e 0B       		.uleb128 0xb
+ 1286 007f 3B       		.uleb128 0x3b
+ 1287 0080 05       		.uleb128 0x5
+ 1288 0081 49       		.uleb128 0x49
+ 1289 0082 13       		.uleb128 0x13
+ 1290 0083 00       		.byte	0
+ 1291 0084 00       		.byte	0
+ 1292 0085 0C       		.uleb128 0xc
+ 1293 0086 0D       		.uleb128 0xd
+ 1294 0087 00       		.byte	0
+ 1295 0088 03       		.uleb128 0x3
+ 1296 0089 08       		.uleb128 0x8
+ 1297 008a 3A       		.uleb128 0x3a
+ 1298 008b 0B       		.uleb128 0xb
+ 1299 008c 3B       		.uleb128 0x3b
+ 1300 008d 05       		.uleb128 0x5
+ 1301 008e 49       		.uleb128 0x49
+ 1302 008f 13       		.uleb128 0x13
+ 1303 0090 38       		.uleb128 0x38
+ 1304 0091 0B       		.uleb128 0xb
+ 1305 0092 00       		.byte	0
+ 1306 0093 00       		.byte	0
+ 1307 0094 0D       		.uleb128 0xd
+ 1308 0095 13       		.uleb128 0x13
+ 1309 0096 01       		.byte	0x1
+ 1310 0097 0B       		.uleb128 0xb
+ 1311 0098 0B       		.uleb128 0xb
+ 1312 0099 3A       		.uleb128 0x3a
+ 1313 009a 0B       		.uleb128 0xb
+ 1314 009b 3B       		.uleb128 0x3b
+ 1315 009c 0B       		.uleb128 0xb
+ 1316 009d 01       		.uleb128 0x1
+ 1317 009e 13       		.uleb128 0x13
+ 1318 009f 00       		.byte	0
+ 1319 00a0 00       		.byte	0
+ 1320 00a1 0E       		.uleb128 0xe
+ 1321 00a2 0D       		.uleb128 0xd
+ 1322 00a3 00       		.byte	0
+ 1323 00a4 03       		.uleb128 0x3
+ 1324 00a5 0E       		.uleb128 0xe
+ 1325 00a6 3A       		.uleb128 0x3a
+ 1326 00a7 0B       		.uleb128 0xb
+ 1327 00a8 3B       		.uleb128 0x3b
+ 1328 00a9 0B       		.uleb128 0xb
+ 1329 00aa 49       		.uleb128 0x49
+ 1330 00ab 13       		.uleb128 0x13
+ 1331 00ac 38       		.uleb128 0x38
+ 1332 00ad 0B       		.uleb128 0xb
+ 1333 00ae 00       		.byte	0
+ 1334 00af 00       		.byte	0
+ 1335 00b0 0F       		.uleb128 0xf
+ 1336 00b1 2E       		.uleb128 0x2e
+ 1337 00b2 01       		.byte	0x1
+ 1338 00b3 3F       		.uleb128 0x3f
+ 1339 00b4 19       		.uleb128 0x19
+ 1340 00b5 03       		.uleb128 0x3
+ 1341 00b6 0E       		.uleb128 0xe
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 26
+
+
+ 1342 00b7 3A       		.uleb128 0x3a
+ 1343 00b8 0B       		.uleb128 0xb
+ 1344 00b9 3B       		.uleb128 0x3b
+ 1345 00ba 0B       		.uleb128 0xb
+ 1346 00bb 27       		.uleb128 0x27
+ 1347 00bc 19       		.uleb128 0x19
+ 1348 00bd 11       		.uleb128 0x11
+ 1349 00be 01       		.uleb128 0x1
+ 1350 00bf 12       		.uleb128 0x12
+ 1351 00c0 06       		.uleb128 0x6
+ 1352 00c1 40       		.uleb128 0x40
+ 1353 00c2 18       		.uleb128 0x18
+ 1354 00c3 9642     		.uleb128 0x2116
+ 1355 00c5 19       		.uleb128 0x19
+ 1356 00c6 00       		.byte	0
+ 1357 00c7 00       		.byte	0
+ 1358 00c8 10       		.uleb128 0x10
+ 1359 00c9 05       		.uleb128 0x5
+ 1360 00ca 00       		.byte	0
+ 1361 00cb 03       		.uleb128 0x3
+ 1362 00cc 0E       		.uleb128 0xe
+ 1363 00cd 3A       		.uleb128 0x3a
+ 1364 00ce 0B       		.uleb128 0xb
+ 1365 00cf 3B       		.uleb128 0x3b
+ 1366 00d0 0B       		.uleb128 0xb
+ 1367 00d1 49       		.uleb128 0x49
+ 1368 00d2 13       		.uleb128 0x13
+ 1369 00d3 02       		.uleb128 0x2
+ 1370 00d4 18       		.uleb128 0x18
+ 1371 00d5 00       		.byte	0
+ 1372 00d6 00       		.byte	0
+ 1373 00d7 11       		.uleb128 0x11
+ 1374 00d8 34       		.uleb128 0x34
+ 1375 00d9 00       		.byte	0
+ 1376 00da 03       		.uleb128 0x3
+ 1377 00db 0E       		.uleb128 0xe
+ 1378 00dc 3A       		.uleb128 0x3a
+ 1379 00dd 0B       		.uleb128 0xb
+ 1380 00de 3B       		.uleb128 0x3b
+ 1381 00df 0B       		.uleb128 0xb
+ 1382 00e0 49       		.uleb128 0x49
+ 1383 00e1 13       		.uleb128 0x13
+ 1384 00e2 02       		.uleb128 0x2
+ 1385 00e3 18       		.uleb128 0x18
+ 1386 00e4 00       		.byte	0
+ 1387 00e5 00       		.byte	0
+ 1388 00e6 00       		.byte	0
+ 1389              		.section	.debug_aranges,"",%progbits
+ 1390 0000 1C000000 		.4byte	0x1c
+ 1391 0004 0200     		.2byte	0x2
+ 1392 0006 00000000 		.4byte	.Ldebug_info0
+ 1393 000a 04       		.byte	0x4
+ 1394 000b 00       		.byte	0
+ 1395 000c 0000     		.2byte	0
+ 1396 000e 0000     		.2byte	0
+ 1397 0010 00000000 		.4byte	.LFB35
+ 1398 0014 B4000000 		.4byte	.LFE35-.LFB35
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 27
+
+
+ 1399 0018 00000000 		.4byte	0
+ 1400 001c 00000000 		.4byte	0
+ 1401              		.section	.debug_ranges,"",%progbits
+ 1402              	.Ldebug_ranges0:
+ 1403 0000 00000000 		.4byte	.LFB35
+ 1404 0004 B4000000 		.4byte	.LFE35
+ 1405 0008 00000000 		.4byte	0
+ 1406 000c 00000000 		.4byte	0
+ 1407              		.section	.debug_line,"",%progbits
+ 1408              	.Ldebug_line0:
+ 1409 0000 AD000000 		.section	.debug_str,"MS",%progbits,1
+ 1409      02008900 
+ 1409      00000201 
+ 1409      FB0E0D00 
+ 1409      01010101 
+ 1410              	.LASF274:
+ 1411 0000 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_CHAR_RESPONSE\000"
+ 1411      455F4556 
+ 1411      545F5544 
+ 1411      53435F52 
+ 1411      4541445F 
+ 1412              	.LASF204:
+ 1413 0022 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_DISABLED\000"
+ 1413      455F4556 
+ 1413      545F4854 
+ 1413      53535F4E 
+ 1413      4F544946 
+ 1414              	.LASF16:
+ 1415 0047 73697A65 		.ascii	"sizetype\000"
+ 1415      74797065 
+ 1415      00
+ 1416              	.LASF272:
+ 1417 0050 4359424C 		.ascii	"CYBLE_EVT_UDSC_INDICATION\000"
+ 1417      455F4556 
+ 1417      545F5544 
+ 1417      53435F49 
+ 1417      4E444943 
+ 1418              	.LASF131:
+ 1419 006a 4359424C 		.ascii	"CYBLE_EVT_CGMSC_INDICATION\000"
+ 1419      455F4556 
+ 1419      545F4347 
+ 1419      4D53435F 
+ 1419      494E4449 
+ 1420              	.LASF149:
+ 1421 0085 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_DESCR_RESPONSE\000"
+ 1421      455F4556 
+ 1421      545F4350 
+ 1421      53435F52 
+ 1421      4541445F 
+ 1422              	.LASF252:
+ 1423 00a8 4359424C 		.ascii	"CYBLE_EVT_RTUSS_WRITE_CHAR_CMD\000"
+ 1423      455F4556 
+ 1423      545F5254 
+ 1423      5553535F 
+ 1423      57524954 
+ 1424              	.LASF80:
+ 1425 00c7 63686172 		.ascii	"charIndex\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 28
+
+
+ 1425      496E6465 
+ 1425      7800
+ 1426              	.LASF147:
+ 1427 00d1 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_CHAR_RESPONSE\000"
+ 1427      455F4556 
+ 1427      545F4350 
+ 1427      53435F52 
+ 1427      4541445F 
+ 1428              	.LASF160:
+ 1429 00f3 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_CHAR_RESPONSE\000"
+ 1429      455F4556 
+ 1429      545F4353 
+ 1429      4353435F 
+ 1429      52454144 
+ 1430              	.LASF136:
+ 1431 0116 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_DESCR_RESPONSE\000"
+ 1431      455F4556 
+ 1431      545F4347 
+ 1431      4D53435F 
+ 1431      57524954 
+ 1432              	.LASF175:
+ 1433 013b 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_DISABLED\000"
+ 1433      455F4556 
+ 1433      545F474C 
+ 1433      53535F4E 
+ 1433      4F544946 
+ 1434              	.LASF280:
+ 1435 0160 6576656E 		.ascii	"eventParam\000"
+ 1435      74506172 
+ 1435      616D00
+ 1436              	.LASF122:
+ 1437 016b 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_CHAR_RESPONSE\000"
+ 1437      455F4556 
+ 1437      545F424C 
+ 1437      53435F52 
+ 1437      4541445F 
+ 1438              	.LASF30:
+ 1439 018d 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 1439      455F4556 
+ 1439      545F4741 
+ 1439      505F4445 
+ 1439      56494345 
+ 1440              	.LASF37:
+ 1441 01ac 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1441      455F4556 
+ 1441      545F4741 
+ 1441      54545F43 
+ 1441      4F4E4E45 
+ 1442              	.LASF180:
+ 1443 01c7 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_CHAR_RESPONSE\000"
+ 1443      455F4556 
+ 1443      545F474C 
+ 1443      53435F57 
+ 1443      52495445 
+ 1444              	.LASF11:
+ 1445 01ea 75696E74 		.ascii	"uint32\000"
+ 1445      333200
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 29
+
+
+ 1446              	.LASF93:
+ 1447 01f1 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DISCOVERY_FAILED\000"
+ 1447      455F4556 
+ 1447      545F4741 
+ 1447      5454435F 
+ 1447      44455343 
+ 1448              	.LASF251:
+ 1449 0218 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_DESCR_RESPONSE\000"
+ 1449      455F4556 
+ 1449      545F5253 
+ 1449      4353435F 
+ 1449      57524954 
+ 1450              	.LASF220:
+ 1451 023d 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_DISABLED\000"
+ 1451      455F4556 
+ 1451      545F4C4E 
+ 1451      53535F49 
+ 1451      4E444943 
+ 1452              	.LASF167:
+ 1453 0260 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_CHAR_RESPONSE\000"
+ 1453      455F4556 
+ 1453      545F4354 
+ 1453      53435F52 
+ 1453      4541445F 
+ 1454              	.LASF97:
+ 1455 0282 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_COMPLETE\000"
+ 1455      455F4556 
+ 1455      545F4741 
+ 1455      5454435F 
+ 1455      53525643 
+ 1456              	.LASF245:
+ 1457 02aa 4359424C 		.ascii	"CYBLE_EVT_RSCSS_CHAR_WRITE\000"
+ 1457      455F4556 
+ 1457      545F5253 
+ 1457      4353535F 
+ 1457      43484152 
+ 1458              	.LASF78:
+ 1459 02c5 4359424C 		.ascii	"CYBLE_TPS_CHAR_INDEX_T\000"
+ 1459      455F5450 
+ 1459      535F4348 
+ 1459      41525F49 
+ 1459      4E444558 
+ 1460              	.LASF277:
+ 1461 02dc 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_DESCR_RESPONSE\000"
+ 1461      455F4556 
+ 1461      545F5544 
+ 1461      53435F57 
+ 1461      52495445 
+ 1462              	.LASF194:
+ 1463 0300 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_DESCR_RESPONSE\000"
+ 1463      455F4556 
+ 1463      545F4849 
+ 1463      4453435F 
+ 1463      57524954 
+ 1464              	.LASF107:
+ 1465 0325 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_DESCR_RESPONSE\000"
+ 1465      455F4556 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 30
+
+
+ 1465      545F414E 
+ 1465      53435F52 
+ 1465      4541445F 
+ 1466              	.LASF208:
+ 1467 0348 4359424C 		.ascii	"CYBLE_EVT_HTSS_CHAR_WRITE\000"
+ 1467      455F4556 
+ 1467      545F4854 
+ 1467      53535F43 
+ 1467      4841525F 
+ 1468              	.LASF92:
+ 1469 0362 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_FAILED\000"
+ 1469      455F4556 
+ 1469      545F4741 
+ 1469      5454435F 
+ 1469      43484152 
+ 1470              	.LASF57:
+ 1471 0388 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 1471      455F4556 
+ 1471      545F4741 
+ 1471      5454535F 
+ 1471      44415441 
+ 1472              	.LASF66:
+ 1473 03ac 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1473      455F4556 
+ 1473      545F4C32 
+ 1473      4341505F 
+ 1473      43424643 
+ 1474              	.LASF75:
+ 1475 03cf 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 1475      455F4741 
+ 1475      54545F56 
+ 1475      414C5545 
+ 1475      5F5400
+ 1476              	.LASF154:
+ 1477 03e2 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_ENABLED\000"
+ 1477      455F4556 
+ 1477      545F4353 
+ 1477      4353535F 
+ 1477      494E4449 
+ 1478              	.LASF225:
+ 1479 0405 4359424C 		.ascii	"CYBLE_EVT_LNSC_INDICATION\000"
+ 1479      455F4556 
+ 1479      545F4C4E 
+ 1479      53435F49 
+ 1479      4E444943 
+ 1480              	.LASF236:
+ 1481 041f 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_CHAR_RESPONSE\000"
+ 1481      455F4556 
+ 1481      545F5041 
+ 1481      5353435F 
+ 1481      52454144 
+ 1482              	.LASF115:
+ 1483 0442 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_ENABLED\000"
+ 1483      455F4556 
+ 1483      545F424C 
+ 1483      53535F49 
+ 1483      4E444943 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 31
+
+
+ 1484              	.LASF121:
+ 1485 0464 4359424C 		.ascii	"CYBLE_EVT_BLSC_NOTIFICATION\000"
+ 1485      455F4556 
+ 1485      545F424C 
+ 1485      53435F4E 
+ 1485      4F544946 
+ 1486              	.LASF159:
+ 1487 0480 4359424C 		.ascii	"CYBLE_EVT_CSCSC_INDICATION\000"
+ 1487      455F4556 
+ 1487      545F4353 
+ 1487      4353435F 
+ 1487      494E4449 
+ 1488              	.LASF54:
+ 1489 049b 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1489      455F4556 
+ 1489      545F4741 
+ 1489      5454435F 
+ 1489      48414E44 
+ 1490              	.LASF24:
+ 1491 04bc 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1491      455F4556 
+ 1491      545F4741 
+ 1491      505F4155 
+ 1491      54485F52 
+ 1492              	.LASF12:
+ 1493 04d3 696E7438 		.ascii	"int8\000"
+ 1493      00
+ 1494              	.LASF99:
+ 1495 04d8 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_COMPLETE\000"
+ 1495      455F4556 
+ 1495      545F4741 
+ 1495      5454435F 
+ 1495      43484152 
+ 1496              	.LASF73:
+ 1497 0500 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 1497      455F434F 
+ 1497      4E4E5F48 
+ 1497      414E444C 
+ 1497      455F5400 
+ 1498              	.LASF200:
+ 1499 0514 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_CHAR_RESPONSE\000"
+ 1499      455F4556 
+ 1499      545F4852 
+ 1499      53435F57 
+ 1499      52495445 
+ 1500              	.LASF158:
+ 1501 0537 4359424C 		.ascii	"CYBLE_EVT_CSCSC_NOTIFICATION\000"
+ 1501      455F4556 
+ 1501      545F4353 
+ 1501      4353435F 
+ 1501      4E4F5449 
+ 1502              	.LASF71:
+ 1503 0554 62644861 		.ascii	"bdHandle\000"
+ 1503      6E646C65 
+ 1503      00
+ 1504              	.LASF127:
+ 1505 055d 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_CONFIRMED\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 32
+
+
+ 1505      455F4556 
+ 1505      545F4347 
+ 1505      4D53535F 
+ 1505      494E4449 
+ 1506              	.LASF123:
+ 1507 0582 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_DESCR_RESPONSE\000"
+ 1507      455F4556 
+ 1507      545F424C 
+ 1507      53435F52 
+ 1507      4541445F 
+ 1508              	.LASF140:
+ 1509 05a5 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_DISABLED\000"
+ 1509      455F4556 
+ 1509      545F4350 
+ 1509      53535F49 
+ 1509      4E444943 
+ 1510              	.LASF139:
+ 1511 05c8 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_ENABLED\000"
+ 1511      455F4556 
+ 1511      545F4350 
+ 1511      53535F49 
+ 1511      4E444943 
+ 1512              	.LASF222:
+ 1513 05ea 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_ENABLED\000"
+ 1513      455F4556 
+ 1513      545F4C4E 
+ 1513      53535F4E 
+ 1513      4F544946 
+ 1514              	.LASF50:
+ 1515 060e 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1515      455F4556 
+ 1515      545F4741 
+ 1515      5454535F 
+ 1515      57524954 
+ 1516              	.LASF150:
+ 1517 062c 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_DESCR_RESPONSE\000"
+ 1517      455F4556 
+ 1517      545F4350 
+ 1517      53435F57 
+ 1517      52495445 
+ 1518              	.LASF4:
+ 1519 0650 6C6F6E67 		.ascii	"long int\000"
+ 1519      20696E74 
+ 1519      00
+ 1520              	.LASF155:
+ 1521 0659 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_DISABLED\000"
+ 1521      455F4556 
+ 1521      545F4353 
+ 1521      4353535F 
+ 1521      494E4449 
+ 1522              	.LASF237:
+ 1523 067d 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_CHAR_RESPONSE\000"
+ 1523      455F4556 
+ 1523      545F5041 
+ 1523      5353435F 
+ 1523      57524954 
+ 1524              	.LASF268:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 33
+
+
+ 1525 06a1 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_CONFIRMED\000"
+ 1525      455F4556 
+ 1525      545F5544 
+ 1525      53535F49 
+ 1525      4E444943 
+ 1526              	.LASF85:
+ 1527 06c5 4359424C 		.ascii	"CYBLE_LONG_TERM_KEY_REQUEST_REPLY\000"
+ 1527      455F4C4F 
+ 1527      4E475F54 
+ 1527      45524D5F 
+ 1527      4B45595F 
+ 1528              	.LASF18:
+ 1529 06e7 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1529      455F4556 
+ 1529      545F5354 
+ 1529      41434B5F 
+ 1529      4F4E00
+ 1530              	.LASF248:
+ 1531 06fa 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_CHAR_RESPONSE\000"
+ 1531      455F4556 
+ 1531      545F5253 
+ 1531      4353435F 
+ 1531      52454144 
+ 1532              	.LASF203:
+ 1533 071d 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_ENABLED\000"
+ 1533      455F4556 
+ 1533      545F4854 
+ 1533      53535F4E 
+ 1533      4F544946 
+ 1534              	.LASF60:
+ 1535 0741 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1535      455F4556 
+ 1535      545F4C32 
+ 1535      4341505F 
+ 1535      434F4D4D 
+ 1536              	.LASF90:
+ 1537 075d 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_FAILED\000"
+ 1537      455F4556 
+ 1537      545F4741 
+ 1537      5454435F 
+ 1537      53525643 
+ 1538              	.LASF187:
+ 1539 0783 4359424C 		.ascii	"CYBLE_EVT_HIDSS_SUSPEND\000"
+ 1539      455F4556 
+ 1539      545F4849 
+ 1539      4453535F 
+ 1539      53555350 
+ 1540              	.LASF0:
+ 1541 079b 7369676E 		.ascii	"signed char\000"
+ 1541      65642063 
+ 1541      68617200 
+ 1542              	.LASF113:
+ 1543 07a7 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_DESCR_RESPONSE\000"
+ 1543      455F4556 
+ 1543      545F4241 
+ 1543      53435F52 
+ 1543      4541445F 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 34
+
+
+ 1544              	.LASF20:
+ 1545 07ca 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 1545      455F4556 
+ 1545      545F4841 
+ 1545      52445741 
+ 1545      52455F45 
+ 1546              	.LASF41:
+ 1547 07e3 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1547      455F4556 
+ 1547      545F4741 
+ 1547      5454435F 
+ 1547      52454144 
+ 1548              	.LASF242:
+ 1549 080a 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_ENABLED\000"
+ 1549      455F4556 
+ 1549      545F5253 
+ 1549      4353535F 
+ 1549      494E4449 
+ 1550              	.LASF1:
+ 1551 082d 756E7369 		.ascii	"unsigned char\000"
+ 1551      676E6564 
+ 1551      20636861 
+ 1551      7200
+ 1552              	.LASF40:
+ 1553 083b 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1553      455F4556 
+ 1553      545F4741 
+ 1553      5454435F 
+ 1553      5843484E 
+ 1554              	.LASF141:
+ 1555 0859 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_CONFIRMED\000"
+ 1555      455F4556 
+ 1555      545F4350 
+ 1555      53535F49 
+ 1555      4E444943 
+ 1556              	.LASF138:
+ 1557 087d 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_DISABLED\000"
+ 1557      455F4556 
+ 1557      545F4350 
+ 1557      53535F4E 
+ 1557      4F544946 
+ 1558              	.LASF247:
+ 1559 08a2 4359424C 		.ascii	"CYBLE_EVT_RSCSC_INDICATION\000"
+ 1559      455F4556 
+ 1559      545F5253 
+ 1559      4353435F 
+ 1559      494E4449 
+ 1560              	.LASF67:
+ 1561 08bd 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 1561      455F4556 
+ 1561      545F4C32 
+ 1561      4341505F 
+ 1561      43424643 
+ 1562              	.LASF89:
+ 1563 08e0 4359424C 		.ascii	"CYBLE_EVT_GATTC_INDICATION\000"
+ 1563      455F4556 
+ 1563      545F4741 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 35
+
+
+ 1563      5454435F 
+ 1563      494E4449 
+ 1564              	.LASF254:
+ 1565 08fb 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_ENABLED\000"
+ 1565      455F4556 
+ 1565      545F5343 
+ 1565      5053535F 
+ 1565      4E4F5449 
+ 1566              	.LASF64:
+ 1567 0920 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1567      455F4556 
+ 1567      545F4C32 
+ 1567      4341505F 
+ 1567      43424643 
+ 1568              	.LASF44:
+ 1569 0941 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 1569      455F4556 
+ 1569      545F4741 
+ 1569      5454435F 
+ 1569      46494E44 
+ 1570              	.LASF259:
+ 1571 0968 4359424C 		.ascii	"CYBLE_EVT_SCPSC_WRITE_DESCR_RESPONSE\000"
+ 1571      455F4556 
+ 1571      545F5343 
+ 1571      5053435F 
+ 1571      57524954 
+ 1572              	.LASF15:
+ 1573 098d 63686172 		.ascii	"char\000"
+ 1573      00
+ 1574              	.LASF262:
+ 1575 0992 4359424C 		.ascii	"CYBLE_EVT_TPSC_NOTIFICATION\000"
+ 1575      455F4556 
+ 1575      545F5450 
+ 1575      53435F4E 
+ 1575      4F544946 
+ 1576              	.LASF47:
+ 1577 09ae 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1577      455F4556 
+ 1577      545F4741 
+ 1577      5454435F 
+ 1577      52454144 
+ 1578              	.LASF17:
+ 1579 09cd 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1579      455F4556 
+ 1579      545F484F 
+ 1579      53545F49 
+ 1579      4E56414C 
+ 1580              	.LASF181:
+ 1581 09e4 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_DESCR_RESPONSE\000"
+ 1581      455F4556 
+ 1581      545F474C 
+ 1581      53435F52 
+ 1581      4541445F 
+ 1582              	.LASF77:
+ 1583 0a07 4359424C 		.ascii	"CYBLE_TPS_CHAR_COUNT\000"
+ 1583      455F5450 
+ 1583      535F4348 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 36
+
+
+ 1583      41525F43 
+ 1583      4F554E54 
+ 1584              	.LASF46:
+ 1585 0a1c 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 1585      455F4556 
+ 1585      545F4741 
+ 1585      5454435F 
+ 1585      52454144 
+ 1586              	.LASF206:
+ 1587 0a3a 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_DISABLED\000"
+ 1587      455F4556 
+ 1587      545F4854 
+ 1587      53535F49 
+ 1587      4E444943 
+ 1588              	.LASF253:
+ 1589 0a5d 4359424C 		.ascii	"CYBLE_EVT_RTUSC_READ_CHAR_RESPONSE\000"
+ 1589      455F4556 
+ 1589      545F5254 
+ 1589      5553435F 
+ 1589      52454144 
+ 1590              	.LASF53:
+ 1591 0a80 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1591      455F4556 
+ 1591      545F4741 
+ 1591      5454435F 
+ 1591      45584543 
+ 1592              	.LASF267:
+ 1593 0a9f 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_DISABLED\000"
+ 1593      455F4556 
+ 1593      545F5544 
+ 1593      53535F49 
+ 1593      4E444943 
+ 1594              	.LASF144:
+ 1595 0ac2 4359424C 		.ascii	"CYBLE_EVT_CPSS_CHAR_WRITE\000"
+ 1595      455F4556 
+ 1595      545F4350 
+ 1595      53535F43 
+ 1595      4841525F 
+ 1596              	.LASF195:
+ 1597 0adc 4359424C 		.ascii	"CYBLE_EVT_HRSS_ENERGY_EXPENDED_RESET\000"
+ 1597      455F4556 
+ 1597      545F4852 
+ 1597      53535F45 
+ 1597      4E455247 
+ 1598              	.LASF118:
+ 1599 0b01 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_ENABLED\000"
+ 1599      455F4556 
+ 1599      545F424C 
+ 1599      53535F4E 
+ 1599      4F544946 
+ 1600              	.LASF249:
+ 1601 0b25 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_CHAR_RESPONSE\000"
+ 1601      455F4556 
+ 1601      545F5253 
+ 1601      4353435F 
+ 1601      57524954 
+ 1602              	.LASF265:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 37
+
+
+ 1603 0b49 4359424C 		.ascii	"CYBLE_EVT_TPSC_WRITE_DESCR_RESPONSE\000"
+ 1603      455F4556 
+ 1603      545F5450 
+ 1603      53435F57 
+ 1603      52495445 
+ 1604              	.LASF153:
+ 1605 0b6d 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_DISABLED\000"
+ 1605      455F4556 
+ 1605      545F4353 
+ 1605      4353535F 
+ 1605      4E4F5449 
+ 1606              	.LASF164:
+ 1607 0b93 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_ENABLED\000"
+ 1607      455F4556 
+ 1607      545F4354 
+ 1607      53535F4E 
+ 1607      4F544946 
+ 1608              	.LASF243:
+ 1609 0bb7 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_DISABLED\000"
+ 1609      455F4556 
+ 1609      545F5253 
+ 1609      4353535F 
+ 1609      494E4449 
+ 1610              	.LASF216:
+ 1611 0bdb 4359424C 		.ascii	"CYBLE_EVT_LLSS_WRITE_CHAR_REQ\000"
+ 1611      455F4556 
+ 1611      545F4C4C 
+ 1611      53535F57 
+ 1611      52495445 
+ 1612              	.LASF201:
+ 1613 0bf9 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_DESCR_RESPONSE\000"
+ 1613      455F4556 
+ 1613      545F4852 
+ 1613      53435F52 
+ 1613      4541445F 
+ 1614              	.LASF152:
+ 1615 0c1c 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_ENABLED\000"
+ 1615      455F4556 
+ 1615      545F4353 
+ 1615      4353535F 
+ 1615      4E4F5449 
+ 1616              	.LASF120:
+ 1617 0c41 4359424C 		.ascii	"CYBLE_EVT_BLSC_INDICATION\000"
+ 1617      455F4556 
+ 1617      545F424C 
+ 1617      53435F49 
+ 1617      4E444943 
+ 1618              	.LASF189:
+ 1619 0c5b 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_CHAR_WRITE\000"
+ 1619      455F4556 
+ 1619      545F4849 
+ 1619      4453535F 
+ 1619      5245504F 
+ 1620              	.LASF228:
+ 1621 0c7d 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_CHAR_RESPONSE\000"
+ 1621      455F4556 
+ 1621      545F4C4E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 38
+
+
+ 1621      53435F57 
+ 1621      52495445 
+ 1622              	.LASF59:
+ 1623 0ca0 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 1623      455F4556 
+ 1623      545F4C32 
+ 1623      4341505F 
+ 1623      434F4E4E 
+ 1624              	.LASF106:
+ 1625 0cc6 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_CHAR_RESPONSE\000"
+ 1625      455F4556 
+ 1625      545F414E 
+ 1625      53435F57 
+ 1625      52495445 
+ 1626              	.LASF270:
+ 1627 0ce9 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_DISABLED\000"
+ 1627      455F4556 
+ 1627      545F5544 
+ 1627      53535F4E 
+ 1627      4F544946 
+ 1628              	.LASF271:
+ 1629 0d0e 4359424C 		.ascii	"CYBLE_EVT_UDSS_WRITE_CHAR\000"
+ 1629      455F4556 
+ 1629      545F5544 
+ 1629      53535F57 
+ 1629      52495445 
+ 1630              	.LASF196:
+ 1631 0d28 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_ENABLED\000"
+ 1631      455F4556 
+ 1631      545F4852 
+ 1631      53535F4E 
+ 1631      4F544946 
+ 1632              	.LASF282:
+ 1633 0d4c 2E5C7470 		.ascii	".\\tps.c\000"
+ 1633      732E6300 
+ 1634              	.LASF27:
+ 1635 0d54 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1635      455F4556 
+ 1635      545F4741 
+ 1635      505F4155 
+ 1635      54485F43 
+ 1636              	.LASF238:
+ 1637 0d70 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_DESCR_RESPONSE\000"
+ 1637      455F4556 
+ 1637      545F5041 
+ 1637      5353435F 
+ 1637      52454144 
+ 1638              	.LASF28:
+ 1639 0d94 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1639      455F4556 
+ 1639      545F4741 
+ 1639      505F4155 
+ 1639      54485F46 
+ 1640              	.LASF188:
+ 1641 0dae 4359424C 		.ascii	"CYBLE_EVT_HIDSS_EXIT_SUSPEND\000"
+ 1641      455F4556 
+ 1641      545F4849 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 39
+
+
+ 1641      4453535F 
+ 1641      45584954 
+ 1642              	.LASF284:
+ 1643 0dcb 54707353 		.ascii	"TpsServiceAppEventHandler\000"
+ 1643      65727669 
+ 1643      63654170 
+ 1643      70457665 
+ 1643      6E744861 
+ 1644              	.LASF169:
+ 1645 0de5 4359424C 		.ascii	"CYBLE_EVT_CTSC_WRITE_DESCR_RESPONSE\000"
+ 1645      455F4556 
+ 1645      545F4354 
+ 1645      53435F57 
+ 1645      52495445 
+ 1646              	.LASF241:
+ 1647 0e09 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_DISABLED\000"
+ 1647      455F4556 
+ 1647      545F5253 
+ 1647      4353535F 
+ 1647      4E4F5449 
+ 1648              	.LASF192:
+ 1649 0e2f 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_CHAR_RESPONSE\000"
+ 1649      455F4556 
+ 1649      545F4849 
+ 1649      4453435F 
+ 1649      57524954 
+ 1650              	.LASF5:
+ 1651 0e53 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1651      20756E73 
+ 1651      69676E65 
+ 1651      6420696E 
+ 1651      7400
+ 1652              	.LASF215:
+ 1653 0e65 4359424C 		.ascii	"CYBLE_EVT_IASS_WRITE_CHAR_CMD\000"
+ 1653      455F4556 
+ 1653      545F4941 
+ 1653      53535F57 
+ 1653      52495445 
+ 1654              	.LASF232:
+ 1655 0e83 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_ENABLED\000"
+ 1655      455F4556 
+ 1655      545F5041 
+ 1655      5353535F 
+ 1655      4E4F5449 
+ 1656              	.LASF235:
+ 1657 0ea8 4359424C 		.ascii	"CYBLE_EVT_PASSC_NOTIFICATION\000"
+ 1657      455F4556 
+ 1657      545F5041 
+ 1657      5353435F 
+ 1657      4E4F5449 
+ 1658              	.LASF105:
+ 1659 0ec5 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_CHAR_RESPONSE\000"
+ 1659      455F4556 
+ 1659      545F414E 
+ 1659      53435F52 
+ 1659      4541445F 
+ 1660              	.LASF76:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 40
+
+
+ 1661 0ee7 4359424C 		.ascii	"CYBLE_TPS_TX_POWER_LEVEL\000"
+ 1661      455F5450 
+ 1661      535F5458 
+ 1661      5F504F57 
+ 1661      45525F4C 
+ 1662              	.LASF109:
+ 1663 0f00 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_ENABLED\000"
+ 1663      455F4556 
+ 1663      545F4241 
+ 1663      53535F4E 
+ 1663      4F544946 
+ 1664              	.LASF234:
+ 1665 0f24 4359424C 		.ascii	"CYBLE_EVT_PASSS_WRITE_CHAR\000"
+ 1665      455F4556 
+ 1665      545F5041 
+ 1665      5353535F 
+ 1665      57524954 
+ 1666              	.LASF148:
+ 1667 0f3f 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_CHAR_RESPONSE\000"
+ 1667      455F4556 
+ 1667      545F4350 
+ 1667      53435F57 
+ 1667      52495445 
+ 1668              	.LASF33:
+ 1669 0f62 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1669      455F4556 
+ 1669      545F4741 
+ 1669      505F434F 
+ 1669      4E4E4543 
+ 1670              	.LASF133:
+ 1671 0f8b 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_CHAR_RESPONSE\000"
+ 1671      455F4556 
+ 1671      545F4347 
+ 1671      4D53435F 
+ 1671      52454144 
+ 1672              	.LASF161:
+ 1673 0fae 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_CHAR_RESPONSE\000"
+ 1673      455F4556 
+ 1673      545F4353 
+ 1673      4353435F 
+ 1673      57524954 
+ 1674              	.LASF63:
+ 1675 0fd2 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1675      455F4556 
+ 1675      545F4C32 
+ 1675      4341505F 
+ 1675      43424643 
+ 1676              	.LASF157:
+ 1677 0ff3 4359424C 		.ascii	"CYBLE_EVT_CSCSS_CHAR_WRITE\000"
+ 1677      455F4556 
+ 1677      545F4353 
+ 1677      4353535F 
+ 1677      43484152 
+ 1678              	.LASF25:
+ 1679 100e 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1679      455F4556 
+ 1679      545F4741 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 41
+
+
+ 1679      505F5041 
+ 1679      53534B45 
+ 1680              	.LASF223:
+ 1681 1032 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_DISABLED\000"
+ 1681      455F4556 
+ 1681      545F4C4E 
+ 1681      53535F4E 
+ 1681      4F544946 
+ 1682              	.LASF142:
+ 1683 1057 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_ENABLED\000"
+ 1683      455F4556 
+ 1683      545F4350 
+ 1683      53535F42 
+ 1683      524F4144 
+ 1684              	.LASF285:
+ 1685 1078 43686172 		.ascii	"CharValue\000"
+ 1685      56616C75 
+ 1685      6500
+ 1686              	.LASF209:
+ 1687 1082 4359424C 		.ascii	"CYBLE_EVT_HTSC_NOTIFICATION\000"
+ 1687      455F4556 
+ 1687      545F4854 
+ 1687      53435F4E 
+ 1687      4F544946 
+ 1688              	.LASF6:
+ 1689 109e 6C6F6E67 		.ascii	"long long int\000"
+ 1689      206C6F6E 
+ 1689      6720696E 
+ 1689      7400
+ 1690              	.LASF263:
+ 1691 10ac 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_CHAR_RESPONSE\000"
+ 1691      455F4556 
+ 1691      545F5450 
+ 1691      53435F52 
+ 1691      4541445F 
+ 1692              	.LASF95:
+ 1693 10ce 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DUPLICATION\000"
+ 1693      455F4556 
+ 1693      545F4741 
+ 1693      5454435F 
+ 1693      43484152 
+ 1694              	.LASF174:
+ 1695 10ef 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_ENABLED\000"
+ 1695      455F4556 
+ 1695      545F474C 
+ 1695      53535F4E 
+ 1695      4F544946 
+ 1696              	.LASF125:
+ 1697 1113 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_ENABLED\000"
+ 1697      455F4556 
+ 1697      545F4347 
+ 1697      4D53535F 
+ 1697      494E4449 
+ 1698              	.LASF14:
+ 1699 1136 646F7562 		.ascii	"double\000"
+ 1699      6C6500
+ 1700              	.LASF69:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 42
+
+
+ 1701 113d 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 1701      455F4556 
+ 1701      545F5045 
+ 1701      4E44494E 
+ 1701      475F464C 
+ 1702              	.LASF98:
+ 1703 115b 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_COMPLETE\000"
+ 1703      455F4556 
+ 1703      545F4741 
+ 1703      5454435F 
+ 1703      494E434C 
+ 1704              	.LASF230:
+ 1705 1183 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_DESCR_RESPONSE\000"
+ 1705      455F4556 
+ 1705      545F4C4E 
+ 1705      53435F57 
+ 1705      52495445 
+ 1706              	.LASF217:
+ 1707 11a7 4359424C 		.ascii	"CYBLE_EVT_LLSC_READ_CHAR_RESPONSE\000"
+ 1707      455F4556 
+ 1707      545F4C4C 
+ 1707      53435F52 
+ 1707      4541445F 
+ 1708              	.LASF156:
+ 1709 11c9 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_CONFIRMATION\000"
+ 1709      455F4556 
+ 1709      545F4353 
+ 1709      4353535F 
+ 1709      494E4449 
+ 1710              	.LASF13:
+ 1711 11f1 666C6F61 		.ascii	"float\000"
+ 1711      7400
+ 1712              	.LASF257:
+ 1713 11f7 4359424C 		.ascii	"CYBLE_EVT_SCPSC_NOTIFICATION\000"
+ 1713      455F4556 
+ 1713      545F5343 
+ 1713      5053435F 
+ 1713      4E4F5449 
+ 1714              	.LASF186:
+ 1715 1214 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_MODE_ENTER\000"
+ 1715      455F4556 
+ 1715      545F4849 
+ 1715      4453535F 
+ 1715      5245504F 
+ 1716              	.LASF184:
+ 1717 1236 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_DISABLED\000"
+ 1717      455F4556 
+ 1717      545F4849 
+ 1717      4453535F 
+ 1717      4E4F5449 
+ 1718              	.LASF279:
+ 1719 125c 6576656E 		.ascii	"event\000"
+ 1719      7400
+ 1720              	.LASF273:
+ 1721 1262 4359424C 		.ascii	"CYBLE_EVT_UDSC_NOTIFICATION\000"
+ 1721      455F4556 
+ 1721      545F5544 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 43
+
+
+ 1721      53435F4E 
+ 1721      4F544946 
+ 1722              	.LASF8:
+ 1723 127e 756E7369 		.ascii	"unsigned int\000"
+ 1723      676E6564 
+ 1723      20696E74 
+ 1723      00
+ 1724              	.LASF51:
+ 1725 128b 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1725      455F4556 
+ 1725      545F4741 
+ 1725      5454535F 
+ 1725      50524550 
+ 1726              	.LASF165:
+ 1727 12aa 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_DISABLED\000"
+ 1727      455F4556 
+ 1727      545F4354 
+ 1727      53535F4E 
+ 1727      4F544946 
+ 1728              	.LASF116:
+ 1729 12cf 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_DISABLED\000"
+ 1729      455F4556 
+ 1729      545F424C 
+ 1729      53535F49 
+ 1729      4E444943 
+ 1730              	.LASF255:
+ 1731 12f2 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_DISABLED\000"
+ 1731      455F4556 
+ 1731      545F5343 
+ 1731      5053535F 
+ 1731      4E4F5449 
+ 1732              	.LASF281:
+ 1733 1318 474E5520 		.ascii	"GNU C 4.8.4 20140526 (release) [ARM/embedded-4_8-br"
+ 1733      4320342E 
+ 1733      382E3420 
+ 1733      32303134 
+ 1733      30353236 
+ 1734 134b 616E6368 		.ascii	"anch revision 211358] -mcpu=cortex-m0 -mthumb -g -O"
+ 1734      20726576 
+ 1734      6973696F 
+ 1734      6E203231 
+ 1734      31333538 
+ 1735 137e 30202D66 		.ascii	"0 -ffunction-sections\000"
+ 1735      66756E63 
+ 1735      74696F6E 
+ 1735      2D736563 
+ 1735      74696F6E 
+ 1736              	.LASF83:
+ 1737 1394 4359424C 		.ascii	"CYBLE_AUTHENTICATION_REQUEST_REPLY\000"
+ 1737      455F4155 
+ 1737      5448454E 
+ 1737      54494341 
+ 1737      54494F4E 
+ 1738              	.LASF119:
+ 1739 13b7 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_DISABLED\000"
+ 1739      455F4556 
+ 1739      545F424C 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 44
+
+
+ 1739      53535F4E 
+ 1739      4F544946 
+ 1740              	.LASF212:
+ 1741 13dc 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_CHAR_RESPONSE\000"
+ 1741      455F4556 
+ 1741      545F4854 
+ 1741      53435F57 
+ 1741      52495445 
+ 1742              	.LASF70:
+ 1743 13ff 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1743      455F4556 
+ 1743      545F4D41 
+ 1743      5800
+ 1744              	.LASF34:
+ 1745 140d 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1745      455F4556 
+ 1745      545F4741 
+ 1745      50435F53 
+ 1745      43414E5F 
+ 1746              	.LASF101:
+ 1747 142c 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_ENABLED\000"
+ 1747      455F4556 
+ 1747      545F414E 
+ 1747      53535F4E 
+ 1747      4F544946 
+ 1748              	.LASF48:
+ 1749 1450 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1749      455F4556 
+ 1749      545F4741 
+ 1749      5454535F 
+ 1749      57524954 
+ 1750              	.LASF275:
+ 1751 146a 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_CHAR_RESPONSE\000"
+ 1751      455F4556 
+ 1751      545F5544 
+ 1751      53435F57 
+ 1751      52495445 
+ 1752              	.LASF26:
+ 1753 148d 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1753      455F4556 
+ 1753      545F4741 
+ 1753      505F5041 
+ 1753      53534B45 
+ 1754              	.LASF45:
+ 1755 14b3 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1755      455F4556 
+ 1755      545F4741 
+ 1755      5454435F 
+ 1755      52454144 
+ 1756              	.LASF146:
+ 1757 14cc 4359424C 		.ascii	"CYBLE_EVT_CPSC_INDICATION\000"
+ 1757      455F4556 
+ 1757      545F4350 
+ 1757      53435F49 
+ 1757      4E444943 
+ 1758              	.LASF170:
+ 1759 14e6 4359424C 		.ascii	"CYBLE_EVT_DISC_READ_CHAR_RESPONSE\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 45
+
+
+ 1759      455F4556 
+ 1759      545F4449 
+ 1759      53435F52 
+ 1759      4541445F 
+ 1760              	.LASF62:
+ 1761 1508 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1761      455F4556 
+ 1761      545F4C32 
+ 1761      4341505F 
+ 1761      43424643 
+ 1762              	.LASF213:
+ 1763 1526 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_DESCR_RESPONSE\000"
+ 1763      455F4556 
+ 1763      545F4854 
+ 1763      53435F52 
+ 1763      4541445F 
+ 1764              	.LASF278:
+ 1765 1549 4359424C 		.ascii	"CYBLE_DEBUG_EVT_BLESS_INT\000"
+ 1765      455F4445 
+ 1765      4255475F 
+ 1765      4556545F 
+ 1765      424C4553 
+ 1766              	.LASF176:
+ 1767 1563 4359424C 		.ascii	"CYBLE_EVT_GLSS_WRITE_CHAR\000"
+ 1767      455F4556 
+ 1767      545F474C 
+ 1767      53535F57 
+ 1767      52495445 
+ 1768              	.LASF128:
+ 1769 157d 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_ENABLED\000"
+ 1769      455F4556 
+ 1769      545F4347 
+ 1769      4D53535F 
+ 1769      4E4F5449 
+ 1770              	.LASF198:
+ 1771 15a2 4359424C 		.ascii	"CYBLE_EVT_HRSC_NOTIFICATION\000"
+ 1771      455F4556 
+ 1771      545F4852 
+ 1771      53435F4E 
+ 1771      4F544946 
+ 1772              	.LASF244:
+ 1773 15be 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_CONFIRMATION\000"
+ 1773      455F4556 
+ 1773      545F5253 
+ 1773      4353535F 
+ 1773      494E4449 
+ 1774              	.LASF193:
+ 1775 15e6 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_DESCR_RESPONSE\000"
+ 1775      455F4556 
+ 1775      545F4849 
+ 1775      4453435F 
+ 1775      52454144 
+ 1776              	.LASF199:
+ 1777 160a 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_CHAR_RESPONSE\000"
+ 1777      455F4556 
+ 1777      545F4852 
+ 1777      53435F52 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 46
+
+
+ 1777      4541445F 
+ 1778              	.LASF32:
+ 1779 162c 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1779      455F4556 
+ 1779      545F4741 
+ 1779      505F454E 
+ 1779      43525950 
+ 1780              	.LASF231:
+ 1781 1649 4359424C 		.ascii	"CYBLE_EVT_NDCSC_READ_CHAR_RESPONSE\000"
+ 1781      455F4556 
+ 1781      545F4E44 
+ 1781      4353435F 
+ 1781      52454144 
+ 1782              	.LASF96:
+ 1783 166c 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DUPLICATION\000"
+ 1783      455F4556 
+ 1783      545F4741 
+ 1783      5454435F 
+ 1783      44455343 
+ 1784              	.LASF39:
+ 1785 168e 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 1785      455F4556 
+ 1785      545F4741 
+ 1785      5454535F 
+ 1785      58434E48 
+ 1786              	.LASF269:
+ 1787 16ac 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_ENABLED\000"
+ 1787      455F4556 
+ 1787      545F5544 
+ 1787      53535F4E 
+ 1787      4F544946 
+ 1788              	.LASF221:
+ 1789 16d0 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_CONFIRMED\000"
+ 1789      455F4556 
+ 1789      545F4C4E 
+ 1789      53535F49 
+ 1789      4E444943 
+ 1790              	.LASF108:
+ 1791 16f4 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_DESCR_RESPONSE\000"
+ 1791      455F4556 
+ 1791      545F414E 
+ 1791      53435F57 
+ 1791      52495445 
+ 1792              	.LASF227:
+ 1793 1718 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_CHAR_RESPONSE\000"
+ 1793      455F4556 
+ 1793      545F4C4E 
+ 1793      53435F52 
+ 1793      4541445F 
+ 1794              	.LASF173:
+ 1795 173a 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_CONFIRMED\000"
+ 1795      455F4556 
+ 1795      545F474C 
+ 1795      53535F49 
+ 1795      4E444943 
+ 1796              	.LASF87:
+ 1797 175e 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_ENABLED\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 47
+
+
+ 1797      455F4556 
+ 1797      545F4741 
+ 1797      5454535F 
+ 1797      494E4449 
+ 1798              	.LASF7:
+ 1799 1781 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1799      206C6F6E 
+ 1799      6720756E 
+ 1799      7369676E 
+ 1799      65642069 
+ 1800              	.LASF19:
+ 1801 1798 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1801      455F4556 
+ 1801      545F5449 
+ 1801      4D454F55 
+ 1801      5400
+ 1802              	.LASF168:
+ 1803 17aa 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_DESCR_RESPONSE\000"
+ 1803      455F4556 
+ 1803      545F4354 
+ 1803      53435F52 
+ 1803      4541445F 
+ 1804              	.LASF283:
+ 1805 17cd 433A5C55 		.ascii	"C:\\Users\\msuro\\Documents\\Manhattan College\\Fal"
+ 1805      73657273 
+ 1805      5C6D7375 
+ 1805      726F5C44 
+ 1805      6F63756D 
+ 1806 17fb 6C203230 		.ascii	"l 2016\\Embedded Systems\\Project\\Project Files\\C"
+ 1806      31365C45 
+ 1806      6D626564 
+ 1806      64656420 
+ 1806      53797374 
+ 1807 182a 6C69656E 		.ascii	"lient and Server-Central\\Client and Server-Central"
+ 1807      7420616E 
+ 1807      64205365 
+ 1807      72766572 
+ 1807      2D43656E 
+ 1808 185c 2E637964 		.ascii	".cydsn\000"
+ 1808      736E00
+ 1809              	.LASF65:
+ 1810 1863 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1810      455F4556 
+ 1810      545F4C32 
+ 1810      4341505F 
+ 1810      43424643 
+ 1811              	.LASF81:
+ 1812 1882 76616C75 		.ascii	"value\000"
+ 1812      6500
+ 1813              	.LASF145:
+ 1814 1888 4359424C 		.ascii	"CYBLE_EVT_CPSC_NOTIFICATION\000"
+ 1814      455F4556 
+ 1814      545F4350 
+ 1814      53435F4E 
+ 1814      4F544946 
+ 1815              	.LASF124:
+ 1816 18a4 4359424C 		.ascii	"CYBLE_EVT_BLSC_WRITE_DESCR_RESPONSE\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 48
+
+
+ 1816      455F4556 
+ 1816      545F424C 
+ 1816      53435F57 
+ 1816      52495445 
+ 1817              	.LASF226:
+ 1818 18c8 4359424C 		.ascii	"CYBLE_EVT_LNSC_NOTIFICATION\000"
+ 1818      455F4556 
+ 1818      545F4C4E 
+ 1818      53435F4E 
+ 1818      4F544946 
+ 1819              	.LASF166:
+ 1820 18e4 4359424C 		.ascii	"CYBLE_EVT_CTSC_NOTIFICATION\000"
+ 1820      455F4556 
+ 1820      545F4354 
+ 1820      53435F4E 
+ 1820      4F544946 
+ 1821              	.LASF172:
+ 1822 1900 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_DISABLED\000"
+ 1822      455F4556 
+ 1822      545F474C 
+ 1822      53535F49 
+ 1822      4E444943 
+ 1823              	.LASF94:
+ 1824 1923 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DUPLICATION\000"
+ 1824      455F4556 
+ 1824      545F4741 
+ 1824      5454435F 
+ 1824      53525643 
+ 1825              	.LASF219:
+ 1826 1944 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_ENABLED\000"
+ 1826      455F4556 
+ 1826      545F4C4E 
+ 1826      53535F49 
+ 1826      4E444943 
+ 1827              	.LASF163:
+ 1828 1966 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_DESCR_RESPONSE\000"
+ 1828      455F4556 
+ 1828      545F4353 
+ 1828      4353435F 
+ 1828      57524954 
+ 1829              	.LASF79:
+ 1830 198b 636F6E6E 		.ascii	"connHandle\000"
+ 1830      48616E64 
+ 1830      6C6500
+ 1831              	.LASF110:
+ 1832 1996 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_DISABLED\000"
+ 1832      455F4556 
+ 1832      545F4241 
+ 1832      53535F4E 
+ 1832      4F544946 
+ 1833              	.LASF137:
+ 1834 19bb 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_ENABLED\000"
+ 1834      455F4556 
+ 1834      545F4350 
+ 1834      53535F4E 
+ 1834      4F544946 
+ 1835              	.LASF264:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 49
+
+
+ 1836 19df 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_DESCR_RESPONSE\000"
+ 1836      455F4556 
+ 1836      545F5450 
+ 1836      53435F52 
+ 1836      4541445F 
+ 1837              	.LASF43:
+ 1838 1a02 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1838      455F4556 
+ 1838      545F4741 
+ 1838      5454435F 
+ 1838      46494E44 
+ 1839              	.LASF42:
+ 1840 1a20 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1840      455F4556 
+ 1840      545F4741 
+ 1840      5454435F 
+ 1840      52454144 
+ 1841              	.LASF233:
+ 1842 1a41 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_DISABLED\000"
+ 1842      455F4556 
+ 1842      545F5041 
+ 1842      5353535F 
+ 1842      4E4F5449 
+ 1843              	.LASF135:
+ 1844 1a67 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_DESCR_RESPONSE\000"
+ 1844      455F4556 
+ 1844      545F4347 
+ 1844      4D53435F 
+ 1844      52454144 
+ 1845              	.LASF191:
+ 1846 1a8b 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_CHAR_RESPONSE\000"
+ 1846      455F4556 
+ 1846      545F4849 
+ 1846      4453435F 
+ 1846      52454144 
+ 1847              	.LASF261:
+ 1848 1aae 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_DISABLED\000"
+ 1848      455F4556 
+ 1848      545F5450 
+ 1848      53535F4E 
+ 1848      4F544946 
+ 1849              	.LASF258:
+ 1850 1ad3 4359424C 		.ascii	"CYBLE_EVT_SCPSC_READ_DESCR_RESPONSE\000"
+ 1850      455F4556 
+ 1850      545F5343 
+ 1850      5053435F 
+ 1850      52454144 
+ 1851              	.LASF202:
+ 1852 1af7 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_DESCR_RESPONSE\000"
+ 1852      455F4556 
+ 1852      545F4852 
+ 1852      53435F57 
+ 1852      52495445 
+ 1853              	.LASF224:
+ 1854 1b1b 4359424C 		.ascii	"CYBLE_EVT_LNSS_WRITE_CHAR\000"
+ 1854      455F4556 
+ 1854      545F4C4E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 50
+
+
+ 1854      53535F57 
+ 1854      52495445 
+ 1855              	.LASF49:
+ 1856 1b35 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1856      455F4556 
+ 1856      545F4741 
+ 1856      5454435F 
+ 1856      57524954 
+ 1857              	.LASF179:
+ 1858 1b4f 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_CHAR_RESPONSE\000"
+ 1858      455F4556 
+ 1858      545F474C 
+ 1858      53435F52 
+ 1858      4541445F 
+ 1859              	.LASF246:
+ 1860 1b71 4359424C 		.ascii	"CYBLE_EVT_RSCSC_NOTIFICATION\000"
+ 1860      455F4556 
+ 1860      545F5253 
+ 1860      4353435F 
+ 1860      4E4F5449 
+ 1861              	.LASF29:
+ 1862 1b8e 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1862      455F4556 
+ 1862      545F4741 
+ 1862      50505F41 
+ 1862      44564552 
+ 1863              	.LASF117:
+ 1864 1bb6 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_CONFIRMED\000"
+ 1864      455F4556 
+ 1864      545F424C 
+ 1864      53535F49 
+ 1864      4E444943 
+ 1865              	.LASF134:
+ 1866 1bda 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_CHAR_RESPONSE\000"
+ 1866      455F4556 
+ 1866      545F4347 
+ 1866      4D53435F 
+ 1866      57524954 
+ 1867              	.LASF9:
+ 1868 1bfe 75696E74 		.ascii	"uint8\000"
+ 1868      3800
+ 1869              	.LASF211:
+ 1870 1c04 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_CHAR_RESPONSE\000"
+ 1870      455F4556 
+ 1870      545F4854 
+ 1870      53435F52 
+ 1870      4541445F 
+ 1871              	.LASF239:
+ 1872 1c26 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_DESCR_RESPONSE\000"
+ 1872      455F4556 
+ 1872      545F5041 
+ 1872      5353435F 
+ 1872      57524954 
+ 1873              	.LASF2:
+ 1874 1c4b 73686F72 		.ascii	"short int\000"
+ 1874      7420696E 
+ 1874      7400
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 51
+
+
+ 1875              	.LASF88:
+ 1876 1c55 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_DISABLED\000"
+ 1876      455F4556 
+ 1876      545F4741 
+ 1876      5454535F 
+ 1876      494E4449 
+ 1877              	.LASF132:
+ 1878 1c79 4359424C 		.ascii	"CYBLE_EVT_CGMSC_NOTIFICATION\000"
+ 1878      455F4556 
+ 1878      545F4347 
+ 1878      4D53435F 
+ 1878      4E4F5449 
+ 1879              	.LASF36:
+ 1880 1c96 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1880      455F4556 
+ 1880      545F4741 
+ 1880      5454435F 
+ 1880      4552524F 
+ 1881              	.LASF111:
+ 1882 1cb0 4359424C 		.ascii	"CYBLE_EVT_BASC_NOTIFICATION\000"
+ 1882      455F4556 
+ 1882      545F4241 
+ 1882      53435F4E 
+ 1882      4F544946 
+ 1883              	.LASF114:
+ 1884 1ccc 4359424C 		.ascii	"CYBLE_EVT_BASC_WRITE_DESCR_RESPONSE\000"
+ 1884      455F4556 
+ 1884      545F4241 
+ 1884      53435F57 
+ 1884      52495445 
+ 1885              	.LASF171:
+ 1886 1cf0 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_ENABLED\000"
+ 1886      455F4556 
+ 1886      545F474C 
+ 1886      53535F49 
+ 1886      4E444943 
+ 1887              	.LASF103:
+ 1888 1d12 4359424C 		.ascii	"CYBLE_EVT_ANSS_CHAR_WRITE\000"
+ 1888      455F4556 
+ 1888      545F414E 
+ 1888      53535F43 
+ 1888      4841525F 
+ 1889              	.LASF61:
+ 1890 1d2c 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1890      455F4556 
+ 1890      545F4C32 
+ 1890      4341505F 
+ 1890      43424643 
+ 1891              	.LASF52:
+ 1892 1d4a 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1892      455F4556 
+ 1892      545F4741 
+ 1892      5454535F 
+ 1892      45584543 
+ 1893              	.LASF23:
+ 1894 1d69 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1894      455F4556 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 52
+
+
+ 1894      545F4741 
+ 1894      50435F53 
+ 1894      43414E5F 
+ 1895              	.LASF266:
+ 1896 1d8d 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_ENABLED\000"
+ 1896      455F4556 
+ 1896      545F5544 
+ 1896      53535F49 
+ 1896      4E444943 
+ 1897              	.LASF205:
+ 1898 1daf 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_ENABLED\000"
+ 1898      455F4556 
+ 1898      545F4854 
+ 1898      53535F49 
+ 1898      4E444943 
+ 1899              	.LASF276:
+ 1900 1dd1 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_DESCR_RESPONSE\000"
+ 1900      455F4556 
+ 1900      545F5544 
+ 1900      53435F52 
+ 1900      4541445F 
+ 1901              	.LASF112:
+ 1902 1df4 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_CHAR_RESPONSE\000"
+ 1902      455F4556 
+ 1902      545F4241 
+ 1902      53435F52 
+ 1902      4541445F 
+ 1903              	.LASF178:
+ 1904 1e16 4359424C 		.ascii	"CYBLE_EVT_GLSC_NOTIFICATION\000"
+ 1904      455F4556 
+ 1904      545F474C 
+ 1904      53435F4E 
+ 1904      4F544946 
+ 1905              	.LASF256:
+ 1906 1e32 4359424C 		.ascii	"CYBLE_EVT_SCPSS_SCAN_INT_WIN_CHAR_WRITE\000"
+ 1906      455F4556 
+ 1906      545F5343 
+ 1906      5053535F 
+ 1906      5343414E 
+ 1907              	.LASF218:
+ 1908 1e5a 4359424C 		.ascii	"CYBLE_EVT_LLSC_WRITE_CHAR_RESPONSE\000"
+ 1908      455F4556 
+ 1908      545F4C4C 
+ 1908      53435F57 
+ 1908      52495445 
+ 1909              	.LASF82:
+ 1910 1e7d 4359424C 		.ascii	"CYBLE_TPS_CHAR_VALUE_T\000"
+ 1910      455F5450 
+ 1910      535F4348 
+ 1910      41525F56 
+ 1910      414C5545 
+ 1911              	.LASF126:
+ 1912 1e94 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_DISABLED\000"
+ 1912      455F4556 
+ 1912      545F4347 
+ 1912      4D53535F 
+ 1912      494E4449 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 53
+
+
+ 1913              	.LASF100:
+ 1914 1eb8 4359424C 		.ascii	"CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\000"
+ 1914      455F4556 
+ 1914      545F4741 
+ 1914      5454435F 
+ 1914      44495343 
+ 1915              	.LASF130:
+ 1916 1edb 4359424C 		.ascii	"CYBLE_EVT_CGMSS_WRITE_CHAR\000"
+ 1916      455F4556 
+ 1916      545F4347 
+ 1916      4D53535F 
+ 1916      57524954 
+ 1917              	.LASF182:
+ 1918 1ef6 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_DESCR_RESPONSE\000"
+ 1918      455F4556 
+ 1918      545F474C 
+ 1918      53435F57 
+ 1918      52495445 
+ 1919              	.LASF55:
+ 1920 1f1a 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1920      455F4556 
+ 1920      545F4741 
+ 1920      5454435F 
+ 1920      48414E44 
+ 1921              	.LASF151:
+ 1922 1f3b 4359424C 		.ascii	"CYBLE_EVT_CPSC_SCAN_PROGRESS_RESULT\000"
+ 1922      455F4556 
+ 1922      545F4350 
+ 1922      53435F53 
+ 1922      43414E5F 
+ 1923              	.LASF250:
+ 1924 1f5f 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_DESCR_RESPONSE\000"
+ 1924      455F4556 
+ 1924      545F5253 
+ 1924      4353435F 
+ 1924      52454144 
+ 1925              	.LASF22:
+ 1926 1f83 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1926      455F4556 
+ 1926      545F5354 
+ 1926      41434B5F 
+ 1926      42555359 
+ 1927              	.LASF214:
+ 1928 1f9f 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_DESCR_RESPONSE\000"
+ 1928      455F4556 
+ 1928      545F4854 
+ 1928      53435F57 
+ 1928      52495445 
+ 1929              	.LASF35:
+ 1930 1fc3 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 1930      455F4556 
+ 1930      545F4741 
+ 1930      505F4B45 
+ 1930      59494E46 
+ 1931              	.LASF58:
+ 1932 1fe7 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1932      455F4556 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 54
+
+
+ 1932      545F4C32 
+ 1932      4341505F 
+ 1932      434F4E4E 
+ 1933              	.LASF129:
+ 1934 200d 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_DISABLED\000"
+ 1934      455F4556 
+ 1934      545F4347 
+ 1934      4D53535F 
+ 1934      4E4F5449 
+ 1935              	.LASF91:
+ 1936 2033 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_FAILED\000"
+ 1936      455F4556 
+ 1936      545F4741 
+ 1936      5454435F 
+ 1936      494E434C 
+ 1937              	.LASF3:
+ 1938 2059 73686F72 		.ascii	"short unsigned int\000"
+ 1938      7420756E 
+ 1938      7369676E 
+ 1938      65642069 
+ 1938      6E7400
+ 1939              	.LASF229:
+ 1940 206c 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_DESCR_RESPONSE\000"
+ 1940      455F4556 
+ 1940      545F4C4E 
+ 1940      53435F52 
+ 1940      4541445F 
+ 1941              	.LASF74:
+ 1942 208f 61637475 		.ascii	"actualLen\000"
+ 1942      616C4C65 
+ 1942      6E00
+ 1943              	.LASF260:
+ 1944 2099 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_ENABLED\000"
+ 1944      455F4556 
+ 1944      545F5450 
+ 1944      53535F4E 
+ 1944      4F544946 
+ 1945              	.LASF177:
+ 1946 20bd 4359424C 		.ascii	"CYBLE_EVT_GLSC_INDICATION\000"
+ 1946      455F4556 
+ 1946      545F474C 
+ 1946      53435F49 
+ 1946      4E444943 
+ 1947              	.LASF143:
+ 1948 20d7 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_DISABLED\000"
+ 1948      455F4556 
+ 1948      545F4350 
+ 1948      53535F42 
+ 1948      524F4144 
+ 1949              	.LASF72:
+ 1950 20f9 61747449 		.ascii	"attId\000"
+ 1950      6400
+ 1951              	.LASF21:
+ 1952 20ff 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1952      455F4556 
+ 1952      545F4843 
+ 1952      495F5354 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 55
+
+
+ 1952      41545553 
+ 1953              	.LASF38:
+ 1954 2114 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1954      455F4556 
+ 1954      545F4741 
+ 1954      54545F44 
+ 1954      4953434F 
+ 1955              	.LASF86:
+ 1956 2132 4359424C 		.ascii	"CYBLE_KEY_EXCHANGE_INFO_REQUEST_REPLY\000"
+ 1956      455F4B45 
+ 1956      595F4558 
+ 1956      4348414E 
+ 1956      47455F49 
+ 1957              	.LASF68:
+ 1958 2158 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1958      455F4556 
+ 1958      545F4C32 
+ 1958      4341505F 
+ 1958      43424643 
+ 1959              	.LASF84:
+ 1960 217c 4359424C 		.ascii	"CYBLE_PASSKEY_ENTRY_REQUEST_REPLY\000"
+ 1960      455F5041 
+ 1960      53534B45 
+ 1960      595F454E 
+ 1960      5452595F 
+ 1961              	.LASF104:
+ 1962 219e 4359424C 		.ascii	"CYBLE_EVT_ANSC_NOTIFICATION\000"
+ 1962      455F4556 
+ 1962      545F414E 
+ 1962      53435F4E 
+ 1962      4F544946 
+ 1963              	.LASF31:
+ 1964 21ba 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 1964      455F4556 
+ 1964      545F4741 
+ 1964      505F4445 
+ 1964      56494345 
+ 1965              	.LASF185:
+ 1966 21dc 4359424C 		.ascii	"CYBLE_EVT_HIDSS_BOOT_MODE_ENTER\000"
+ 1966      455F4556 
+ 1966      545F4849 
+ 1966      4453535F 
+ 1966      424F4F54 
+ 1967              	.LASF56:
+ 1968 21fc 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 1968      455F4556 
+ 1968      545F4741 
+ 1968      5454535F 
+ 1968      48414E44 
+ 1969              	.LASF162:
+ 1970 221d 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_DESCR_RESPONSE\000"
+ 1970      455F4556 
+ 1970      545F4353 
+ 1970      4353435F 
+ 1970      52454144 
+ 1971              	.LASF10:
+ 1972 2241 75696E74 		.ascii	"uint16\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccggOrAt.s 			page 56
+
+
+ 1972      313600
+ 1973              	.LASF190:
+ 1974 2248 4359424C 		.ascii	"CYBLE_EVT_HIDSC_NOTIFICATION\000"
+ 1974      455F4556 
+ 1974      545F4849 
+ 1974      4453435F 
+ 1974      4E4F5449 
+ 1975              	.LASF240:
+ 1976 2265 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_ENABLED\000"
+ 1976      455F4556 
+ 1976      545F5253 
+ 1976      4353535F 
+ 1976      4E4F5449 
+ 1977              	.LASF102:
+ 1978 228a 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_DISABLED\000"
+ 1978      455F4556 
+ 1978      545F414E 
+ 1978      53535F4E 
+ 1978      4F544946 
+ 1979              	.LASF210:
+ 1980 22af 4359424C 		.ascii	"CYBLE_EVT_HTSC_INDICATION\000"
+ 1980      455F4556 
+ 1980      545F4854 
+ 1980      53435F49 
+ 1980      4E444943 
+ 1981              	.LASF183:
+ 1982 22c9 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_ENABLED\000"
+ 1982      455F4556 
+ 1982      545F4849 
+ 1982      4453535F 
+ 1982      4E4F5449 
+ 1983              	.LASF207:
+ 1984 22ee 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_CONFIRMED\000"
+ 1984      455F4556 
+ 1984      545F4854 
+ 1984      53535F49 
+ 1984      4E444943 
+ 1985              	.LASF197:
+ 1986 2312 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_DISABLED\000"
+ 1986      455F4556 
+ 1986      545F4852 
+ 1986      53535F4E 
+ 1986      4F544946 
+ 1987              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.8.4 20140526 (release) [ARM/embedded-4_8-br

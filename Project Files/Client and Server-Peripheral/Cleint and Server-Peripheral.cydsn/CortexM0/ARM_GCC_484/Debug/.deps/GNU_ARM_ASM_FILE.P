@@ -1,0 +1,8 @@
+C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/CortexM0/ARM_GCC_484/Debug/CyBootAsmGnu.o : C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/cyfittergnu.inc C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s 
+
+C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc : 
+
+C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/cyfittergnu.inc : 
+
+C:/Users/msuro/Documents/Manhattan\ College/Fall\ 2016/Embedded\ Systems/Project/Project\ Files/Client\ and\ Server-Peripheral/Cleint\ and\ Server-Peripheral.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s : 
+

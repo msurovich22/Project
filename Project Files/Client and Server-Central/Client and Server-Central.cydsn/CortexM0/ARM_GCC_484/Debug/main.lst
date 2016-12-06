@@ -1,0 +1,5068 @@
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	deviceDetected
+  18              		.bss
+  19              		.type	deviceDetected, %object
+  20              		.size	deviceDetected, 1
+  21              	deviceDetected:
+  22 0000 00       		.space	1
+  23              		.comm	peerDeviceAddr,7,4
+  24              		.section	.rodata
+  25              		.align	2
+  26              	.LC0:
+  27 0000 424C4520 		.ascii	"BLE Stack ON:\015\000"
+  27      53746163 
+  27      6B204F4E 
+  27      3A0D00
+  28 000f 00       		.align	2
+  29              	.LC2:
+  30 0010 70656572 		.ascii	"peer address:\015\000"
+  30      20616464 
+  30      72657373 
+  30      3A0D00
+  31 001f 00       		.align	2
+  32              	.LC5:
+  33 0020 25322E32 		.ascii	"%2.2x\000"
+  33      7800
+  34 0026 0000     		.align	2
+  35              	.LC7:
+  36 0028 0D00     		.ascii	"\015\000"
+  37 002a 0000     		.align	2
+  38              	.LC11:
+  39 002c 53746172 		.ascii	"Started to Scan\015\000"
+  39      74656420 
+  39      746F2053 
+  39      63616E0D 
+  39      00
+  40 003d 000000   		.align	2
+  41              	.LC13:
+  42 0040 53746F70 		.ascii	"Stop scanning:\015\000"
+  42      20736361 
+  42      6E6E696E 
+  42      673A0D00 
+  43              		.align	2
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 2
+
+
+  44              	.LC15:
+  45 0050 73756363 		.ascii	"success\015\000"
+  45      6573730D 
+  45      00
+  46 0059 000000   		.align	2
+  47              	.LC17:
+  48 005c 636F6E6E 		.ascii	"connection failed:%x\015\012\000"
+  48      65637469 
+  48      6F6E2066 
+  48      61696C65 
+  48      643A2578 
+  49 0073 00       		.align	2
+  50              	.LC20:
+  51 0074 44697363 		.ascii	"Discovery complete.\015\000"
+  51      6F766572 
+  51      7920636F 
+  51      6D706C65 
+  51      74652E0D 
+  52 0089 000000   		.align	2
+  53              	.LC23:
+  54 008c 50656572 		.ascii	"Peer device supports Tx power Service \015\000"
+  54      20646576 
+  54      69636520 
+  54      73757070 
+  54      6F727473 
+  55              		.align	2
+  56              	.LC25:
+  57 00b4 50656572 		.ascii	"Peer device doesn't supports Tx power Service \015\000"
+  57      20646576 
+  57      69636520 
+  57      646F6573 
+  57      6E277420 
+  58              		.section	.text.StackEventHandler,"ax",%progbits
+  59              		.align	2
+  60              		.global	StackEventHandler
+  61              		.code	16
+  62              		.thumb_func
+  63              		.type	StackEventHandler, %function
+  64              	StackEventHandler:
+  65              	.LFB35:
+  66              		.file 1 ".\\main.c"
+   1:.\main.c      **** /*******************************************************************************
+   2:.\main.c      **** * File Name: main.c
+   3:.\main.c      **** *
+   4:.\main.c      **** * Version: 1.0
+   5:.\main.c      **** *
+   6:.\main.c      **** * Description:
+   7:.\main.c      **** *  This project demonstrates simultaneous usage of the BLE GATT Client and 
+   8:.\main.c      **** * Server roles. 
+   9:.\main.c      **** *
+  10:.\main.c      **** * Hardware Dependency:
+  11:.\main.c      **** *  CY8CKIT-042-BLE Bluetooth Low Energy Pioneer Kit
+  12:.\main.c      **** *
+  13:.\main.c      **** ********************************************************************************
+  14:.\main.c      **** * Copyright (2015), Cypress Semiconductor Corporation.
+  15:.\main.c      **** ******************************************************************************
+  16:.\main.c      **** * This software is owned by Cypress Semiconductor Corporation (Cypress) and is
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 3
+
+
+  17:.\main.c      **** * protected by and subject to worldwide patent protection (United States and
+  18:.\main.c      **** * foreign), United States copyright laws and international treaty provisions.
+  19:.\main.c      **** * Cypress hereby grants to licensee a personal, non-exclusive, non-transferable
+  20:.\main.c      **** * license to copy, use, modify, create derivative works of, and compile the
+  21:.\main.c      **** * Cypress Source Code and derivative works for the sole purpose of creating
+  22:.\main.c      **** * custom software in support of licensee product to be used only in conjunction
+  23:.\main.c      **** * with a Cypress integrated circuit as specified in the applicable agreement.
+  24:.\main.c      **** * Any reproduction, modification, translation, compilation, or representation of
+  25:.\main.c      **** * this software except as specified above is prohibited without the express
+  26:.\main.c      **** * written permission of Cypress.
+  27:.\main.c      **** *
+  28:.\main.c      **** * Disclaimer: CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH
+  29:.\main.c      **** * REGARD TO THIS MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  30:.\main.c      **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  31:.\main.c      **** * Cypress reserves the right to make changes without further notice to the
+  32:.\main.c      **** * materials described herein. Cypress does not assume any liability arising out
+  33:.\main.c      **** * of the application or use of any product or circuit described herein. Cypress
+  34:.\main.c      **** * does not authorize its products for use as critical components in life-support
+  35:.\main.c      **** * systems where a malfunction or failure may reasonably be expected to result in
+  36:.\main.c      **** * significant injury to the user. The inclusion of Cypress' product in a life-
+  37:.\main.c      **** * support systems application implies that the manufacturer assumes all risk of
+  38:.\main.c      **** * such use and in doing so indemnifies Cypress against all charges. Use may be
+  39:.\main.c      **** * limited by and subject to the applicable Cypress software license agreement.
+  40:.\main.c      **** *******************************************************************************/
+  41:.\main.c      **** 
+  42:.\main.c      **** /*******************************************************************************
+  43:.\main.c      **** * Included headers
+  44:.\main.c      **** *******************************************************************************/
+  45:.\main.c      **** #include <project.h>
+  46:.\main.c      **** #include "common.h"
+  47:.\main.c      **** #include <stdio.h>
+  48:.\main.c      **** 
+  49:.\main.c      **** 
+  50:.\main.c      **** /***************************************
+  51:.\main.c      **** *        Global Variables
+  52:.\main.c      **** ***************************************/
+  53:.\main.c      **** uint8 deviceDetected=0;
+  54:.\main.c      **** CYBLE_GAP_BD_ADDR_T  peerDeviceAddr;
+  55:.\main.c      **** 
+  56:.\main.c      **** 
+  57:.\main.c      **** /*******************************************************************************
+  58:.\main.c      **** * Function Name: StackEventHandler
+  59:.\main.c      **** ********************************************************************************
+  60:.\main.c      **** *
+  61:.\main.c      **** * Summary:
+  62:.\main.c      **** *  This is an event callback function to receive events from the CYBLE Component.
+  63:.\main.c      **** *
+  64:.\main.c      **** * Parameters:
+  65:.\main.c      **** *  uint8 event:       Event from the CYBLE component.
+  66:.\main.c      **** *  void* eventParams: A structure instance for corresponding event type. The
+  67:.\main.c      **** *                     list of event structure is described in the component
+  68:.\main.c      **** *                     datasheet.
+  69:.\main.c      **** *
+  70:.\main.c      **** * Return:
+  71:.\main.c      **** *  None
+  72:.\main.c      **** *
+  73:.\main.c      **** *******************************************************************************/
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 4
+
+
+  74:.\main.c      **** 
+  75:.\main.c      **** void StackEventHandler(uint32 event,void* eventParam)
+  76:.\main.c      **** {
+  67              		.loc 1 76 0
+  68              		.cfi_startproc
+  69 0000 90B5     		push	{r4, r7, lr}
+  70              		.cfi_def_cfa_offset 12
+  71              		.cfi_offset 4, -12
+  72              		.cfi_offset 7, -8
+  73              		.cfi_offset 14, -4
+  74 0002 89B0     		sub	sp, sp, #36
+  75              		.cfi_def_cfa_offset 48
+  76 0004 00AF     		add	r7, sp, #0
+  77              		.cfi_def_cfa_register 7
+  78 0006 7860     		str	r0, [r7, #4]
+  79 0008 3960     		str	r1, [r7]
+  77:.\main.c      ****     
+  78:.\main.c      ****    /*Declaring Local variables*/
+  79:.\main.c      ****     uint8 i;
+  80:.\main.c      ****     CYBLE_GAPC_ADV_REPORT_T scanReport;
+  81:.\main.c      ****     CYBLE_API_RESULT_T apiResult;              
+  82:.\main.c      ****    
+  83:.\main.c      ****     switch(event)
+  80              		.loc 1 83 0
+  81 000a 7B68     		ldr	r3, [r7, #4]
+  82 000c 272B     		cmp	r3, #39
+  83 000e 00D1     		bne	.LCB17
+  84 0010 B3E0     		b	.L3	@long jump
+  85              	.LCB17:
+  86 0012 04D8     		bhi	.L4
+  87 0014 012B     		cmp	r3, #1
+  88 0016 0ED0     		beq	.L5
+  89 0018 202B     		cmp	r3, #32
+  90 001a 14D0     		beq	.L6
+  84:.\main.c      ****     {
+  85:.\main.c      ****         
+  86:.\main.c      ****         case CYBLE_EVT_STACK_ON:
+  87:.\main.c      ****         
+  88:.\main.c      ****                 printf("BLE Stack ON:\r\n");
+  89:.\main.c      ****                 /*Start to Scan after Stack ON*/
+  90:.\main.c      ****                 CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
+  91:.\main.c      ****             break;                   
+  92:.\main.c      ****             
+  93:.\main.c      ****         case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
+  94:.\main.c      ****                 scanReport=  *(CYBLE_GAPC_ADV_REPORT_T*)eventParam;
+  95:.\main.c      ****                  
+  96:.\main.c      ****                 /*Check for the Manufacturer specific data in scan response*/
+  97:.\main.c      ****                 if(scanReport.data[1] == MANUFACTURER_SPECIFIC_DATA && scanReport.data[2] == COMPAN
+  98:.\main.c      ****                 && scanReport.data[4] == MAN_SPEC_DATA_LSB && scanReport.data[5] == MAN_SPEC_DATA_M
+  99:.\main.c      ****                 {
+ 100:.\main.c      ****                     printf("peer address:\r\n");
+ 101:.\main.c      ****                     
+ 102:.\main.c      ****                     for(i=0;i<CYBLE_GAP_BD_ADDR_SIZE;i++)
+ 103:.\main.c      ****                     {
+ 104:.\main.c      ****                         peerDeviceAddr.bdAddr[i]=scanReport.peerBdAddr[i];
+ 105:.\main.c      ****                         printf("%2.2x",scanReport.peerBdAddr[CYBLE_GAP_BD_ADDR_SIZE-1-i]);
+ 106:.\main.c      ****                     }
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 5
+
+
+ 107:.\main.c      ****                     
+ 108:.\main.c      ****                     printf("\r\n");
+ 109:.\main.c      ****                     deviceDetected=TRUE;
+ 110:.\main.c      ****                     
+ 111:.\main.c      ****                     /*Start to scan after disconnection*/
+ 112:.\main.c      ****                     CyBle_GapcStopScan();
+ 113:.\main.c      ****                 }
+ 114:.\main.c      ****                  
+ 115:.\main.c      ****             break;
+ 116:.\main.c      ****                 
+ 117:.\main.c      ****         case CYBLE_EVT_GAPC_SCAN_START_STOP:
+ 118:.\main.c      ****                 
+ 119:.\main.c      ****                 if(CyBle_GetState()==CYBLE_STATE_SCANNING)
+ 120:.\main.c      ****                 {
+ 121:.\main.c      ****                     printf("Started to Scan\r\n");
+ 122:.\main.c      ****                 }
+ 123:.\main.c      ****                 else if(CyBle_GetState()==CYBLE_STATE_DISCONNECTED)
+ 124:.\main.c      ****                 {    
+ 125:.\main.c      ****                     printf("Stop scanning:\r\n");
+ 126:.\main.c      ****                     if(deviceDetected==TRUE)
+ 127:.\main.c      ****                     {
+ 128:.\main.c      ****                         apiResult=CyBle_GapcConnectDevice(&peerDeviceAddr);
+ 129:.\main.c      ****                         if(apiResult==CYBLE_ERROR_OK)
+ 130:.\main.c      ****                         {
+ 131:.\main.c      ****                             printf("success\r\n");
+ 132:.\main.c      ****                         }
+ 133:.\main.c      ****                         else 
+ 134:.\main.c      ****                         {
+ 135:.\main.c      ****                             printf("connection failed:%x\r\n",apiResult);
+ 136:.\main.c      ****                         }
+ 137:.\main.c      ****                         deviceDetected=FALSE;   
+ 138:.\main.c      ****                     }
+ 139:.\main.c      ****                 }
+ 140:.\main.c      ****             break;
+ 141:.\main.c      ****         
+ 142:.\main.c      ****          case CYBLE_EVT_GAP_DEVICE_CONNECTED:
+ 143:.\main.c      ****                 /*Start to dicovery the servioes of the serve after connection*/
+ 144:.\main.c      ****                 CyBle_GattcStartDiscovery(cyBle_connHandle);  
+ 145:.\main.c      ****             break;
+ 146:.\main.c      ****                 
+ 147:.\main.c      ****         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:           
+ 148:.\main.c      ****                 /*Start to scan after disconnection*/
+ 149:.\main.c      ****                 CyBle_GapcStartScan(CYBLE_SCANNING_FAST); 
+ 150:.\main.c      ****             break;
+ 151:.\main.c      ****                 
+ 152:.\main.c      ****         case CYBLE_EVT_GATTC_DISCOVERY_COMPLETE:
+ 153:.\main.c      ****                 printf("\r\n");
+ 154:.\main.c      ****                 printf("Discovery complete.\r\n");
+ 155:.\main.c      ****                 
+ 156:.\main.c      ****                 for(i = 0u; i < CYBLE_SRVI_COUNT; i++)
+ 157:.\main.c      ****                 {          
+ 158:.\main.c      ****                     /*Checking for the Tx power service*/
+ 159:.\main.c      ****                     if(cyBle_serverInfo[i].uuid == CYBLE_UUID_TX_POWER_SERVICE)
+ 160:.\main.c      ****                     {
+ 161:.\main.c      ****                         if(cyBle_serverInfo[i].range.startHandle < cyBle_serverInfo[i].range.endHan
+ 162:.\main.c      ****                         {
+ 163:.\main.c      ****                             printf("Peer device supports Tx power Service \r\n");      
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 6
+
+
+ 164:.\main.c      ****                         }
+ 165:.\main.c      ****                         else
+ 166:.\main.c      ****                         {
+ 167:.\main.c      ****                             printf("Peer device doesn't supports Tx power Service \r\n");
+ 168:.\main.c      ****                         }
+ 169:.\main.c      ****                     }
+ 170:.\main.c      **** 
+ 171:.\main.c      ****                 }                
+ 172:.\main.c      ****                 printf("\r\n");
+ 173:.\main.c      ****             break;                   
+ 174:.\main.c      ****                 
+ 175:.\main.c      ****         default:               
+ 176:.\main.c      ****              break;
+  91              		.loc 1 176 0
+  92 001c 09E1     		b	.L1
+  93              	.L4:
+  83:.\main.c      ****     switch(event)
+  94              		.loc 1 83 0
+  95 001e 2B2B     		cmp	r3, #43
+  96 0020 00D1     		bne	.LCB29
+  97 0022 76E0     		b	.L7	@long jump
+  98              	.LCB29:
+  99 0024 1222     		mov	r2, #18
+ 100 0026 FF32     		add	r2, r2, #255
+ 101 0028 9342     		cmp	r3, r2
+ 102 002a 00D1     		bne	.LCB33
+ 103 002c B8E0     		b	.L8	@long jump
+ 104              	.LCB33:
+ 105 002e 282B     		cmp	r3, #40
+ 106 0030 00D1     		bne	.LCB35
+ 107 0032 B1E0     		b	.L9	@long jump
+ 108              	.LCB35:
+ 109              		.loc 1 176 0
+ 110 0034 FDE0     		b	.L1
+ 111              	.L5:
+  88:.\main.c      ****                 printf("BLE Stack ON:\r\n");
+ 112              		.loc 1 88 0
+ 113 0036 804B     		ldr	r3, .L22
+ 114 0038 181C     		mov	r0, r3
+ 115 003a FFF7FEFF 		bl	puts
+  90:.\main.c      ****                 CyBle_GapcStartScan(CYBLE_SCANNING_FAST);
+ 116              		.loc 1 90 0
+ 117 003e 0020     		mov	r0, #0
+ 118 0040 FFF7FEFF 		bl	CyBle_GapcStartScan
+  91:.\main.c      ****             break;                   
+ 119              		.loc 1 91 0
+ 120 0044 F5E0     		b	.L1
+ 121              	.L6:
+  94:.\main.c      ****                 scanReport=  *(CYBLE_GAPC_ADV_REPORT_T*)eventParam;
+ 122              		.loc 1 94 0
+ 123 0046 3B1C     		mov	r3, r7
+ 124 0048 0833     		add	r3, r3, #8
+ 125 004a 3A68     		ldr	r2, [r7]
+ 126 004c 13CA     		ldmia	r2!, {r0, r1, r4}
+ 127 004e 13C3     		stmia	r3!, {r0, r1, r4}
+ 128 0050 03CA     		ldmia	r2!, {r0, r1}
+ 129 0052 03C3     		stmia	r3!, {r0, r1}
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 7
+
+
+  97:.\main.c      ****                 if(scanReport.data[1] == MANUFACTURER_SPECIFIC_DATA && scanReport.data[2] == COMPAN
+ 130              		.loc 1 97 0
+ 131 0054 3B1C     		mov	r3, r7
+ 132 0056 0833     		add	r3, r3, #8
+ 133 0058 DB68     		ldr	r3, [r3, #12]
+ 134 005a 0133     		add	r3, r3, #1
+ 135 005c 1B78     		ldrb	r3, [r3]
+ 136 005e FF2B     		cmp	r3, #255
+ 137 0060 56D1     		bne	.L11
+  97:.\main.c      ****                 if(scanReport.data[1] == MANUFACTURER_SPECIFIC_DATA && scanReport.data[2] == COMPAN
+ 138              		.loc 1 97 0 is_stmt 0 discriminator 1
+ 139 0062 3B1C     		mov	r3, r7
+ 140 0064 0833     		add	r3, r3, #8
+ 141 0066 DB68     		ldr	r3, [r3, #12]
+ 142 0068 0233     		add	r3, r3, #2
+ 143 006a 1B78     		ldrb	r3, [r3]
+ 144 006c 312B     		cmp	r3, #49
+ 145 006e 4FD1     		bne	.L11
+ 146 0070 3B1C     		mov	r3, r7
+ 147 0072 0833     		add	r3, r3, #8
+ 148 0074 DB68     		ldr	r3, [r3, #12]
+ 149 0076 0333     		add	r3, r3, #3
+ 150 0078 1B78     		ldrb	r3, [r3]
+ 151 007a 012B     		cmp	r3, #1
+ 152 007c 48D1     		bne	.L11
+  98:.\main.c      ****                 && scanReport.data[4] == MAN_SPEC_DATA_LSB && scanReport.data[5] == MAN_SPEC_DATA_M
+ 153              		.loc 1 98 0 is_stmt 1
+ 154 007e 3B1C     		mov	r3, r7
+ 155 0080 0833     		add	r3, r3, #8
+ 156 0082 DB68     		ldr	r3, [r3, #12]
+ 157 0084 0433     		add	r3, r3, #4
+ 158 0086 1B78     		ldrb	r3, [r3]
+ 159 0088 342B     		cmp	r3, #52
+ 160 008a 41D1     		bne	.L11
+  98:.\main.c      ****                 && scanReport.data[4] == MAN_SPEC_DATA_LSB && scanReport.data[5] == MAN_SPEC_DATA_M
+ 161              		.loc 1 98 0 is_stmt 0 discriminator 1
+ 162 008c 3B1C     		mov	r3, r7
+ 163 008e 0833     		add	r3, r3, #8
+ 164 0090 DB68     		ldr	r3, [r3, #12]
+ 165 0092 0533     		add	r3, r3, #5
+ 166 0094 1B78     		ldrb	r3, [r3]
+ 167 0096 122B     		cmp	r3, #18
+ 168 0098 3AD1     		bne	.L11
+ 100:.\main.c      ****                     printf("peer address:\r\n");
+ 169              		.loc 1 100 0 is_stmt 1
+ 170 009a 684B     		ldr	r3, .L22+4
+ 171 009c 181C     		mov	r0, r3
+ 172 009e FFF7FEFF 		bl	puts
+ 102:.\main.c      ****                     for(i=0;i<CYBLE_GAP_BD_ADDR_SIZE;i++)
+ 173              		.loc 1 102 0
+ 174 00a2 3B1C     		mov	r3, r7
+ 175 00a4 1F33     		add	r3, r3, #31
+ 176 00a6 0022     		mov	r2, #0
+ 177 00a8 1A70     		strb	r2, [r3]
+ 178 00aa 22E0     		b	.L12
+ 179              	.L13:
+ 104:.\main.c      ****                         peerDeviceAddr.bdAddr[i]=scanReport.peerBdAddr[i];
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 8
+
+
+ 180              		.loc 1 104 0 discriminator 2
+ 181 00ac 3B1C     		mov	r3, r7
+ 182 00ae 1F33     		add	r3, r3, #31
+ 183 00b0 1A78     		ldrb	r2, [r3]
+ 184 00b2 3B1C     		mov	r3, r7
+ 185 00b4 0833     		add	r3, r3, #8
+ 186 00b6 5968     		ldr	r1, [r3, #4]
+ 187 00b8 3B1C     		mov	r3, r7
+ 188 00ba 1F33     		add	r3, r3, #31
+ 189 00bc 1B78     		ldrb	r3, [r3]
+ 190 00be CB18     		add	r3, r1, r3
+ 191 00c0 1978     		ldrb	r1, [r3]
+ 192 00c2 5F4B     		ldr	r3, .L22+8
+ 193 00c4 9954     		strb	r1, [r3, r2]
+ 105:.\main.c      ****                         printf("%2.2x",scanReport.peerBdAddr[CYBLE_GAP_BD_ADDR_SIZE-1-i]);
+ 194              		.loc 1 105 0 discriminator 2
+ 195 00c6 3B1C     		mov	r3, r7
+ 196 00c8 0833     		add	r3, r3, #8
+ 197 00ca 5A68     		ldr	r2, [r3, #4]
+ 198 00cc 3B1C     		mov	r3, r7
+ 199 00ce 1F33     		add	r3, r3, #31
+ 200 00d0 1B78     		ldrb	r3, [r3]
+ 201 00d2 0521     		mov	r1, #5
+ 202 00d4 CB1A     		sub	r3, r1, r3
+ 203 00d6 D318     		add	r3, r2, r3
+ 204 00d8 1B78     		ldrb	r3, [r3]
+ 205 00da 5A4A     		ldr	r2, .L22+12
+ 206 00dc 101C     		mov	r0, r2
+ 207 00de 191C     		mov	r1, r3
+ 208 00e0 FFF7FEFF 		bl	printf
+ 102:.\main.c      ****                     for(i=0;i<CYBLE_GAP_BD_ADDR_SIZE;i++)
+ 209              		.loc 1 102 0 discriminator 2
+ 210 00e4 3B1C     		mov	r3, r7
+ 211 00e6 1F33     		add	r3, r3, #31
+ 212 00e8 1A78     		ldrb	r2, [r3]
+ 213 00ea 3B1C     		mov	r3, r7
+ 214 00ec 1F33     		add	r3, r3, #31
+ 215 00ee 0132     		add	r2, r2, #1
+ 216 00f0 1A70     		strb	r2, [r3]
+ 217              	.L12:
+ 102:.\main.c      ****                     for(i=0;i<CYBLE_GAP_BD_ADDR_SIZE;i++)
+ 218              		.loc 1 102 0 is_stmt 0 discriminator 1
+ 219 00f2 3B1C     		mov	r3, r7
+ 220 00f4 1F33     		add	r3, r3, #31
+ 221 00f6 1B78     		ldrb	r3, [r3]
+ 222 00f8 052B     		cmp	r3, #5
+ 223 00fa D7D9     		bls	.L13
+ 108:.\main.c      ****                     printf("\r\n");
+ 224              		.loc 1 108 0 is_stmt 1
+ 225 00fc 524B     		ldr	r3, .L22+16
+ 226 00fe 181C     		mov	r0, r3
+ 227 0100 FFF7FEFF 		bl	puts
+ 109:.\main.c      ****                     deviceDetected=TRUE;
+ 228              		.loc 1 109 0
+ 229 0104 514B     		ldr	r3, .L22+20
+ 230 0106 0122     		mov	r2, #1
+ 231 0108 1A70     		strb	r2, [r3]
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 9
+
+
+ 112:.\main.c      ****                     CyBle_GapcStopScan();
+ 232              		.loc 1 112 0
+ 233 010a FFF7FEFF 		bl	CyBle_GapcStopScan
+ 115:.\main.c      ****             break;
+ 234              		.loc 1 115 0
+ 235 010e 90E0     		b	.L1
+ 236              	.L11:
+ 237 0110 8FE0     		b	.L1
+ 238              	.L7:
+ 119:.\main.c      ****                 if(CyBle_GetState()==CYBLE_STATE_SCANNING)
+ 239              		.loc 1 119 0
+ 240 0112 4F4B     		ldr	r3, .L22+24
+ 241 0114 1B78     		ldrb	r3, [r3]
+ 242 0116 032B     		cmp	r3, #3
+ 243 0118 04D1     		bne	.L14
+ 121:.\main.c      ****                     printf("Started to Scan\r\n");
+ 244              		.loc 1 121 0
+ 245 011a 4E4B     		ldr	r3, .L22+28
+ 246 011c 181C     		mov	r0, r3
+ 247 011e FFF7FEFF 		bl	puts
+ 248 0122 29E0     		b	.L15
+ 249              	.L14:
+ 123:.\main.c      ****                 else if(CyBle_GetState()==CYBLE_STATE_DISCONNECTED)
+ 250              		.loc 1 123 0
+ 251 0124 4A4B     		ldr	r3, .L22+24
+ 252 0126 1B78     		ldrb	r3, [r3]
+ 253 0128 052B     		cmp	r3, #5
+ 254 012a 25D1     		bne	.L15
+ 125:.\main.c      ****                     printf("Stop scanning:\r\n");
+ 255              		.loc 1 125 0
+ 256 012c 4A4B     		ldr	r3, .L22+32
+ 257 012e 181C     		mov	r0, r3
+ 258 0130 FFF7FEFF 		bl	puts
+ 126:.\main.c      ****                     if(deviceDetected==TRUE)
+ 259              		.loc 1 126 0
+ 260 0134 454B     		ldr	r3, .L22+20
+ 261 0136 1B78     		ldrb	r3, [r3]
+ 262 0138 012B     		cmp	r3, #1
+ 263 013a 1DD1     		bne	.L15
+ 128:.\main.c      ****                         apiResult=CyBle_GapcConnectDevice(&peerDeviceAddr);
+ 264              		.loc 1 128 0
+ 265 013c 3C1C     		mov	r4, r7
+ 266 013e 1C34     		add	r4, r4, #28
+ 267 0140 3F4B     		ldr	r3, .L22+8
+ 268 0142 181C     		mov	r0, r3
+ 269 0144 FFF7FEFF 		bl	CyBle_GapcConnectDevice
+ 270 0148 031C     		mov	r3, r0
+ 271 014a 2380     		strh	r3, [r4]
+ 129:.\main.c      ****                         if(apiResult==CYBLE_ERROR_OK)
+ 272              		.loc 1 129 0
+ 273 014c 3B1C     		mov	r3, r7
+ 274 014e 1C33     		add	r3, r3, #28
+ 275 0150 1B88     		ldrh	r3, [r3]
+ 276 0152 002B     		cmp	r3, #0
+ 277 0154 04D1     		bne	.L16
+ 131:.\main.c      ****                             printf("success\r\n");
+ 278              		.loc 1 131 0
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 10
+
+
+ 279 0156 414B     		ldr	r3, .L22+36
+ 280 0158 181C     		mov	r0, r3
+ 281 015a FFF7FEFF 		bl	puts
+ 282 015e 07E0     		b	.L17
+ 283              	.L16:
+ 135:.\main.c      ****                             printf("connection failed:%x\r\n",apiResult);
+ 284              		.loc 1 135 0
+ 285 0160 3B1C     		mov	r3, r7
+ 286 0162 1C33     		add	r3, r3, #28
+ 287 0164 1B88     		ldrh	r3, [r3]
+ 288 0166 3E4A     		ldr	r2, .L22+40
+ 289 0168 101C     		mov	r0, r2
+ 290 016a 191C     		mov	r1, r3
+ 291 016c FFF7FEFF 		bl	printf
+ 292              	.L17:
+ 137:.\main.c      ****                         deviceDetected=FALSE;   
+ 293              		.loc 1 137 0
+ 294 0170 364B     		ldr	r3, .L22+20
+ 295 0172 0022     		mov	r2, #0
+ 296 0174 1A70     		strb	r2, [r3]
+ 140:.\main.c      ****             break;
+ 297              		.loc 1 140 0
+ 298 0176 5CE0     		b	.L1
+ 299              	.L15:
+ 300 0178 5BE0     		b	.L1
+ 301              	.L3:
+ 144:.\main.c      ****                 CyBle_GattcStartDiscovery(cyBle_connHandle);  
+ 302              		.loc 1 144 0
+ 303 017a 3A4B     		ldr	r3, .L22+44
+ 304 017c 1A78     		ldrb	r2, [r3]
+ 305 017e 5B78     		ldrb	r3, [r3, #1]
+ 306 0180 1B02     		lsl	r3, r3, #8
+ 307 0182 1A43     		orr	r2, r3
+ 308 0184 0023     		mov	r3, #0
+ 309 0186 1204     		lsl	r2, r2, #16
+ 310 0188 120C     		lsr	r2, r2, #16
+ 311 018a 1B0C     		lsr	r3, r3, #16
+ 312 018c 1B04     		lsl	r3, r3, #16
+ 313 018e 1343     		orr	r3, r2
+ 314 0190 181C     		mov	r0, r3
+ 315 0192 FFF7FEFF 		bl	CyBle_GattcStartDiscovery
+ 145:.\main.c      ****             break;
+ 316              		.loc 1 145 0
+ 317 0196 4CE0     		b	.L1
+ 318              	.L9:
+ 149:.\main.c      ****                 CyBle_GapcStartScan(CYBLE_SCANNING_FAST); 
+ 319              		.loc 1 149 0
+ 320 0198 0020     		mov	r0, #0
+ 321 019a FFF7FEFF 		bl	CyBle_GapcStartScan
+ 150:.\main.c      ****             break;
+ 322              		.loc 1 150 0
+ 323 019e 48E0     		b	.L1
+ 324              	.L8:
+ 153:.\main.c      ****                 printf("\r\n");
+ 325              		.loc 1 153 0
+ 326 01a0 294B     		ldr	r3, .L22+16
+ 327 01a2 181C     		mov	r0, r3
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 11
+
+
+ 328 01a4 FFF7FEFF 		bl	puts
+ 154:.\main.c      ****                 printf("Discovery complete.\r\n");
+ 329              		.loc 1 154 0
+ 330 01a8 2F4B     		ldr	r3, .L22+48
+ 331 01aa 181C     		mov	r0, r3
+ 332 01ac FFF7FEFF 		bl	puts
+ 156:.\main.c      ****                 for(i = 0u; i < CYBLE_SRVI_COUNT; i++)
+ 333              		.loc 1 156 0
+ 334 01b0 3B1C     		mov	r3, r7
+ 335 01b2 1F33     		add	r3, r3, #31
+ 336 01b4 0022     		mov	r2, #0
+ 337 01b6 1A70     		strb	r2, [r3]
+ 338 01b8 31E0     		b	.L18
+ 339              	.L21:
+ 159:.\main.c      ****                     if(cyBle_serverInfo[i].uuid == CYBLE_UUID_TX_POWER_SERVICE)
+ 340              		.loc 1 159 0
+ 341 01ba 3B1C     		mov	r3, r7
+ 342 01bc 1F33     		add	r3, r3, #31
+ 343 01be 1A78     		ldrb	r2, [r3]
+ 344 01c0 2A49     		ldr	r1, .L22+52
+ 345 01c2 131C     		mov	r3, r2
+ 346 01c4 5B00     		lsl	r3, r3, #1
+ 347 01c6 9B18     		add	r3, r3, r2
+ 348 01c8 5B00     		lsl	r3, r3, #1
+ 349 01ca CB18     		add	r3, r1, r3
+ 350 01cc 9A88     		ldrh	r2, [r3, #4]
+ 351 01ce 284B     		ldr	r3, .L22+56
+ 352 01d0 9A42     		cmp	r2, r3
+ 353 01d2 1DD1     		bne	.L19
+ 161:.\main.c      ****                         if(cyBle_serverInfo[i].range.startHandle < cyBle_serverInfo[i].range.endHan
+ 354              		.loc 1 161 0
+ 355 01d4 3B1C     		mov	r3, r7
+ 356 01d6 1F33     		add	r3, r3, #31
+ 357 01d8 1A78     		ldrb	r2, [r3]
+ 358 01da 2449     		ldr	r1, .L22+52
+ 359 01dc 131C     		mov	r3, r2
+ 360 01de 5B00     		lsl	r3, r3, #1
+ 361 01e0 9B18     		add	r3, r3, r2
+ 362 01e2 5B00     		lsl	r3, r3, #1
+ 363 01e4 595A     		ldrh	r1, [r3, r1]
+ 364 01e6 3B1C     		mov	r3, r7
+ 365 01e8 1F33     		add	r3, r3, #31
+ 366 01ea 1A78     		ldrb	r2, [r3]
+ 367 01ec 1F48     		ldr	r0, .L22+52
+ 368 01ee 131C     		mov	r3, r2
+ 369 01f0 5B00     		lsl	r3, r3, #1
+ 370 01f2 9B18     		add	r3, r3, r2
+ 371 01f4 5B00     		lsl	r3, r3, #1
+ 372 01f6 C318     		add	r3, r0, r3
+ 373 01f8 5B88     		ldrh	r3, [r3, #2]
+ 374 01fa 9942     		cmp	r1, r3
+ 375 01fc 04D2     		bcs	.L20
+ 163:.\main.c      ****                             printf("Peer device supports Tx power Service \r\n");      
+ 376              		.loc 1 163 0
+ 377 01fe 1D4B     		ldr	r3, .L22+60
+ 378 0200 181C     		mov	r0, r3
+ 379 0202 FFF7FEFF 		bl	puts
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 12
+
+
+ 380 0206 03E0     		b	.L19
+ 381              	.L20:
+ 167:.\main.c      ****                             printf("Peer device doesn't supports Tx power Service \r\n");
+ 382              		.loc 1 167 0
+ 383 0208 1B4B     		ldr	r3, .L22+64
+ 384 020a 181C     		mov	r0, r3
+ 385 020c FFF7FEFF 		bl	puts
+ 386              	.L19:
+ 156:.\main.c      ****                 for(i = 0u; i < CYBLE_SRVI_COUNT; i++)
+ 387              		.loc 1 156 0
+ 388 0210 3B1C     		mov	r3, r7
+ 389 0212 1F33     		add	r3, r3, #31
+ 390 0214 1A78     		ldrb	r2, [r3]
+ 391 0216 3B1C     		mov	r3, r7
+ 392 0218 1F33     		add	r3, r3, #31
+ 393 021a 0132     		add	r2, r2, #1
+ 394 021c 1A70     		strb	r2, [r3]
+ 395              	.L18:
+ 156:.\main.c      ****                 for(i = 0u; i < CYBLE_SRVI_COUNT; i++)
+ 396              		.loc 1 156 0 is_stmt 0 discriminator 1
+ 397 021e 3B1C     		mov	r3, r7
+ 398 0220 1F33     		add	r3, r3, #31
+ 399 0222 1B78     		ldrb	r3, [r3]
+ 400 0224 022B     		cmp	r3, #2
+ 401 0226 C8D9     		bls	.L21
+ 172:.\main.c      ****                 printf("\r\n");
+ 402              		.loc 1 172 0 is_stmt 1
+ 403 0228 074B     		ldr	r3, .L22+16
+ 404 022a 181C     		mov	r0, r3
+ 405 022c FFF7FEFF 		bl	puts
+ 173:.\main.c      ****             break;                   
+ 406              		.loc 1 173 0
+ 407 0230 C046     		mov	r8, r8
+ 408              	.L1:
+ 177:.\main.c      ****                 
+ 178:.\main.c      ****     }
+ 179:.\main.c      **** }
+ 409              		.loc 1 179 0
+ 410 0232 BD46     		mov	sp, r7
+ 411 0234 09B0     		add	sp, sp, #36
+ 412              		@ sp needed
+ 413 0236 90BD     		pop	{r4, r7, pc}
+ 414              	.L23:
+ 415              		.align	2
+ 416              	.L22:
+ 417 0238 00000000 		.word	.LC0
+ 418 023c 10000000 		.word	.LC2
+ 419 0240 00000000 		.word	peerDeviceAddr
+ 420 0244 20000000 		.word	.LC5
+ 421 0248 28000000 		.word	.LC7
+ 422 024c 00000000 		.word	deviceDetected
+ 423 0250 00000000 		.word	cyBle_state
+ 424 0254 2C000000 		.word	.LC11
+ 425 0258 40000000 		.word	.LC13
+ 426 025c 50000000 		.word	.LC15
+ 427 0260 5C000000 		.word	.LC17
+ 428 0264 00000000 		.word	cyBle_connHandle
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 13
+
+
+ 429 0268 74000000 		.word	.LC20
+ 430 026c 00000000 		.word	cyBle_serverInfo
+ 431 0270 04180000 		.word	6148
+ 432 0274 8C000000 		.word	.LC23
+ 433 0278 B4000000 		.word	.LC25
+ 434              		.cfi_endproc
+ 435              	.LFE35:
+ 436              		.size	StackEventHandler, .-StackEventHandler
+ 437              		.section	.rodata
+ 438              		.align	2
+ 439              	.LC27:
+ 440 00e4 31323334 		.ascii	"123456\000"
+ 440      353600
+ 441 00eb 00       		.section	.text.main,"ax",%progbits
+ 442              		.align	2
+ 443              		.global	main
+ 444              		.code	16
+ 445              		.thumb_func
+ 446              		.type	main, %function
+ 447              	main:
+ 448              	.LFB36:
+ 180:.\main.c      **** 
+ 181:.\main.c      **** /*******************************************************************************
+ 182:.\main.c      **** * Function Name: main
+ 183:.\main.c      **** ********************************************************************************
+ 184:.\main.c      **** *
+ 185:.\main.c      **** * Summary:
+ 186:.\main.c      **** *  Main function.
+ 187:.\main.c      **** *
+ 188:.\main.c      **** * Parameters:
+ 189:.\main.c      **** *  None
+ 190:.\main.c      **** *
+ 191:.\main.c      **** * Return:
+ 192:.\main.c      **** *  None
+ 193:.\main.c      **** *
+ 194:.\main.c      **** * Theory:
+ 195:.\main.c      **** * This function initializes the BLE component and then procesthe BLE events routinely
+ 196:.\main.c      **** *******************************************************************************/
+ 197:.\main.c      **** 
+ 198:.\main.c      **** int main()
+ 199:.\main.c      **** {
+ 449              		.loc 1 199 0
+ 450              		.cfi_startproc
+ 451 0000 80B5     		push	{r7, lr}
+ 452              		.cfi_def_cfa_offset 8
+ 453              		.cfi_offset 7, -8
+ 454              		.cfi_offset 14, -4
+ 455 0002 86B0     		sub	sp, sp, #24
+ 456              		.cfi_def_cfa_offset 32
+ 457 0004 02AF     		add	r7, sp, #8
+ 458              		.cfi_def_cfa 7, 24
+ 200:.\main.c      ****     /* Local variables*/
+ 201:.\main.c      ****     uint8 value;
+ 202:.\main.c      ****     char8 command;
+ 203:.\main.c      ****     const char8 serialNumber[] = "123456";       
+ 459              		.loc 1 203 0
+ 460 0006 3B1D     		add	r3, r7, #4
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 14
+
+
+ 461 0008 384A     		ldr	r2, .L30
+ 462 000a 1168     		ldr	r1, [r2]
+ 463 000c 1960     		str	r1, [r3]
+ 464 000e 9188     		ldrh	r1, [r2, #4]
+ 465 0010 9980     		strh	r1, [r3, #4]
+ 466 0012 9279     		ldrb	r2, [r2, #6]
+ 467 0014 9A71     		strb	r2, [r3, #6]
+ 204:.\main.c      ****     
+ 205:.\main.c      ****     CyGlobalIntEnable;  
+ 468              		.loc 1 205 0
+ 469              	@ 205 ".\main.c" 1
+ 470 0016 62B6     		CPSIE   i
+ 471              	@ 0 "" 2
+ 206:.\main.c      ****     
+ 207:.\main.c      ****     UART_Start();
+ 472              		.loc 1 207 0
+ 473              		.code	16
+ 474 0018 FFF7FEFF 		bl	UART_Start
+ 208:.\main.c      ****     
+ 209:.\main.c      ****     CyBle_Start(StackEventHandler);/*Start BLE*/
+ 475              		.loc 1 209 0
+ 476 001c 344B     		ldr	r3, .L30+4
+ 477 001e 181C     		mov	r0, r3
+ 478 0020 FFF7FEFF 		bl	CyBle_Start
+ 210:.\main.c      ****     
+ 211:.\main.c      ****     /* Set Serial Number string not initialized in GUI */
+ 212:.\main.c      ****     CyBle_DissSetCharacteristicValue(CYBLE_DIS_SERIAL_NUMBER, sizeof(serialNumber), (uint8 *)serial
+ 479              		.loc 1 212 0
+ 480 0024 3B1D     		add	r3, r7, #4
+ 481 0026 0220     		mov	r0, #2
+ 482 0028 0721     		mov	r1, #7
+ 483 002a 1A1C     		mov	r2, r3
+ 484 002c FFF7FEFF 		bl	CyBle_DissSetCharacteristicValue
+ 213:.\main.c      ****         
+ 214:.\main.c      ****     
+ 215:.\main.c      ****     /* Register the event handler for TPS specific events */
+ 216:.\main.c      ****     CyBle_TpsRegisterAttrCallback(TpsServiceAppEventHandler);
+ 485              		.loc 1 216 0
+ 486 0030 304B     		ldr	r3, .L30+8
+ 487 0032 181C     		mov	r0, r3
+ 488 0034 FFF7FEFF 		bl	CyBle_TpsRegisterAttrCallback
+ 489              	.L29:
+ 217:.\main.c      ****    
+ 218:.\main.c      ****     for(;;)
+ 219:.\main.c      ****     {
+ 220:.\main.c      ****         CyBle_ProcessEvents();
+ 490              		.loc 1 220 0
+ 491 0038 FFF7FEFF 		bl	CyBle_ProcessEvents
+ 221:.\main.c      ****         
+ 222:.\main.c      ****         command=UART_UartGetChar();
+ 492              		.loc 1 222 0
+ 493 003c FFF7FEFF 		bl	UART_UartGetChar
+ 494 0040 021C     		mov	r2, r0
+ 495 0042 3B1C     		mov	r3, r7
+ 496 0044 0F33     		add	r3, r3, #15
+ 497 0046 1A70     		strb	r2, [r3]
+ 223:.\main.c      ****         if(command!=0u)
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 15
+
+
+ 498              		.loc 1 223 0
+ 499 0048 3B1C     		mov	r3, r7
+ 500 004a 0F33     		add	r3, r3, #15
+ 501 004c 1B78     		ldrb	r3, [r3]
+ 502 004e 002B     		cmp	r3, #0
+ 503 0050 4BD0     		beq	.L25
+ 224:.\main.c      ****         {
+ 225:.\main.c      ****             switch(command)
+ 504              		.loc 1 225 0
+ 505 0052 3B1C     		mov	r3, r7
+ 506 0054 0F33     		add	r3, r3, #15
+ 507 0056 1B78     		ldrb	r3, [r3]
+ 508 0058 652B     		cmp	r3, #101
+ 509 005a 14D0     		beq	.L26
+ 510 005c 722B     		cmp	r3, #114
+ 511 005e 02D0     		beq	.L27
+ 512 0060 642B     		cmp	r3, #100
+ 513 0062 29D0     		beq	.L28
+ 226:.\main.c      ****             {
+ 227:.\main.c      ****                 case 'r':    /*Read Tx power level*/           
+ 228:.\main.c      ****                         CyBle_TpscGetCharacteristicValue(cyBle_connHandle,CYBLE_TPS_TX_POWER_LEVEL)
+ 229:.\main.c      ****                     break;      
+ 230:.\main.c      ****                         
+ 231:.\main.c      ****                 case 'e':   /*Enable the notification*/
+ 232:.\main.c      ****                         value=1;
+ 233:.\main.c      ****                         CyBle_TpscSetCharacteristicDescriptor(cyBle_connHandle,CYBLE_TPS_TX_POWER_L
+ 234:.\main.c      ****                             CYBLE_TPS_TX_POWER_LEVEL_SIZE*2,&value);            
+ 235:.\main.c      ****                     break;
+ 236:.\main.c      ****                         
+ 237:.\main.c      ****                 case 'd':   /*Disable the notification*/
+ 238:.\main.c      ****                         value=0;
+ 239:.\main.c      ****                         CyBle_TpscSetCharacteristicDescriptor(cyBle_connHandle,CYBLE_TPS_TX_POWER_L
+ 240:.\main.c      ****                             CYBLE_TPS_TX_POWER_LEVEL_SIZE*2,&value);
+ 241:.\main.c      ****                     break;
+ 242:.\main.c      ****             }
+ 243:.\main.c      ****         }
+ 244:.\main.c      ****     }
+ 514              		.loc 1 244 0
+ 515 0064 E8E7     		b	.L29
+ 516              	.L27:
+ 228:.\main.c      ****                         CyBle_TpscGetCharacteristicValue(cyBle_connHandle,CYBLE_TPS_TX_POWER_LEVEL)
+ 517              		.loc 1 228 0
+ 518 0066 244B     		ldr	r3, .L30+12
+ 519 0068 1A78     		ldrb	r2, [r3]
+ 520 006a 5B78     		ldrb	r3, [r3, #1]
+ 521 006c 1B02     		lsl	r3, r3, #8
+ 522 006e 1A43     		orr	r2, r3
+ 523 0070 0023     		mov	r3, #0
+ 524 0072 1204     		lsl	r2, r2, #16
+ 525 0074 120C     		lsr	r2, r2, #16
+ 526 0076 1B0C     		lsr	r3, r3, #16
+ 527 0078 1B04     		lsl	r3, r3, #16
+ 528 007a 1343     		orr	r3, r2
+ 529 007c 181C     		mov	r0, r3
+ 530 007e 0021     		mov	r1, #0
+ 531 0080 FFF7FEFF 		bl	CyBle_TpscGetCharacteristicValue
+ 229:.\main.c      ****                     break;      
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 16
+
+
+ 532              		.loc 1 229 0
+ 533 0084 31E0     		b	.L25
+ 534              	.L26:
+ 232:.\main.c      ****                         value=1;
+ 535              		.loc 1 232 0
+ 536 0086 3B1C     		mov	r3, r7
+ 537 0088 0E33     		add	r3, r3, #14
+ 538 008a 0122     		mov	r2, #1
+ 539 008c 1A70     		strb	r2, [r3]
+ 233:.\main.c      ****                         CyBle_TpscSetCharacteristicDescriptor(cyBle_connHandle,CYBLE_TPS_TX_POWER_L
+ 540              		.loc 1 233 0
+ 541 008e 1A4B     		ldr	r3, .L30+12
+ 542 0090 3A1C     		mov	r2, r7
+ 543 0092 0E32     		add	r2, r2, #14
+ 544 0094 0092     		str	r2, [sp]
+ 545 0096 1A78     		ldrb	r2, [r3]
+ 546 0098 5B78     		ldrb	r3, [r3, #1]
+ 547 009a 1B02     		lsl	r3, r3, #8
+ 548 009c 1A43     		orr	r2, r3
+ 549 009e 0023     		mov	r3, #0
+ 550 00a0 1204     		lsl	r2, r2, #16
+ 551 00a2 120C     		lsr	r2, r2, #16
+ 552 00a4 1B0C     		lsr	r3, r3, #16
+ 553 00a6 1B04     		lsl	r3, r3, #16
+ 554 00a8 1343     		orr	r3, r2
+ 555 00aa 181C     		mov	r0, r3
+ 556 00ac 0021     		mov	r1, #0
+ 557 00ae 0022     		mov	r2, #0
+ 558 00b0 0223     		mov	r3, #2
+ 559 00b2 FFF7FEFF 		bl	CyBle_TpscSetCharacteristicDescriptor
+ 235:.\main.c      ****                     break;
+ 560              		.loc 1 235 0
+ 561 00b6 18E0     		b	.L25
+ 562              	.L28:
+ 238:.\main.c      ****                         value=0;
+ 563              		.loc 1 238 0
+ 564 00b8 3B1C     		mov	r3, r7
+ 565 00ba 0E33     		add	r3, r3, #14
+ 566 00bc 0022     		mov	r2, #0
+ 567 00be 1A70     		strb	r2, [r3]
+ 239:.\main.c      ****                         CyBle_TpscSetCharacteristicDescriptor(cyBle_connHandle,CYBLE_TPS_TX_POWER_L
+ 568              		.loc 1 239 0
+ 569 00c0 0D4B     		ldr	r3, .L30+12
+ 570 00c2 3A1C     		mov	r2, r7
+ 571 00c4 0E32     		add	r2, r2, #14
+ 572 00c6 0092     		str	r2, [sp]
+ 573 00c8 1A78     		ldrb	r2, [r3]
+ 574 00ca 5B78     		ldrb	r3, [r3, #1]
+ 575 00cc 1B02     		lsl	r3, r3, #8
+ 576 00ce 1A43     		orr	r2, r3
+ 577 00d0 0023     		mov	r3, #0
+ 578 00d2 1204     		lsl	r2, r2, #16
+ 579 00d4 120C     		lsr	r2, r2, #16
+ 580 00d6 1B0C     		lsr	r3, r3, #16
+ 581 00d8 1B04     		lsl	r3, r3, #16
+ 582 00da 1343     		orr	r3, r2
+ 583 00dc 181C     		mov	r0, r3
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 17
+
+
+ 584 00de 0021     		mov	r1, #0
+ 585 00e0 0022     		mov	r2, #0
+ 586 00e2 0223     		mov	r3, #2
+ 587 00e4 FFF7FEFF 		bl	CyBle_TpscSetCharacteristicDescriptor
+ 241:.\main.c      ****                     break;
+ 588              		.loc 1 241 0
+ 589 00e8 C046     		mov	r8, r8
+ 590              	.L25:
+ 591              		.loc 1 244 0
+ 592 00ea A5E7     		b	.L29
+ 593              	.L31:
+ 594              		.align	2
+ 595              	.L30:
+ 596 00ec E4000000 		.word	.LC27
+ 597 00f0 00000000 		.word	StackEventHandler
+ 598 00f4 00000000 		.word	TpsServiceAppEventHandler
+ 599 00f8 00000000 		.word	cyBle_connHandle
+ 600              		.cfi_endproc
+ 601              	.LFE36:
+ 602              		.size	main, .-main
+ 603              		.text
+ 604              	.Letext0:
+ 605              		.file 2 ".\\Generated_Source\\PSoC4/cytypes.h"
+ 606              		.file 3 ".\\Generated_Source\\PSoC4/BLE_Stack.h"
+ 607              		.file 4 ".\\Generated_Source\\PSoC4/BLE_StackGap.h"
+ 608              		.file 5 ".\\Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 609              		.file 6 ".\\Generated_Source\\PSoC4/BLE_gatt.h"
+ 610              		.file 7 ".\\Generated_Source\\PSoC4/BLE_tps.h"
+ 611              		.file 8 ".\\Generated_Source\\PSoC4/BLE_dis.h"
+ 612              		.file 9 ".\\Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 613              		.section	.debug_info,"",%progbits
+ 614              	.Ldebug_info0:
+ 615 0000 B30B0000 		.4byte	0xbb3
+ 616 0004 0400     		.2byte	0x4
+ 617 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 618 000a 04       		.byte	0x4
+ 619 000b 01       		.uleb128 0x1
+ 620 000c 55170000 		.4byte	.LASF365
+ 621 0010 01       		.byte	0x1
+ 622 0011 F1260000 		.4byte	.LASF366
+ 623 0015 231D0000 		.4byte	.LASF367
+ 624 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 625 001d 00000000 		.4byte	0
+ 626 0021 00000000 		.4byte	.Ldebug_line0
+ 627 0025 02       		.uleb128 0x2
+ 628 0026 01       		.byte	0x1
+ 629 0027 06       		.byte	0x6
+ 630 0028 EF080000 		.4byte	.LASF0
+ 631 002c 02       		.uleb128 0x2
+ 632 002d 01       		.byte	0x1
+ 633 002e 08       		.byte	0x8
+ 634 002f AF090000 		.4byte	.LASF1
+ 635 0033 02       		.uleb128 0x2
+ 636 0034 02       		.byte	0x2
+ 637 0035 05       		.byte	0x5
+ 638 0036 1E220000 		.4byte	.LASF2
+ 639 003a 02       		.uleb128 0x2
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 18
+
+
+ 640 003b 02       		.byte	0x2
+ 641 003c 07       		.byte	0x7
+ 642 003d 35270000 		.4byte	.LASF3
+ 643 0041 02       		.uleb128 0x2
+ 644 0042 04       		.byte	0x4
+ 645 0043 05       		.byte	0x5
+ 646 0044 19070000 		.4byte	.LASF4
+ 647 0048 02       		.uleb128 0x2
+ 648 0049 04       		.byte	0x4
+ 649 004a 07       		.byte	0x7
+ 650 004b 28110000 		.4byte	.LASF5
+ 651 004f 02       		.uleb128 0x2
+ 652 0050 08       		.byte	0x8
+ 653 0051 05       		.byte	0x5
+ 654 0052 C3130000 		.4byte	.LASF6
+ 655 0056 02       		.uleb128 0x2
+ 656 0057 08       		.byte	0x8
+ 657 0058 07       		.byte	0x7
+ 658 0059 A11C0000 		.4byte	.LASF7
+ 659 005d 03       		.uleb128 0x3
+ 660 005e 04       		.byte	0x4
+ 661 005f 05       		.byte	0x5
+ 662 0060 696E7400 		.ascii	"int\000"
+ 663 0064 02       		.uleb128 0x2
+ 664 0065 04       		.byte	0x4
+ 665 0066 07       		.byte	0x7
+ 666 0067 94160000 		.4byte	.LASF8
+ 667 006b 04       		.uleb128 0x4
+ 668 006c B8210000 		.4byte	.LASF9
+ 669 0070 02       		.byte	0x2
+ 670 0071 A1       		.byte	0xa1
+ 671 0072 2C000000 		.4byte	0x2c
+ 672 0076 04       		.uleb128 0x4
+ 673 0077 69290000 		.4byte	.LASF10
+ 674 007b 02       		.byte	0x2
+ 675 007c A2       		.byte	0xa2
+ 676 007d 3A000000 		.4byte	0x3a
+ 677 0081 04       		.uleb128 0x4
+ 678 0082 FC010000 		.4byte	.LASF11
+ 679 0086 02       		.byte	0x2
+ 680 0087 A3       		.byte	0xa3
+ 681 0088 48000000 		.4byte	0x48
+ 682 008c 04       		.uleb128 0x4
+ 683 008d 3A050000 		.4byte	.LASF12
+ 684 0091 02       		.byte	0x2
+ 685 0092 A4       		.byte	0xa4
+ 686 0093 25000000 		.4byte	0x25
+ 687 0097 02       		.uleb128 0x2
+ 688 0098 04       		.byte	0x4
+ 689 0099 04       		.byte	0x4
+ 690 009a DD150000 		.4byte	.LASF13
+ 691 009e 02       		.uleb128 0x2
+ 692 009f 08       		.byte	0x8
+ 693 00a0 04       		.byte	0x4
+ 694 00a1 BE140000 		.4byte	.LASF14
+ 695 00a5 04       		.uleb128 0x4
+ 696 00a6 E2030000 		.4byte	.LASF15
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 19
+
+
+ 697 00aa 02       		.byte	0x2
+ 698 00ab B2       		.byte	0xb2
+ 699 00ac B0000000 		.4byte	0xb0
+ 700 00b0 02       		.uleb128 0x2
+ 701 00b1 01       		.byte	0x1
+ 702 00b2 08       		.byte	0x8
+ 703 00b3 1C0B0000 		.4byte	.LASF16
+ 704 00b7 02       		.uleb128 0x2
+ 705 00b8 04       		.byte	0x4
+ 706 00b9 07       		.byte	0x7
+ 707 00ba 7F000000 		.4byte	.LASF17
+ 708 00be 05       		.uleb128 0x5
+ 709 00bf 04       		.byte	0x4
+ 710 00c0 06       		.uleb128 0x6
+ 711 00c1 01       		.byte	0x1
+ 712 00c2 03       		.byte	0x3
+ 713 00c3 58       		.byte	0x58
+ 714 00c4 30020000 		.4byte	0x230
+ 715 00c8 07       		.uleb128 0x7
+ 716 00c9 730B0000 		.4byte	.LASF18
+ 717 00cd 00       		.sleb128 0
+ 718 00ce 07       		.uleb128 0x7
+ 719 00cf 94070000 		.4byte	.LASF19
+ 720 00d3 01       		.sleb128 1
+ 721 00d4 07       		.uleb128 0x7
+ 722 00d5 B81C0000 		.4byte	.LASF20
+ 723 00d9 02       		.sleb128 2
+ 724 00da 07       		.uleb128 0x7
+ 725 00db 1E090000 		.4byte	.LASF21
+ 726 00df 03       		.sleb128 3
+ 727 00e0 07       		.uleb128 0x7
+ 728 00e1 05280000 		.4byte	.LASF22
+ 729 00e5 04       		.sleb128 4
+ 730 00e6 07       		.uleb128 0x7
+ 731 00e7 36260000 		.4byte	.LASF23
+ 732 00eb 05       		.sleb128 5
+ 733 00ec 07       		.uleb128 0x7
+ 734 00ed A8230000 		.4byte	.LASF24
+ 735 00f1 20       		.sleb128 32
+ 736 00f2 07       		.uleb128 0x7
+ 737 00f3 23050000 		.4byte	.LASF25
+ 738 00f7 21       		.sleb128 33
+ 739 00f8 07       		.uleb128 0x7
+ 740 00f9 3D130000 		.4byte	.LASF26
+ 741 00fd 22       		.sleb128 34
+ 742 00fe 07       		.uleb128 0x7
+ 743 00ff 3B190000 		.4byte	.LASF27
+ 744 0103 23       		.sleb128 35
+ 745 0104 07       		.uleb128 0x7
+ 746 0105 0B100000 		.4byte	.LASF28
+ 747 0109 24       		.sleb128 36
+ 748 010a 07       		.uleb128 0x7
+ 749 010b 4B100000 		.4byte	.LASF29
+ 750 010f 25       		.sleb128 37
+ 751 0110 07       		.uleb128 0x7
+ 752 0111 48210000 		.4byte	.LASF30
+ 753 0115 26       		.sleb128 38
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 20
+
+
+ 754 0116 07       		.uleb128 0x7
+ 755 0117 9F010000 		.4byte	.LASF31
+ 756 011b 27       		.sleb128 39
+ 757 011c 07       		.uleb128 0x7
+ 758 011d CA280000 		.4byte	.LASF32
+ 759 0121 28       		.sleb128 40
+ 760 0122 07       		.uleb128 0x7
+ 761 0123 0C1B0000 		.4byte	.LASF33
+ 762 0127 29       		.sleb128 41
+ 763 0128 07       		.uleb128 0x7
+ 764 0129 78120000 		.4byte	.LASF34
+ 765 012d 2A       		.sleb128 42
+ 766 012e 07       		.uleb128 0x7
+ 767 012f 97180000 		.4byte	.LASF35
+ 768 0133 2B       		.sleb128 43
+ 769 0134 07       		.uleb128 0x7
+ 770 0135 81260000 		.4byte	.LASF36
+ 771 0139 2C       		.sleb128 44
+ 772 013a 07       		.uleb128 0x7
+ 773 013b 97220000 		.4byte	.LASF37
+ 774 013f C000     		.sleb128 64
+ 775 0141 07       		.uleb128 0x7
+ 776 0142 BE010000 		.4byte	.LASF38
+ 777 0146 C100     		.sleb128 65
+ 778 0148 07       		.uleb128 0x7
+ 779 0149 1A280000 		.4byte	.LASF39
+ 780 014d C200     		.sleb128 66
+ 781 014f 07       		.uleb128 0x7
+ 782 0150 921B0000 		.4byte	.LASF40
+ 783 0154 C300     		.sleb128 67
+ 784 0156 07       		.uleb128 0x7
+ 785 0157 BD090000 		.4byte	.LASF41
+ 786 015b C400     		.sleb128 68
+ 787 015d 07       		.uleb128 0x7
+ 788 015e 51090000 		.4byte	.LASF42
+ 789 0162 C500     		.sleb128 69
+ 790 0164 07       		.uleb128 0x7
+ 791 0165 AB1F0000 		.4byte	.LASF43
+ 792 0169 C600     		.sleb128 70
+ 793 016b 07       		.uleb128 0x7
+ 794 016c 8D1F0000 		.4byte	.LASF44
+ 795 0170 C700     		.sleb128 71
+ 796 0172 07       		.uleb128 0x7
+ 797 0173 D00A0000 		.4byte	.LASF45
+ 798 0177 C800     		.sleb128 72
+ 799 0179 07       		.uleb128 0x7
+ 800 017a 93190000 		.4byte	.LASF46
+ 801 017e C900     		.sleb128 73
+ 802 0180 07       		.uleb128 0x7
+ 803 0181 DF0B0000 		.4byte	.LASF47
+ 804 0185 CA00     		.sleb128 74
+ 805 0187 07       		.uleb128 0x7
+ 806 0188 3D0B0000 		.4byte	.LASF48
+ 807 018c CB00     		.sleb128 75
+ 808 018e 07       		.uleb128 0x7
+ 809 018f DA180000 		.4byte	.LASF49
+ 810 0193 CC00     		.sleb128 76
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 21
+
+
+ 811 0195 07       		.uleb128 0x7
+ 812 0196 D6200000 		.4byte	.LASF50
+ 813 019a CD00     		.sleb128 77
+ 814 019c 07       		.uleb128 0x7
+ 815 019d B8060000 		.4byte	.LASF51
+ 816 01a1 CE00     		.sleb128 78
+ 817 01a3 07       		.uleb128 0x7
+ 818 01a4 A1160000 		.4byte	.LASF52
+ 819 01a8 CF00     		.sleb128 79
+ 820 01aa 07       		.uleb128 0x7
+ 821 01ab 89230000 		.4byte	.LASF53
+ 822 01af D000     		.sleb128 80
+ 823 01b1 07       		.uleb128 0x7
+ 824 01b2 430C0000 		.4byte	.LASF54
+ 825 01b6 D100     		.sleb128 81
+ 826 01b8 07       		.uleb128 0x7
+ 827 01b9 02050000 		.4byte	.LASF55
+ 828 01bd D200     		.sleb128 82
+ 829 01bf 07       		.uleb128 0x7
+ 830 01c0 B6250000 		.4byte	.LASF56
+ 831 01c4 D300     		.sleb128 83
+ 832 01c6 07       		.uleb128 0x7
+ 833 01c7 0C290000 		.4byte	.LASF57
+ 834 01cb D400     		.sleb128 84
+ 835 01cd 07       		.uleb128 0x7
+ 836 01ce F4180000 		.4byte	.LASF58
+ 837 01d2 D500     		.sleb128 85
+ 838 01d4 07       		.uleb128 0x7
+ 839 01d5 A5260000 		.4byte	.LASF59
+ 840 01d9 F000     		.sleb128 112
+ 841 01db 07       		.uleb128 0x7
+ 842 01dc 670F0000 		.4byte	.LASF60
+ 843 01e0 F100     		.sleb128 113
+ 844 01e2 07       		.uleb128 0x7
+ 845 01e3 6D080000 		.4byte	.LASF61
+ 846 01e7 F200     		.sleb128 114
+ 847 01e9 07       		.uleb128 0x7
+ 848 01ea 6B230000 		.4byte	.LASF62
+ 849 01ee F300     		.sleb128 115
+ 850 01f0 07       		.uleb128 0x7
+ 851 01f1 E8190000 		.4byte	.LASF63
+ 852 01f5 F400     		.sleb128 116
+ 853 01f7 07       		.uleb128 0x7
+ 854 01f8 01130000 		.4byte	.LASF64
+ 855 01fc F500     		.sleb128 117
+ 856 01fe 07       		.uleb128 0x7
+ 857 01ff AF0A0000 		.4byte	.LASF65
+ 858 0203 F600     		.sleb128 118
+ 859 0205 07       		.uleb128 0x7
+ 860 0206 B91D0000 		.4byte	.LASF66
+ 861 020a F700     		.sleb128 119
+ 862 020c 07       		.uleb128 0x7
+ 863 020d E8030000 		.4byte	.LASF67
+ 864 0211 F800     		.sleb128 120
+ 865 0213 07       		.uleb128 0x7
+ 866 0214 3F0A0000 		.4byte	.LASF68
+ 867 0218 F900     		.sleb128 121
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 22
+
+
+ 868 021a 07       		.uleb128 0x7
+ 869 021b 5E280000 		.4byte	.LASF69
+ 870 021f FA00     		.sleb128 122
+ 871 0221 07       		.uleb128 0x7
+ 872 0222 E7140000 		.4byte	.LASF70
+ 873 0226 FA01     		.sleb128 250
+ 874 0228 07       		.uleb128 0x7
+ 875 0229 89180000 		.4byte	.LASF71
+ 876 022d FF01     		.sleb128 255
+ 877 022f 00       		.byte	0
+ 878 0230 08       		.uleb128 0x8
+ 879 0231 02       		.byte	0x2
+ 880 0232 03       		.byte	0x3
+ 881 0233 9A01     		.2byte	0x19a
+ 882 0235 FC020000 		.4byte	0x2fc
+ 883 0239 07       		.uleb128 0x7
+ 884 023a 37090000 		.4byte	.LASF72
+ 885 023e 00       		.sleb128 0
+ 886 023f 07       		.uleb128 0x7
+ 887 0240 370D0000 		.4byte	.LASF73
+ 888 0244 01       		.sleb128 1
+ 889 0245 07       		.uleb128 0x7
+ 890 0246 E7270000 		.4byte	.LASF74
+ 891 024a 02       		.sleb128 2
+ 892 024b 07       		.uleb128 0x7
+ 893 024c 630E0000 		.4byte	.LASF75
+ 894 0250 03       		.sleb128 3
+ 895 0251 07       		.uleb128 0x7
+ 896 0252 BB100000 		.4byte	.LASF76
+ 897 0256 04       		.sleb128 4
+ 898 0257 07       		.uleb128 0x7
+ 899 0258 6E140000 		.4byte	.LASF77
+ 900 025c 05       		.sleb128 5
+ 901 025d 07       		.uleb128 0x7
+ 902 025e F9240000 		.4byte	.LASF78
+ 903 0262 06       		.sleb128 6
+ 904 0263 07       		.uleb128 0x7
+ 905 0264 C20B0000 		.4byte	.LASF79
+ 906 0268 07       		.sleb128 7
+ 907 0269 07       		.uleb128 0x7
+ 908 026a BF150000 		.4byte	.LASF80
+ 909 026e 08       		.sleb128 8
+ 910 026f 07       		.uleb128 0x7
+ 911 0270 EE230000 		.4byte	.LASF81
+ 912 0274 09       		.sleb128 9
+ 913 0275 07       		.uleb128 0x7
+ 914 0276 70290000 		.4byte	.LASF82
+ 915 027a 0A       		.sleb128 10
+ 916 027b 07       		.uleb128 0x7
+ 917 027c 9E050000 		.4byte	.LASF83
+ 918 0280 0B       		.sleb128 11
+ 919 0281 07       		.uleb128 0x7
+ 920 0282 1F260000 		.4byte	.LASF84
+ 921 0286 0C       		.sleb128 12
+ 922 0287 07       		.uleb128 0x7
+ 923 0288 0B180000 		.4byte	.LASF85
+ 924 028c 0D       		.sleb128 13
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 23
+
+
+ 925 028d 07       		.uleb128 0x7
+ 926 028e BC110000 		.4byte	.LASF86
+ 927 0292 0E       		.sleb128 14
+ 928 0293 07       		.uleb128 0x7
+ 929 0294 49140000 		.4byte	.LASF87
+ 930 0298 0F       		.sleb128 15
+ 931 0299 07       		.uleb128 0x7
+ 932 029a 43030000 		.4byte	.LASF88
+ 933 029e 10       		.sleb128 16
+ 934 029f 07       		.uleb128 0x7
+ 935 02a0 9B150000 		.4byte	.LASF89
+ 936 02a4 11       		.sleb128 17
+ 937 02a5 07       		.uleb128 0x7
+ 938 02a6 A7070000 		.4byte	.LASF90
+ 939 02aa 12       		.sleb128 18
+ 940 02ab 07       		.uleb128 0x7
+ 941 02ac C7080000 		.4byte	.LASF91
+ 942 02b0 13       		.sleb128 19
+ 943 02b1 07       		.uleb128 0x7
+ 944 02b2 C5140000 		.4byte	.LASF92
+ 945 02b6 27       		.sleb128 39
+ 946 02b7 07       		.uleb128 0x7
+ 947 02b8 22160000 		.4byte	.LASF93
+ 948 02bc 28       		.sleb128 40
+ 949 02bd 07       		.uleb128 0x7
+ 950 02be 8B030000 		.4byte	.LASF94
+ 951 02c2 29       		.sleb128 41
+ 952 02c3 07       		.uleb128 0x7
+ 953 02c4 340F0000 		.4byte	.LASF95
+ 954 02c8 FF01     		.sleb128 255
+ 955 02ca 07       		.uleb128 0x7
+ 956 02cb 82100000 		.4byte	.LASF96
+ 957 02cf 8002     		.sleb128 256
+ 958 02d1 07       		.uleb128 0x7
+ 959 02d2 FA260000 		.4byte	.LASF97
+ 960 02d6 8102     		.sleb128 257
+ 961 02d8 07       		.uleb128 0x7
+ 962 02d9 2F0E0000 		.4byte	.LASF98
+ 963 02dd 8202     		.sleb128 258
+ 964 02df 07       		.uleb128 0x7
+ 965 02e0 7A190000 		.4byte	.LASF99
+ 966 02e4 8302     		.sleb128 259
+ 967 02e6 07       		.uleb128 0x7
+ 968 02e7 61190000 		.4byte	.LASF100
+ 969 02eb 8402     		.sleb128 260
+ 970 02ed 07       		.uleb128 0x7
+ 971 02ee 2D080000 		.4byte	.LASF101
+ 972 02f2 8502     		.sleb128 261
+ 973 02f4 07       		.uleb128 0x7
+ 974 02f5 ED1C0000 		.4byte	.LASF102
+ 975 02f9 8602     		.sleb128 262
+ 976 02fb 00       		.byte	0
+ 977 02fc 09       		.uleb128 0x9
+ 978 02fd 13250000 		.4byte	.LASF103
+ 979 0301 03       		.byte	0x3
+ 980 0302 F401     		.2byte	0x1f4
+ 981 0304 30020000 		.4byte	0x230
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 24
+
+
+ 982 0308 0A       		.uleb128 0xa
+ 983 0309 07       		.byte	0x7
+ 984 030a 03       		.byte	0x3
+ 985 030b 7502     		.2byte	0x275
+ 986 030d 2C030000 		.4byte	0x32c
+ 987 0311 0B       		.uleb128 0xb
+ 988 0312 90240000 		.4byte	.LASF104
+ 989 0316 03       		.byte	0x3
+ 990 0317 7702     		.2byte	0x277
+ 991 0319 2C030000 		.4byte	0x32c
+ 992 031d 00       		.byte	0
+ 993 031e 0B       		.uleb128 0xb
+ 994 031f 6A040000 		.4byte	.LASF105
+ 995 0323 03       		.byte	0x3
+ 996 0324 7802     		.2byte	0x278
+ 997 0326 6B000000 		.4byte	0x6b
+ 998 032a 06       		.byte	0x6
+ 999 032b 00       		.byte	0
+ 1000 032c 0C       		.uleb128 0xc
+ 1001 032d 6B000000 		.4byte	0x6b
+ 1002 0331 3C030000 		.4byte	0x33c
+ 1003 0335 0D       		.uleb128 0xd
+ 1004 0336 B7000000 		.4byte	0xb7
+ 1005 033a 05       		.byte	0x5
+ 1006 033b 00       		.byte	0
+ 1007 033c 09       		.uleb128 0x9
+ 1008 033d D91E0000 		.4byte	.LASF106
+ 1009 0341 03       		.byte	0x3
+ 1010 0342 7902     		.2byte	0x279
+ 1011 0344 08030000 		.4byte	0x308
+ 1012 0348 06       		.uleb128 0x6
+ 1013 0349 01       		.byte	0x1
+ 1014 034a 04       		.byte	0x4
+ 1015 034b 9D       		.byte	0x9d
+ 1016 034c 6F030000 		.4byte	0x36f
+ 1017 0350 07       		.uleb128 0x7
+ 1018 0351 FA060000 		.4byte	.LASF107
+ 1019 0355 00       		.sleb128 0
+ 1020 0356 07       		.uleb128 0x7
+ 1021 0357 791E0000 		.4byte	.LASF108
+ 1022 035b 01       		.sleb128 1
+ 1023 035c 07       		.uleb128 0x7
+ 1024 035d 4C220000 		.4byte	.LASF109
+ 1025 0361 02       		.sleb128 2
+ 1026 0362 07       		.uleb128 0x7
+ 1027 0363 09060000 		.4byte	.LASF110
+ 1028 0367 03       		.sleb128 3
+ 1029 0368 07       		.uleb128 0x7
+ 1030 0369 56000000 		.4byte	.LASF111
+ 1031 036d 04       		.sleb128 4
+ 1032 036e 00       		.byte	0
+ 1033 036f 04       		.uleb128 0x4
+ 1034 0370 E2240000 		.4byte	.LASF112
+ 1035 0374 04       		.byte	0x4
+ 1036 0375 AD       		.byte	0xad
+ 1037 0376 48030000 		.4byte	0x348
+ 1038 037a 0A       		.uleb128 0xa
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 25
+
+
+ 1039 037b 14       		.byte	0x14
+ 1040 037c 04       		.byte	0x4
+ 1041 037d 6102     		.2byte	0x261
+ 1042 037f D2030000 		.4byte	0x3d2
+ 1043 0383 0B       		.uleb128 0xb
+ 1044 0384 AC250000 		.4byte	.LASF113
+ 1045 0388 04       		.byte	0x4
+ 1046 0389 6A02     		.2byte	0x26a
+ 1047 038b 6F030000 		.4byte	0x36f
+ 1048 038f 00       		.byte	0
+ 1049 0390 0B       		.uleb128 0xb
+ 1050 0391 620A0000 		.4byte	.LASF114
+ 1051 0395 04       		.byte	0x4
+ 1052 0396 7002     		.2byte	0x270
+ 1053 0398 6B000000 		.4byte	0x6b
+ 1054 039c 01       		.byte	0x1
+ 1055 039d 0B       		.uleb128 0xb
+ 1056 039e 46090000 		.4byte	.LASF115
+ 1057 03a2 04       		.byte	0x4
+ 1058 03a3 7402     		.2byte	0x274
+ 1059 03a5 D2030000 		.4byte	0x3d2
+ 1060 03a9 04       		.byte	0x4
+ 1061 03aa 0B       		.uleb128 0xb
+ 1062 03ab 6A070000 		.4byte	.LASF116
+ 1063 03af 04       		.byte	0x4
+ 1064 03b0 7702     		.2byte	0x277
+ 1065 03b2 6B000000 		.4byte	0x6b
+ 1066 03b6 08       		.byte	0x8
+ 1067 03b7 0B       		.uleb128 0xb
+ 1068 03b8 A9280000 		.4byte	.LASF117
+ 1069 03bc 04       		.byte	0x4
+ 1070 03bd 7A02     		.2byte	0x27a
+ 1071 03bf D2030000 		.4byte	0x3d2
+ 1072 03c3 0C       		.byte	0xc
+ 1073 03c4 0B       		.uleb128 0xb
+ 1074 03c5 A4280000 		.4byte	.LASF118
+ 1075 03c9 04       		.byte	0x4
+ 1076 03ca 7F02     		.2byte	0x27f
+ 1077 03cc 8C000000 		.4byte	0x8c
+ 1078 03d0 10       		.byte	0x10
+ 1079 03d1 00       		.byte	0
+ 1080 03d2 0E       		.uleb128 0xe
+ 1081 03d3 04       		.byte	0x4
+ 1082 03d4 6B000000 		.4byte	0x6b
+ 1083 03d8 09       		.uleb128 0x9
+ 1084 03d9 51290000 		.4byte	.LASF119
+ 1085 03dd 04       		.byte	0x4
+ 1086 03de 8102     		.2byte	0x281
+ 1087 03e0 7A030000 		.4byte	0x37a
+ 1088 03e4 09       		.uleb128 0x9
+ 1089 03e5 071D0000 		.4byte	.LASF120
+ 1090 03e9 05       		.byte	0x5
+ 1091 03ea 5201     		.2byte	0x152
+ 1092 03ec 76000000 		.4byte	0x76
+ 1093 03f0 0A       		.uleb128 0xa
+ 1094 03f1 02       		.byte	0x2
+ 1095 03f2 05       		.byte	0x5
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 26
+
+
+ 1096 03f3 5501     		.2byte	0x155
+ 1097 03f5 14040000 		.4byte	0x414
+ 1098 03f9 0B       		.uleb128 0xb
+ 1099 03fa DB050000 		.4byte	.LASF121
+ 1100 03fe 05       		.byte	0x5
+ 1101 03ff 5C01     		.2byte	0x15c
+ 1102 0401 6B000000 		.4byte	0x6b
+ 1103 0405 00       		.byte	0
+ 1104 0406 0B       		.uleb128 0xb
+ 1105 0407 E1270000 		.4byte	.LASF122
+ 1106 040b 05       		.byte	0x5
+ 1107 040c 6201     		.2byte	0x162
+ 1108 040e 6B000000 		.4byte	0x6b
+ 1109 0412 01       		.byte	0x1
+ 1110 0413 00       		.byte	0
+ 1111 0414 09       		.uleb128 0x9
+ 1112 0415 67050000 		.4byte	.LASF123
+ 1113 0419 05       		.byte	0x5
+ 1114 041a 6401     		.2byte	0x164
+ 1115 041c F0030000 		.4byte	0x3f0
+ 1116 0420 0A       		.uleb128 0xa
+ 1117 0421 04       		.byte	0x4
+ 1118 0422 05       		.byte	0x5
+ 1119 0423 9601     		.2byte	0x196
+ 1120 0425 44040000 		.4byte	0x444
+ 1121 0429 0B       		.uleb128 0xb
+ 1122 042a EF0F0000 		.4byte	.LASF124
+ 1123 042e 05       		.byte	0x5
+ 1124 042f 9901     		.2byte	0x199
+ 1125 0431 E4030000 		.4byte	0x3e4
+ 1126 0435 00       		.byte	0
+ 1127 0436 0B       		.uleb128 0xb
+ 1128 0437 48240000 		.4byte	.LASF125
+ 1129 043b 05       		.byte	0x5
+ 1130 043c 9C01     		.2byte	0x19c
+ 1131 043e E4030000 		.4byte	0x3e4
+ 1132 0442 02       		.byte	0x2
+ 1133 0443 00       		.byte	0
+ 1134 0444 09       		.uleb128 0x9
+ 1135 0445 B1220000 		.4byte	.LASF126
+ 1136 0449 05       		.byte	0x5
+ 1137 044a 9E01     		.2byte	0x19e
+ 1138 044c 20040000 		.4byte	0x420
+ 1139 0450 0F       		.uleb128 0xf
+ 1140 0451 06       		.byte	0x6
+ 1141 0452 06       		.byte	0x6
+ 1142 0453 42       		.byte	0x42
+ 1143 0454 71040000 		.4byte	0x471
+ 1144 0458 10       		.uleb128 0x10
+ 1145 0459 FF000000 		.4byte	.LASF127
+ 1146 045d 06       		.byte	0x6
+ 1147 045e 44       		.byte	0x44
+ 1148 045f 44040000 		.4byte	0x444
+ 1149 0463 00       		.byte	0
+ 1150 0464 10       		.uleb128 0x10
+ 1151 0465 8F160000 		.4byte	.LASF128
+ 1152 0469 06       		.byte	0x6
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 27
+
+
+ 1153 046a 45       		.byte	0x45
+ 1154 046b 76000000 		.4byte	0x76
+ 1155 046f 04       		.byte	0x4
+ 1156 0470 00       		.byte	0
+ 1157 0471 04       		.uleb128 0x4
+ 1158 0472 D1170000 		.4byte	.LASF129
+ 1159 0476 06       		.byte	0x6
+ 1160 0477 46       		.byte	0x46
+ 1161 0478 50040000 		.4byte	0x450
+ 1162 047c 06       		.uleb128 0x6
+ 1163 047d 01       		.byte	0x1
+ 1164 047e 07       		.byte	0x7
+ 1165 047f 25       		.byte	0x25
+ 1166 0480 91040000 		.4byte	0x491
+ 1167 0484 07       		.uleb128 0x7
+ 1168 0485 E5110000 		.4byte	.LASF130
+ 1169 0489 00       		.sleb128 0
+ 1170 048a 07       		.uleb128 0x7
+ 1171 048b AD0B0000 		.4byte	.LASF131
+ 1172 048f 01       		.sleb128 1
+ 1173 0490 00       		.byte	0
+ 1174 0491 06       		.uleb128 0x6
+ 1175 0492 01       		.byte	0x1
+ 1176 0493 07       		.byte	0x7
+ 1177 0494 2C       		.byte	0x2c
+ 1178 0495 A6040000 		.4byte	0x4a6
+ 1179 0499 07       		.uleb128 0x7
+ 1180 049a 6B220000 		.4byte	.LASF132
+ 1181 049e 00       		.sleb128 0
+ 1182 049f 07       		.uleb128 0x7
+ 1183 04a0 AB0E0000 		.4byte	.LASF133
+ 1184 04a4 01       		.sleb128 1
+ 1185 04a5 00       		.byte	0
+ 1186 04a6 06       		.uleb128 0x6
+ 1187 04a7 01       		.byte	0x1
+ 1188 04a8 08       		.byte	0x8
+ 1189 04a9 1D       		.byte	0x1d
+ 1190 04aa EB040000 		.4byte	0x4eb
+ 1191 04ae 07       		.uleb128 0x7
+ 1192 04af 3E1C0000 		.4byte	.LASF134
+ 1193 04b3 00       		.sleb128 0
+ 1194 04b4 07       		.uleb128 0x7
+ 1195 04b5 E80C0000 		.4byte	.LASF135
+ 1196 04b9 01       		.sleb128 1
+ 1197 04ba 07       		.uleb128 0x7
+ 1198 04bb 60120000 		.4byte	.LASF136
+ 1199 04bf 02       		.sleb128 2
+ 1200 04c0 07       		.uleb128 0x7
+ 1201 04c1 CA070000 		.4byte	.LASF137
+ 1202 04c5 03       		.sleb128 3
+ 1203 04c6 07       		.uleb128 0x7
+ 1204 04c7 EB040000 		.4byte	.LASF138
+ 1205 04cb 04       		.sleb128 4
+ 1206 04cc 07       		.uleb128 0x7
+ 1207 04cd 920C0000 		.4byte	.LASF139
+ 1208 04d1 05       		.sleb128 5
+ 1209 04d2 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 28
+
+
+ 1210 04d3 230D0000 		.4byte	.LASF140
+ 1211 04d7 06       		.sleb128 6
+ 1212 04d8 07       		.uleb128 0x7
+ 1213 04d9 17170000 		.4byte	.LASF141
+ 1214 04dd 07       		.sleb128 7
+ 1215 04de 07       		.uleb128 0x7
+ 1216 04df F3130000 		.4byte	.LASF142
+ 1217 04e3 08       		.sleb128 8
+ 1218 04e4 07       		.uleb128 0x7
+ 1219 04e5 6A000000 		.4byte	.LASF143
+ 1220 04e9 09       		.sleb128 9
+ 1221 04ea 00       		.byte	0
+ 1222 04eb 06       		.uleb128 0x6
+ 1223 04ec 02       		.byte	0x2
+ 1224 04ed 09       		.byte	0x9
+ 1225 04ee 80       		.byte	0x80
+ 1226 04ef 510A0000 		.4byte	0xa51
+ 1227 04f3 07       		.uleb128 0x7
+ 1228 04f4 E8170000 		.4byte	.LASF144
+ 1229 04f8 8002     		.sleb128 256
+ 1230 04fa 07       		.uleb128 0x7
+ 1231 04fb 82280000 		.4byte	.LASF145
+ 1232 04ff 8102     		.sleb128 257
+ 1233 0501 07       		.uleb128 0x7
+ 1234 0502 72070000 		.4byte	.LASF146
+ 1235 0506 8202     		.sleb128 258
+ 1236 0508 07       		.uleb128 0x7
+ 1237 0509 38280000 		.4byte	.LASF147
+ 1238 050d 8302     		.sleb128 259
+ 1239 050f 07       		.uleb128 0x7
+ 1240 0510 7E1C0000 		.4byte	.LASF148
+ 1241 0514 8402     		.sleb128 260
+ 1242 0516 07       		.uleb128 0x7
+ 1243 0517 28220000 		.4byte	.LASF149
+ 1244 051b 8502     		.sleb128 261
+ 1245 051d 07       		.uleb128 0x7
+ 1246 051e 6F0A0000 		.4byte	.LASF150
+ 1247 0522 8602     		.sleb128 262
+ 1248 0524 07       		.uleb128 0x7
+ 1249 0525 89080000 		.4byte	.LASF151
+ 1250 0529 8702     		.sleb128 263
+ 1251 052b 07       		.uleb128 0x7
+ 1252 052c 0F270000 		.4byte	.LASF152
+ 1253 0530 8802     		.sleb128 264
+ 1254 0532 07       		.uleb128 0x7
+ 1255 0533 BC030000 		.4byte	.LASF153
+ 1256 0537 8902     		.sleb128 265
+ 1257 0539 07       		.uleb128 0x7
+ 1258 053a 03020000 		.4byte	.LASF154
+ 1259 053e 8A02     		.sleb128 266
+ 1260 0540 07       		.uleb128 0x7
+ 1261 0541 961E0000 		.4byte	.LASF155
+ 1262 0545 8B02     		.sleb128 267
+ 1263 0547 07       		.uleb128 0x7
+ 1264 0548 04140000 		.4byte	.LASF156
+ 1265 054c 8C02     		.sleb128 268
+ 1266 054e 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 29
+
+
+ 1267 054f 701B0000 		.4byte	.LASF157
+ 1268 0553 8D02     		.sleb128 269
+ 1269 0555 07       		.uleb128 0x7
+ 1270 0556 94020000 		.4byte	.LASF158
+ 1271 055a 8E02     		.sleb128 270
+ 1272 055c 07       		.uleb128 0x7
+ 1273 055d 05150000 		.4byte	.LASF159
+ 1274 0561 8F02     		.sleb128 271
+ 1275 0563 07       		.uleb128 0x7
+ 1276 0564 3F050000 		.4byte	.LASF160
+ 1277 0568 9002     		.sleb128 272
+ 1278 056a 07       		.uleb128 0x7
+ 1279 056b 4A250000 		.4byte	.LASF161
+ 1280 056f 9102     		.sleb128 273
+ 1281 0571 07       		.uleb128 0x7
+ 1282 0572 B6180000 		.4byte	.LASF162
+ 1283 0576 9202     		.sleb128 274
+ 1284 0578 07       		.uleb128 0x7
+ 1285 0579 AF290000 		.4byte	.LASF163
+ 1286 057d 9302     		.sleb128 275
+ 1287 057f 07       		.uleb128 0x7
+ 1288 0580 40230000 		.4byte	.LASF164
+ 1289 0584 9402     		.sleb128 276
+ 1290 0586 07       		.uleb128 0x7
+ 1291 0587 AE280000 		.4byte	.LASF165
+ 1292 058b 9502     		.sleb128 277
+ 1293 058d 07       		.uleb128 0x7
+ 1294 058e 9A110000 		.4byte	.LASF166
+ 1295 0592 9602     		.sleb128 278
+ 1296 0594 07       		.uleb128 0x7
+ 1297 0595 8D0F0000 		.4byte	.LASF167
+ 1298 0599 9702     		.sleb128 279
+ 1299 059b 07       		.uleb128 0x7
+ 1300 059c 20030000 		.4byte	.LASF168
+ 1301 05a0 9802     		.sleb128 280
+ 1302 05a2 07       		.uleb128 0x7
+ 1303 05a3 F81B0000 		.4byte	.LASF169
+ 1304 05a7 9902     		.sleb128 281
+ 1305 05a9 07       		.uleb128 0x7
+ 1306 05aa FE110000 		.4byte	.LASF170
+ 1307 05ae 9A02     		.sleb128 282
+ 1308 05b0 07       		.uleb128 0x7
+ 1309 05b1 121F0000 		.4byte	.LASF171
+ 1310 05b5 9B02     		.sleb128 283
+ 1311 05b7 07       		.uleb128 0x7
+ 1312 05b8 DE220000 		.4byte	.LASF172
+ 1313 05bc 9C02     		.sleb128 284
+ 1314 05be 07       		.uleb128 0x7
+ 1315 05bf 52240000 		.4byte	.LASF173
+ 1316 05c3 9D02     		.sleb128 285
+ 1317 05c5 07       		.uleb128 0x7
+ 1318 05c6 FB080000 		.4byte	.LASF174
+ 1319 05ca 9E02     		.sleb128 286
+ 1320 05cc 07       		.uleb128 0x7
+ 1321 05cd FA220000 		.4byte	.LASF175
+ 1322 05d1 9F02     		.sleb128 287
+ 1323 05d3 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 30
+
+
+ 1324 05d4 92040000 		.4byte	.LASF176
+ 1325 05d8 A002     		.sleb128 288
+ 1326 05da 07       		.uleb128 0x7
+ 1327 05db F4160000 		.4byte	.LASF177
+ 1328 05df A102     		.sleb128 289
+ 1329 05e1 07       		.uleb128 0x7
+ 1330 05e2 70210000 		.4byte	.LASF178
+ 1331 05e6 A202     		.sleb128 290
+ 1332 05e8 07       		.uleb128 0x7
+ 1333 05e9 FF0C0000 		.4byte	.LASF179
+ 1334 05ed A302     		.sleb128 291
+ 1335 05ef 07       		.uleb128 0x7
+ 1336 05f0 30180000 		.4byte	.LASF180
+ 1337 05f4 A402     		.sleb128 292
+ 1338 05f6 07       		.uleb128 0x7
+ 1339 05f7 E60E0000 		.4byte	.LASF181
+ 1340 05fb A502     		.sleb128 293
+ 1341 05fd 07       		.uleb128 0x7
+ 1342 05fe B4040000 		.4byte	.LASF182
+ 1343 0602 A602     		.sleb128 294
+ 1344 0604 07       		.uleb128 0x7
+ 1345 0605 7D010000 		.4byte	.LASF183
+ 1346 0609 A702     		.sleb128 295
+ 1347 060b 07       		.uleb128 0x7
+ 1348 060c 2C060000 		.4byte	.LASF184
+ 1349 0610 A802     		.sleb128 296
+ 1350 0612 07       		.uleb128 0x7
+ 1351 0613 FA1D0000 		.4byte	.LASF185
+ 1352 0617 A902     		.sleb128 297
+ 1353 0619 07       		.uleb128 0x7
+ 1354 061a 8C140000 		.4byte	.LASF186
+ 1355 061e AA02     		.sleb128 298
+ 1356 0620 07       		.uleb128 0x7
+ 1357 0621 26250000 		.4byte	.LASF187
+ 1358 0625 AB02     		.sleb128 299
+ 1359 0627 07       		.uleb128 0x7
+ 1360 0628 E4050000 		.4byte	.LASF188
+ 1361 062c AC02     		.sleb128 300
+ 1362 062e 07       		.uleb128 0x7
+ 1363 062f 5D1A0000 		.4byte	.LASF189
+ 1364 0633 AD02     		.sleb128 301
+ 1365 0635 07       		.uleb128 0x7
+ 1366 0636 CB260000 		.4byte	.LASF190
+ 1367 063a AE02     		.sleb128 302
+ 1368 063c 07       		.uleb128 0x7
+ 1369 063d 6D250000 		.4byte	.LASF191
+ 1370 0641 AF02     		.sleb128 303
+ 1371 0643 07       		.uleb128 0x7
+ 1372 0644 A2000000 		.4byte	.LASF192
+ 1373 0648 B002     		.sleb128 304
+ 1374 064a 07       		.uleb128 0x7
+ 1375 064b 7A220000 		.4byte	.LASF193
+ 1376 064f B102     		.sleb128 305
+ 1377 0651 07       		.uleb128 0x7
+ 1378 0652 A1120000 		.4byte	.LASF194
+ 1379 0656 B202     		.sleb128 306
+ 1380 0658 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 31
+
+
+ 1381 0659 94210000 		.4byte	.LASF195
+ 1382 065d B302     		.sleb128 307
+ 1383 065f 07       		.uleb128 0x7
+ 1384 0660 F21F0000 		.4byte	.LASF196
+ 1385 0664 B402     		.sleb128 308
+ 1386 0666 07       		.uleb128 0x7
+ 1387 0667 28010000 		.4byte	.LASF197
+ 1388 066b B502     		.sleb128 309
+ 1389 066d 07       		.uleb128 0x7
+ 1390 066e 371F0000 		.4byte	.LASF198
+ 1391 0672 B602     		.sleb128 310
+ 1392 0674 07       		.uleb128 0x7
+ 1393 0675 FF090000 		.4byte	.LASF199
+ 1394 0679 B702     		.sleb128 311
+ 1395 067b 07       		.uleb128 0x7
+ 1396 067c 72060000 		.4byte	.LASF200
+ 1397 0680 B802     		.sleb128 312
+ 1398 0682 07       		.uleb128 0x7
+ 1399 0683 4F060000 		.4byte	.LASF201
+ 1400 0687 B902     		.sleb128 313
+ 1401 0689 07       		.uleb128 0x7
+ 1402 068a DB090000 		.4byte	.LASF202
+ 1403 068e BA02     		.sleb128 314
+ 1404 0690 07       		.uleb128 0x7
+ 1405 0691 86130000 		.4byte	.LASF203
+ 1406 0695 BB02     		.sleb128 315
+ 1407 0697 07       		.uleb128 0x7
+ 1408 0698 BF270000 		.4byte	.LASF204
+ 1409 069c BC02     		.sleb128 316
+ 1410 069e 07       		.uleb128 0x7
+ 1411 069f A90C0000 		.4byte	.LASF205
+ 1412 06a3 BD02     		.sleb128 317
+ 1413 06a5 07       		.uleb128 0x7
+ 1414 06a6 DE1D0000 		.4byte	.LASF206
+ 1415 06aa BE02     		.sleb128 318
+ 1416 06ac 07       		.uleb128 0x7
+ 1417 06ad AC190000 		.4byte	.LASF207
+ 1418 06b1 BF02     		.sleb128 319
+ 1419 06b3 07       		.uleb128 0x7
+ 1420 06b4 0B040000 		.4byte	.LASF208
+ 1421 06b8 C002     		.sleb128 320
+ 1422 06ba 07       		.uleb128 0x7
+ 1423 06bb 3D120000 		.4byte	.LASF209
+ 1424 06bf C102     		.sleb128 321
+ 1425 06c1 07       		.uleb128 0x7
+ 1426 06c2 BD000000 		.4byte	.LASF210
+ 1427 06c6 C202     		.sleb128 322
+ 1428 06c8 07       		.uleb128 0x7
+ 1429 06c9 D6060000 		.4byte	.LASF211
+ 1430 06cd C302     		.sleb128 323
+ 1431 06cf 07       		.uleb128 0x7
+ 1432 06d0 D7250000 		.4byte	.LASF212
+ 1433 06d4 C402     		.sleb128 324
+ 1434 06d6 07       		.uleb128 0x7
+ 1435 06d7 C10E0000 		.4byte	.LASF213
+ 1436 06db C502     		.sleb128 325
+ 1437 06dd 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 32
+
+
+ 1438 06de C10D0000 		.4byte	.LASF214
+ 1439 06e2 C602     		.sleb128 326
+ 1440 06e4 07       		.uleb128 0x7
+ 1441 06e5 2D040000 		.4byte	.LASF215
+ 1442 06e9 C702     		.sleb128 327
+ 1443 06eb 07       		.uleb128 0x7
+ 1444 06ec 22070000 		.4byte	.LASF216
+ 1445 06f0 C802     		.sleb128 328
+ 1446 06f2 07       		.uleb128 0x7
+ 1447 06f3 73150000 		.4byte	.LASF217
+ 1448 06f7 C902     		.sleb128 329
+ 1449 06f9 07       		.uleb128 0x7
+ 1450 06fa 22130000 		.4byte	.LASF218
+ 1451 06fe CA02     		.sleb128 330
+ 1452 0700 07       		.uleb128 0x7
+ 1453 0701 BE050000 		.4byte	.LASF219
+ 1454 0705 CB02     		.sleb128 331
+ 1455 0707 07       		.uleb128 0x7
+ 1456 0708 D0040000 		.4byte	.LASF220
+ 1457 070c CC02     		.sleb128 332
+ 1458 070e 07       		.uleb128 0x7
+ 1459 070f 05010000 		.4byte	.LASF221
+ 1460 0713 CD02     		.sleb128 333
+ 1461 0715 07       		.uleb128 0x7
+ 1462 0716 DD120000 		.4byte	.LASF222
+ 1463 071a CE02     		.sleb128 334
+ 1464 071c 07       		.uleb128 0x7
+ 1465 071d 2D290000 		.4byte	.LASF223
+ 1466 0721 CF02     		.sleb128 335
+ 1467 0723 07       		.uleb128 0x7
+ 1468 0724 ED1E0000 		.4byte	.LASF224
+ 1469 0728 D002     		.sleb128 336
+ 1470 072a 07       		.uleb128 0x7
+ 1471 072b E70D0000 		.4byte	.LASF225
+ 1472 072f D102     		.sleb128 337
+ 1473 0731 07       		.uleb128 0x7
+ 1474 0732 CF160000 		.4byte	.LASF226
+ 1475 0736 D202     		.sleb128 338
+ 1476 0738 07       		.uleb128 0x7
+ 1477 0739 3A1E0000 		.4byte	.LASF227
+ 1478 073d D302     		.sleb128 339
+ 1479 073f 07       		.uleb128 0x7
+ 1480 0740 72020000 		.4byte	.LASF228
+ 1481 0744 D402     		.sleb128 340
+ 1482 0746 07       		.uleb128 0x7
+ 1483 0747 CA1C0000 		.4byte	.LASF229
+ 1484 074b D502     		.sleb128 341
+ 1485 074d 07       		.uleb128 0x7
+ 1486 074e 97100000 		.4byte	.LASF230
+ 1487 0752 D602     		.sleb128 342
+ 1488 0754 07       		.uleb128 0x7
+ 1489 0755 C6190000 		.4byte	.LASF231
+ 1490 0759 D702     		.sleb128 343
+ 1491 075b 07       		.uleb128 0x7
+ 1492 075c 1E230000 		.4byte	.LASF232
+ 1493 0760 D802     		.sleb128 344
+ 1494 0762 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 33
+
+
+ 1495 0763 561E0000 		.4byte	.LASF233
+ 1496 0767 D902     		.sleb128 345
+ 1497 0769 07       		.uleb128 0x7
+ 1498 076a 5A1C0000 		.4byte	.LASF234
+ 1499 076e DA02     		.sleb128 346
+ 1500 0770 07       		.uleb128 0x7
+ 1501 0771 25140000 		.4byte	.LASF235
+ 1502 0775 DB02     		.sleb128 347
+ 1503 0777 07       		.uleb128 0x7
+ 1504 0778 4D010000 		.4byte	.LASF236
+ 1505 077c DC02     		.sleb128 348
+ 1506 077e 07       		.uleb128 0x7
+ 1507 077f 431A0000 		.4byte	.LASF237
+ 1508 0783 DD02     		.sleb128 349
+ 1509 0785 07       		.uleb128 0x7
+ 1510 0786 A5270000 		.4byte	.LASF238
+ 1511 078a DE02     		.sleb128 350
+ 1512 078c 07       		.uleb128 0x7
+ 1513 078d 74240000 		.4byte	.LASF239
+ 1514 0791 DF02     		.sleb128 351
+ 1515 0793 07       		.uleb128 0x7
+ 1516 0794 09210000 		.4byte	.LASF240
+ 1517 0798 E002     		.sleb128 352
+ 1518 079a 07       		.uleb128 0x7
+ 1519 079b D9010000 		.4byte	.LASF241
+ 1520 079f E102     		.sleb128 353
+ 1521 07a1 07       		.uleb128 0x7
+ 1522 07a2 8A0B0000 		.4byte	.LASF242
+ 1523 07a6 E202     		.sleb128 354
+ 1524 07a8 07       		.uleb128 0x7
+ 1525 07a9 88250000 		.4byte	.LASF243
+ 1526 07ad E302     		.sleb128 355
+ 1527 07af 07       		.uleb128 0x7
+ 1528 07b0 EE290000 		.4byte	.LASF244
+ 1529 07b4 E402     		.sleb128 356
+ 1530 07b6 07       		.uleb128 0x7
+ 1531 07b7 47160000 		.4byte	.LASF245
+ 1532 07bb E502     		.sleb128 357
+ 1533 07bd 07       		.uleb128 0x7
+ 1534 07be EC280000 		.4byte	.LASF246
+ 1535 07c2 E602     		.sleb128 358
+ 1536 07c4 07       		.uleb128 0x7
+ 1537 07c5 00160000 		.4byte	.LASF247
+ 1538 07c9 E702     		.sleb128 359
+ 1539 07cb 07       		.uleb128 0x7
+ 1540 07cc AF080000 		.4byte	.LASF248
+ 1541 07d0 E802     		.sleb128 360
+ 1542 07d2 07       		.uleb128 0x7
+ 1543 07d3 65100000 		.4byte	.LASF249
+ 1544 07d7 E902     		.sleb128 361
+ 1545 07d9 07       		.uleb128 0x7
+ 1546 07da 000F0000 		.4byte	.LASF250
+ 1547 07de EA02     		.sleb128 362
+ 1548 07e0 07       		.uleb128 0x7
+ 1549 07e1 50080000 		.4byte	.LASF251
+ 1550 07e5 EB02     		.sleb128 363
+ 1551 07e7 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 34
+
+
+ 1552 07e8 16200000 		.4byte	.LASF252
+ 1553 07ec EC02     		.sleb128 364
+ 1554 07ee 07       		.uleb128 0x7
+ 1555 07ef 04110000 		.4byte	.LASF253
+ 1556 07f3 ED02     		.sleb128 365
+ 1557 07f5 07       		.uleb128 0x7
+ 1558 07f6 C61A0000 		.4byte	.LASF254
+ 1559 07fa EE02     		.sleb128 366
+ 1560 07fc 07       		.uleb128 0x7
+ 1561 07fd FB020000 		.4byte	.LASF255
+ 1562 0801 EF02     		.sleb128 367
+ 1563 0803 07       		.uleb128 0x7
+ 1564 0804 C30C0000 		.4byte	.LASF256
+ 1565 0808 F002     		.sleb128 368
+ 1566 080a 07       		.uleb128 0x7
+ 1567 080b 790D0000 		.4byte	.LASF257
+ 1568 080f F102     		.sleb128 369
+ 1569 0811 07       		.uleb128 0x7
+ 1570 0812 372A0000 		.4byte	.LASF258
+ 1571 0816 F202     		.sleb128 370
+ 1572 0818 07       		.uleb128 0x7
+ 1573 0819 821A0000 		.4byte	.LASF259
+ 1574 081d F302     		.sleb128 371
+ 1575 081f 07       		.uleb128 0x7
+ 1576 0820 EA1A0000 		.4byte	.LASF260
+ 1577 0824 F402     		.sleb128 372
+ 1578 0826 07       		.uleb128 0x7
+ 1579 0827 7B050000 		.4byte	.LASF261
+ 1580 082b F502     		.sleb128 373
+ 1581 082d 07       		.uleb128 0x7
+ 1582 082e 880E0000 		.4byte	.LASF262
+ 1583 0832 F602     		.sleb128 374
+ 1584 0834 07       		.uleb128 0x7
+ 1585 0835 98200000 		.4byte	.LASF263
+ 1586 0839 F702     		.sleb128 375
+ 1587 083b 07       		.uleb128 0x7
+ 1588 083c 09080000 		.4byte	.LASF264
+ 1589 0840 F802     		.sleb128 376
+ 1590 0842 07       		.uleb128 0x7
+ 1591 0843 31000000 		.4byte	.LASF265
+ 1592 0847 F902     		.sleb128 377
+ 1593 0849 07       		.uleb128 0x7
+ 1594 084a 03240000 		.4byte	.LASF266
+ 1595 084e FA02     		.sleb128 378
+ 1596 0850 07       		.uleb128 0x7
+ 1597 0851 FD0B0000 		.4byte	.LASF267
+ 1598 0855 FB02     		.sleb128 379
+ 1599 0857 07       		.uleb128 0x7
+ 1600 0858 132A0000 		.4byte	.LASF268
+ 1601 085c FC02     		.sleb128 380
+ 1602 085e 07       		.uleb128 0x7
+ 1603 085f 71030000 		.4byte	.LASF269
+ 1604 0863 FD02     		.sleb128 381
+ 1605 0865 07       		.uleb128 0x7
+ 1606 0866 A7130000 		.4byte	.LASF270
+ 1607 086a FE02     		.sleb128 382
+ 1608 086c 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 35
+
+
+ 1609 086d D4290000 		.4byte	.LASF271
+ 1610 0871 FF02     		.sleb128 383
+ 1611 0873 07       		.uleb128 0x7
+ 1612 0874 BE210000 		.4byte	.LASF272
+ 1613 0878 8003     		.sleb128 384
+ 1614 087a 07       		.uleb128 0x7
+ 1615 087b 55180000 		.4byte	.LASF273
+ 1616 087f 8103     		.sleb128 385
+ 1617 0881 07       		.uleb128 0x7
+ 1618 0882 061A0000 		.4byte	.LASF274
+ 1619 0886 8203     		.sleb128 386
+ 1620 0888 07       		.uleb128 0x7
+ 1621 0889 5D260000 		.4byte	.LASF275
+ 1622 088d 8303     		.sleb128 387
+ 1623 088f 07       		.uleb128 0x7
+ 1624 0890 3A110000 		.4byte	.LASF276
+ 1625 0894 8403     		.sleb128 388
+ 1626 0896 07       		.uleb128 0x7
+ 1627 0897 450E0000 		.4byte	.LASF277
+ 1628 089b 8503     		.sleb128 389
+ 1629 089d 07       		.uleb128 0x7
+ 1630 089e 51150000 		.4byte	.LASF278
+ 1631 08a2 8603     		.sleb128 390
+ 1632 08a4 07       		.uleb128 0x7
+ 1633 08a5 BF240000 		.4byte	.LASF279
+ 1634 08a9 8703     		.sleb128 391
+ 1635 08ab 07       		.uleb128 0x7
+ 1636 08ac B71E0000 		.4byte	.LASF280
+ 1637 08b0 8803     		.sleb128 392
+ 1638 08b2 07       		.uleb128 0x7
+ 1639 08b3 4F020000 		.4byte	.LASF281
+ 1640 08b7 8903     		.sleb128 393
+ 1641 08b9 07       		.uleb128 0x7
+ 1642 08ba D41B0000 		.4byte	.LASF282
+ 1643 08be 8A03     		.sleb128 394
+ 1644 08c0 07       		.uleb128 0x7
+ 1645 08c1 94060000 		.4byte	.LASF283
+ 1646 08c5 8B03     		.sleb128 395
+ 1647 08c7 07       		.uleb128 0x7
+ 1648 08c8 61130000 		.4byte	.LASF284
+ 1649 08cc 8C03     		.sleb128 396
+ 1650 08ce 07       		.uleb128 0x7
+ 1651 08cf BC200000 		.4byte	.LASF285
+ 1652 08d3 8D03     		.sleb128 397
+ 1653 08d5 07       		.uleb128 0x7
+ 1654 08d6 50040000 		.4byte	.LASF286
+ 1655 08da 8E03     		.sleb128 398
+ 1656 08dc 07       		.uleb128 0x7
+ 1657 08dd 1E1E0000 		.4byte	.LASF287
+ 1658 08e1 8F03     		.sleb128 399
+ 1659 08e3 07       		.uleb128 0x7
+ 1660 08e4 1C1C0000 		.4byte	.LASF288
+ 1661 08e8 9003     		.sleb128 400
+ 1662 08ea 07       		.uleb128 0x7
+ 1663 08eb 440F0000 		.4byte	.LASF289
+ 1664 08ef 9103     		.sleb128 401
+ 1665 08f1 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 36
+
+
+ 1666 08f2 48270000 		.4byte	.LASF290
+ 1667 08f6 9203     		.sleb128 402
+ 1668 08f8 07       		.uleb128 0x7
+ 1669 08f9 2D150000 		.4byte	.LASF291
+ 1670 08fd 9303     		.sleb128 403
+ 1671 08ff 07       		.uleb128 0x7
+ 1672 0900 4D1B0000 		.4byte	.LASF292
+ 1673 0904 9403     		.sleb128 404
+ 1674 0906 07       		.uleb128 0x7
+ 1675 0907 58110000 		.4byte	.LASF293
+ 1676 090b 9503     		.sleb128 405
+ 1677 090d 07       		.uleb128 0x7
+ 1678 090e CC1F0000 		.4byte	.LASF294
+ 1679 0912 9603     		.sleb128 406
+ 1680 0914 07       		.uleb128 0x7
+ 1681 0915 22120000 		.4byte	.LASF295
+ 1682 0919 9703     		.sleb128 407
+ 1683 091b 07       		.uleb128 0x7
+ 1684 091c 7D110000 		.4byte	.LASF296
+ 1685 0920 9803     		.sleb128 408
+ 1686 0922 07       		.uleb128 0x7
+ 1687 0923 6F040000 		.4byte	.LASF297
+ 1688 0927 9903     		.sleb128 409
+ 1689 0929 07       		.uleb128 0x7
+ 1690 092a 46070000 		.4byte	.LASF298
+ 1691 092e 9A03     		.sleb128 410
+ 1692 0930 07       		.uleb128 0x7
+ 1693 0931 27100000 		.4byte	.LASF299
+ 1694 0935 9B03     		.sleb128 411
+ 1695 0937 07       		.uleb128 0x7
+ 1696 0938 E0210000 		.4byte	.LASF300
+ 1697 093c 9C03     		.sleb128 412
+ 1698 093e 07       		.uleb128 0x7
+ 1699 093f 8A290000 		.4byte	.LASF301
+ 1700 0943 9D03     		.sleb128 413
+ 1701 0945 07       		.uleb128 0x7
+ 1702 0946 DE100000 		.4byte	.LASF302
+ 1703 094a 9E03     		.sleb128 414
+ 1704 094c 07       		.uleb128 0x7
+ 1705 094d 8C090000 		.4byte	.LASF303
+ 1706 0951 9F03     		.sleb128 415
+ 1707 0953 07       		.uleb128 0x7
+ 1708 0954 0B0E0000 		.4byte	.LASF304
+ 1709 0958 A003     		.sleb128 416
+ 1710 095a 07       		.uleb128 0x7
+ 1711 095b 9E1A0000 		.4byte	.LASF305
+ 1712 095f A103     		.sleb128 417
+ 1713 0961 07       		.uleb128 0x7
+ 1714 0962 BC020000 		.4byte	.LASF306
+ 1715 0966 A203     		.sleb128 418
+ 1716 0968 07       		.uleb128 0x7
+ 1717 0969 2B210000 		.4byte	.LASF307
+ 1718 096d A303     		.sleb128 419
+ 1719 096f 07       		.uleb128 0x7
+ 1720 0970 240A0000 		.4byte	.LASF308
+ 1721 0974 A403     		.sleb128 420
+ 1722 0976 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 37
+
+
+ 1723 0977 E6070000 		.4byte	.LASF309
+ 1724 097b A503     		.sleb128 421
+ 1725 097d 07       		.uleb128 0x7
+ 1726 097e 550D0000 		.4byte	.LASF310
+ 1727 0982 A603     		.sleb128 422
+ 1728 0984 07       		.uleb128 0x7
+ 1729 0985 FB250000 		.4byte	.LASF311
+ 1730 0989 A703     		.sleb128 423
+ 1731 098b 07       		.uleb128 0x7
+ 1732 098c 2A020000 		.4byte	.LASF312
+ 1733 0990 A803     		.sleb128 424
+ 1734 0992 07       		.uleb128 0x7
+ 1735 0993 E0000000 		.4byte	.LASF313
+ 1736 0997 A903     		.sleb128 425
+ 1737 0999 07       		.uleb128 0x7
+ 1738 099a 200C0000 		.4byte	.LASF314
+ 1739 099e AA03     		.sleb128 426
+ 1740 09a0 07       		.uleb128 0x7
+ 1741 09a1 8A0A0000 		.4byte	.LASF315
+ 1742 09a5 AB03     		.sleb128 427
+ 1743 09a7 07       		.uleb128 0x7
+ 1744 09a8 2F170000 		.4byte	.LASF316
+ 1745 09ac AC03     		.sleb128 428
+ 1746 09ae 07       		.uleb128 0x7
+ 1747 09af 97240000 		.4byte	.LASF317
+ 1748 09b3 AD03     		.sleb128 429
+ 1749 09b5 07       		.uleb128 0x7
+ 1750 09b6 E3150000 		.4byte	.LASF318
+ 1751 09ba AE03     		.sleb128 430
+ 1752 09bc 07       		.uleb128 0x7
+ 1753 09bd 74200000 		.4byte	.LASF319
+ 1754 09c1 AF03     		.sleb128 431
+ 1755 09c3 07       		.uleb128 0x7
+ 1756 09c4 F70A0000 		.4byte	.LASF320
+ 1757 09c8 B003     		.sleb128 432
+ 1758 09ca 07       		.uleb128 0x7
+ 1759 09cb 81270000 		.4byte	.LASF321
+ 1760 09cf B103     		.sleb128 433
+ 1761 09d1 07       		.uleb128 0x7
+ 1762 09d2 4F200000 		.4byte	.LASF322
+ 1763 09d6 B203     		.sleb128 434
+ 1764 09d8 07       		.uleb128 0x7
+ 1765 09d9 210B0000 		.4byte	.LASF323
+ 1766 09dd B303     		.sleb128 435
+ 1767 09df 07       		.uleb128 0x7
+ 1768 09e0 D1130000 		.4byte	.LASF324
+ 1769 09e4 B403     		.sleb128 436
+ 1770 09e6 07       		.uleb128 0x7
+ 1771 09e7 5B1F0000 		.4byte	.LASF325
+ 1772 09eb B503     		.sleb128 437
+ 1773 09ed 07       		.uleb128 0x7
+ 1774 09ee 9D0D0000 		.4byte	.LASF326
+ 1775 09f2 B603     		.sleb128 438
+ 1776 09f4 07       		.uleb128 0x7
+ 1777 09f5 CC230000 		.4byte	.LASF327
+ 1778 09f9 B703     		.sleb128 439
+ 1779 09fb 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 38
+
+
+ 1780 09fc 6F0C0000 		.4byte	.LASF328
+ 1781 0a00 B803     		.sleb128 440
+ 1782 0a02 07       		.uleb128 0x7
+ 1783 0a03 291B0000 		.4byte	.LASF329
+ 1784 0a07 B903     		.sleb128 441
+ 1785 0a09 07       		.uleb128 0x7
+ 1786 0a0a B01B0000 		.4byte	.LASF330
+ 1787 0a0e BA03     		.sleb128 442
+ 1788 0a10 07       		.uleb128 0x7
+ 1789 0a11 B00F0000 		.4byte	.LASF331
+ 1790 0a15 BB03     		.sleb128 443
+ 1791 0a17 07       		.uleb128 0x7
+ 1792 0a18 D50F0000 		.4byte	.LASF332
+ 1793 0a1c BC03     		.sleb128 444
+ 1794 0a1e 07       		.uleb128 0x7
+ 1795 0a1f 88000000 		.4byte	.LASF333
+ 1796 0a23 BD03     		.sleb128 445
+ 1797 0a25 07       		.uleb128 0x7
+ 1798 0a26 73160000 		.4byte	.LASF334
+ 1799 0a2a BE03     		.sleb128 446
+ 1800 0a2c 07       		.uleb128 0x7
+ 1801 0a2d 0F000000 		.4byte	.LASF335
+ 1802 0a31 BF03     		.sleb128 447
+ 1803 0a33 07       		.uleb128 0x7
+ 1804 0a34 18190000 		.4byte	.LASF336
+ 1805 0a38 C003     		.sleb128 448
+ 1806 0a3a 07       		.uleb128 0x7
+ 1807 0a3b 25240000 		.4byte	.LASF337
+ 1808 0a3f C103     		.sleb128 449
+ 1809 0a41 07       		.uleb128 0x7
+ 1810 0a42 D7020000 		.4byte	.LASF338
+ 1811 0a46 C203     		.sleb128 450
+ 1812 0a48 07       		.uleb128 0x7
+ 1813 0a49 291A0000 		.4byte	.LASF339
+ 1814 0a4d 80C003   		.sleb128 57344
+ 1815 0a50 00       		.byte	0
+ 1816 0a51 08       		.uleb128 0x8
+ 1817 0a52 01       		.byte	0x1
+ 1818 0a53 09       		.byte	0x9
+ 1819 0a54 9505     		.2byte	0x595
+ 1820 0a56 7F0A0000 		.4byte	0xa7f
+ 1821 0a5a 07       		.uleb128 0x7
+ 1822 0a5b 78090000 		.4byte	.LASF340
+ 1823 0a5f 00       		.sleb128 0
+ 1824 0a60 07       		.uleb128 0x7
+ 1825 0a61 C4120000 		.4byte	.LASF341
+ 1826 0a65 01       		.sleb128 1
+ 1827 0a66 07       		.uleb128 0x7
+ 1828 0a67 6B270000 		.4byte	.LASF342
+ 1829 0a6b 02       		.sleb128 2
+ 1830 0a6c 07       		.uleb128 0x7
+ 1831 0a6d A7030000 		.4byte	.LASF343
+ 1832 0a71 03       		.sleb128 3
+ 1833 0a72 07       		.uleb128 0x7
+ 1834 0a73 5C0B0000 		.4byte	.LASF344
+ 1835 0a77 04       		.sleb128 4
+ 1836 0a78 07       		.uleb128 0x7
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 39
+
+
+ 1837 0a79 F0200000 		.4byte	.LASF345
+ 1838 0a7d 05       		.sleb128 5
+ 1839 0a7e 00       		.byte	0
+ 1840 0a7f 09       		.uleb128 0x9
+ 1841 0a80 D0220000 		.4byte	.LASF346
+ 1842 0a84 09       		.byte	0x9
+ 1843 0a85 A305     		.2byte	0x5a3
+ 1844 0a87 510A0000 		.4byte	0xa51
+ 1845 0a8b 08       		.uleb128 0x8
+ 1846 0a8c 01       		.byte	0x1
+ 1847 0a8d 09       		.byte	0x9
+ 1848 0a8e C705     		.2byte	0x5c7
+ 1849 0a90 AD0A0000 		.4byte	0xaad
+ 1850 0a94 07       		.uleb128 0x7
+ 1851 0a95 7E1F0000 		.4byte	.LASF347
+ 1852 0a99 00       		.sleb128 0
+ 1853 0a9a 07       		.uleb128 0x7
+ 1854 0a9b FB0F0000 		.4byte	.LASF348
+ 1855 0a9f 01       		.sleb128 1
+ 1856 0aa0 07       		.uleb128 0x7
+ 1857 0aa1 C0160000 		.4byte	.LASF349
+ 1858 0aa5 02       		.sleb128 2
+ 1859 0aa6 07       		.uleb128 0x7
+ 1860 0aa7 5A230000 		.4byte	.LASF350
+ 1861 0aab 03       		.sleb128 3
+ 1862 0aac 00       		.byte	0
+ 1863 0aad 11       		.uleb128 0x11
+ 1864 0aae 220F0000 		.4byte	.LASF355
+ 1865 0ab2 01       		.byte	0x1
+ 1866 0ab3 4B       		.byte	0x4b
+ 1867 0ab4 00000000 		.4byte	.LFB35
+ 1868 0ab8 7C020000 		.4byte	.LFE35-.LFB35
+ 1869 0abc 01       		.uleb128 0x1
+ 1870 0abd 9C       		.byte	0x9c
+ 1871 0abe 070B0000 		.4byte	0xb07
+ 1872 0ac2 12       		.uleb128 0x12
+ 1873 0ac3 6D160000 		.4byte	.LASF351
+ 1874 0ac7 01       		.byte	0x1
+ 1875 0ac8 4B       		.byte	0x4b
+ 1876 0ac9 81000000 		.4byte	0x81
+ 1877 0acd 02       		.uleb128 0x2
+ 1878 0ace 91       		.byte	0x91
+ 1879 0acf 54       		.sleb128 -44
+ 1880 0ad0 12       		.uleb128 0x12
+ 1881 0ad1 72010000 		.4byte	.LASF352
+ 1882 0ad5 01       		.byte	0x1
+ 1883 0ad6 4B       		.byte	0x4b
+ 1884 0ad7 BE000000 		.4byte	0xbe
+ 1885 0adb 02       		.uleb128 0x2
+ 1886 0adc 91       		.byte	0x91
+ 1887 0add 50       		.sleb128 -48
+ 1888 0ade 13       		.uleb128 0x13
+ 1889 0adf 6900     		.ascii	"i\000"
+ 1890 0ae1 01       		.byte	0x1
+ 1891 0ae2 4F       		.byte	0x4f
+ 1892 0ae3 6B000000 		.4byte	0x6b
+ 1893 0ae7 02       		.uleb128 0x2
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 40
+
+
+ 1894 0ae8 91       		.byte	0x91
+ 1895 0ae9 6F       		.sleb128 -17
+ 1896 0aea 14       		.uleb128 0x14
+ 1897 0aeb 52260000 		.4byte	.LASF353
+ 1898 0aef 01       		.byte	0x1
+ 1899 0af0 50       		.byte	0x50
+ 1900 0af1 D8030000 		.4byte	0x3d8
+ 1901 0af5 02       		.uleb128 0x2
+ 1902 0af6 91       		.byte	0x91
+ 1903 0af7 58       		.sleb128 -40
+ 1904 0af8 14       		.uleb128 0x14
+ 1905 0af9 39200000 		.4byte	.LASF354
+ 1906 0afd 01       		.byte	0x1
+ 1907 0afe 51       		.byte	0x51
+ 1908 0aff FC020000 		.4byte	0x2fc
+ 1909 0b03 02       		.uleb128 0x2
+ 1910 0b04 91       		.byte	0x91
+ 1911 0b05 6C       		.sleb128 -20
+ 1912 0b06 00       		.byte	0
+ 1913 0b07 15       		.uleb128 0x15
+ 1914 0b08 E1070000 		.4byte	.LASF356
+ 1915 0b0c 01       		.byte	0x1
+ 1916 0b0d C6       		.byte	0xc6
+ 1917 0b0e 5D000000 		.4byte	0x5d
+ 1918 0b12 00000000 		.4byte	.LFB36
+ 1919 0b16 FC000000 		.4byte	.LFE36-.LFB36
+ 1920 0b1a 01       		.uleb128 0x1
+ 1921 0b1b 9C       		.byte	0x9c
+ 1922 0b1c 4B0B0000 		.4byte	0xb4b
+ 1923 0b20 14       		.uleb128 0x14
+ 1924 0b21 D81D0000 		.4byte	.LASF357
+ 1925 0b25 01       		.byte	0x1
+ 1926 0b26 C9       		.byte	0xc9
+ 1927 0b27 6B000000 		.4byte	0x6b
+ 1928 0b2b 02       		.uleb128 0x2
+ 1929 0b2c 91       		.byte	0x91
+ 1930 0b2d 76       		.sleb128 -10
+ 1931 0b2e 14       		.uleb128 0x14
+ 1932 0b2f 16220000 		.4byte	.LASF358
+ 1933 0b33 01       		.byte	0x1
+ 1934 0b34 CA       		.byte	0xca
+ 1935 0b35 A5000000 		.4byte	0xa5
+ 1936 0b39 02       		.uleb128 0x2
+ 1937 0b3a 91       		.byte	0x91
+ 1938 0b3b 77       		.sleb128 -9
+ 1939 0b3c 14       		.uleb128 0x14
+ 1940 0b3d 620C0000 		.4byte	.LASF359
+ 1941 0b41 01       		.byte	0x1
+ 1942 0b42 CB       		.byte	0xcb
+ 1943 0b43 5B0B0000 		.4byte	0xb5b
+ 1944 0b47 02       		.uleb128 0x2
+ 1945 0b48 91       		.byte	0x91
+ 1946 0b49 6C       		.sleb128 -20
+ 1947 0b4a 00       		.byte	0
+ 1948 0b4b 0C       		.uleb128 0xc
+ 1949 0b4c A5000000 		.4byte	0xa5
+ 1950 0b50 5B0B0000 		.4byte	0xb5b
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 41
+
+
+ 1951 0b54 0D       		.uleb128 0xd
+ 1952 0b55 B7000000 		.4byte	0xb7
+ 1953 0b59 06       		.byte	0x6
+ 1954 0b5a 00       		.byte	0
+ 1955 0b5b 16       		.uleb128 0x16
+ 1956 0b5c 4B0B0000 		.4byte	0xb4b
+ 1957 0b60 17       		.uleb128 0x17
+ 1958 0b61 43200000 		.4byte	.LASF360
+ 1959 0b65 09       		.byte	0x9
+ 1960 0b66 2207     		.2byte	0x722
+ 1961 0b68 7F0A0000 		.4byte	0xa7f
+ 1962 0b6c 17       		.uleb128 0x17
+ 1963 0b6d 05220000 		.4byte	.LASF361
+ 1964 0b71 09       		.byte	0x9
+ 1965 0b72 2307     		.2byte	0x723
+ 1966 0b74 14040000 		.4byte	0x414
+ 1967 0b78 0C       		.uleb128 0xc
+ 1968 0b79 71040000 		.4byte	0x471
+ 1969 0b7d 880B0000 		.4byte	0xb88
+ 1970 0b81 0D       		.uleb128 0xd
+ 1971 0b82 B7000000 		.4byte	0xb7
+ 1972 0b86 02       		.byte	0x2
+ 1973 0b87 00       		.byte	0
+ 1974 0b88 17       		.uleb128 0x17
+ 1975 0b89 78180000 		.4byte	.LASF362
+ 1976 0b8d 09       		.byte	0x9
+ 1977 0b8e 3207     		.2byte	0x732
+ 1978 0b90 780B0000 		.4byte	0xb78
+ 1979 0b94 18       		.uleb128 0x18
+ 1980 0b95 AF140000 		.4byte	.LASF363
+ 1981 0b99 01       		.byte	0x1
+ 1982 0b9a 35       		.byte	0x35
+ 1983 0b9b 6B000000 		.4byte	0x6b
+ 1984 0b9f 05       		.uleb128 0x5
+ 1985 0ba0 03       		.byte	0x3
+ 1986 0ba1 00000000 		.4byte	deviceDetected
+ 1987 0ba5 18       		.uleb128 0x18
+ 1988 0ba6 00000000 		.4byte	.LASF364
+ 1989 0baa 01       		.byte	0x1
+ 1990 0bab 36       		.byte	0x36
+ 1991 0bac 3C030000 		.4byte	0x33c
+ 1992 0bb0 05       		.uleb128 0x5
+ 1993 0bb1 03       		.byte	0x3
+ 1994 0bb2 00000000 		.4byte	peerDeviceAddr
+ 1995 0bb6 00       		.byte	0
+ 1996              		.section	.debug_abbrev,"",%progbits
+ 1997              	.Ldebug_abbrev0:
+ 1998 0000 01       		.uleb128 0x1
+ 1999 0001 11       		.uleb128 0x11
+ 2000 0002 01       		.byte	0x1
+ 2001 0003 25       		.uleb128 0x25
+ 2002 0004 0E       		.uleb128 0xe
+ 2003 0005 13       		.uleb128 0x13
+ 2004 0006 0B       		.uleb128 0xb
+ 2005 0007 03       		.uleb128 0x3
+ 2006 0008 0E       		.uleb128 0xe
+ 2007 0009 1B       		.uleb128 0x1b
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 42
+
+
+ 2008 000a 0E       		.uleb128 0xe
+ 2009 000b 55       		.uleb128 0x55
+ 2010 000c 17       		.uleb128 0x17
+ 2011 000d 11       		.uleb128 0x11
+ 2012 000e 01       		.uleb128 0x1
+ 2013 000f 10       		.uleb128 0x10
+ 2014 0010 17       		.uleb128 0x17
+ 2015 0011 00       		.byte	0
+ 2016 0012 00       		.byte	0
+ 2017 0013 02       		.uleb128 0x2
+ 2018 0014 24       		.uleb128 0x24
+ 2019 0015 00       		.byte	0
+ 2020 0016 0B       		.uleb128 0xb
+ 2021 0017 0B       		.uleb128 0xb
+ 2022 0018 3E       		.uleb128 0x3e
+ 2023 0019 0B       		.uleb128 0xb
+ 2024 001a 03       		.uleb128 0x3
+ 2025 001b 0E       		.uleb128 0xe
+ 2026 001c 00       		.byte	0
+ 2027 001d 00       		.byte	0
+ 2028 001e 03       		.uleb128 0x3
+ 2029 001f 24       		.uleb128 0x24
+ 2030 0020 00       		.byte	0
+ 2031 0021 0B       		.uleb128 0xb
+ 2032 0022 0B       		.uleb128 0xb
+ 2033 0023 3E       		.uleb128 0x3e
+ 2034 0024 0B       		.uleb128 0xb
+ 2035 0025 03       		.uleb128 0x3
+ 2036 0026 08       		.uleb128 0x8
+ 2037 0027 00       		.byte	0
+ 2038 0028 00       		.byte	0
+ 2039 0029 04       		.uleb128 0x4
+ 2040 002a 16       		.uleb128 0x16
+ 2041 002b 00       		.byte	0
+ 2042 002c 03       		.uleb128 0x3
+ 2043 002d 0E       		.uleb128 0xe
+ 2044 002e 3A       		.uleb128 0x3a
+ 2045 002f 0B       		.uleb128 0xb
+ 2046 0030 3B       		.uleb128 0x3b
+ 2047 0031 0B       		.uleb128 0xb
+ 2048 0032 49       		.uleb128 0x49
+ 2049 0033 13       		.uleb128 0x13
+ 2050 0034 00       		.byte	0
+ 2051 0035 00       		.byte	0
+ 2052 0036 05       		.uleb128 0x5
+ 2053 0037 0F       		.uleb128 0xf
+ 2054 0038 00       		.byte	0
+ 2055 0039 0B       		.uleb128 0xb
+ 2056 003a 0B       		.uleb128 0xb
+ 2057 003b 00       		.byte	0
+ 2058 003c 00       		.byte	0
+ 2059 003d 06       		.uleb128 0x6
+ 2060 003e 04       		.uleb128 0x4
+ 2061 003f 01       		.byte	0x1
+ 2062 0040 0B       		.uleb128 0xb
+ 2063 0041 0B       		.uleb128 0xb
+ 2064 0042 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 43
+
+
+ 2065 0043 0B       		.uleb128 0xb
+ 2066 0044 3B       		.uleb128 0x3b
+ 2067 0045 0B       		.uleb128 0xb
+ 2068 0046 01       		.uleb128 0x1
+ 2069 0047 13       		.uleb128 0x13
+ 2070 0048 00       		.byte	0
+ 2071 0049 00       		.byte	0
+ 2072 004a 07       		.uleb128 0x7
+ 2073 004b 28       		.uleb128 0x28
+ 2074 004c 00       		.byte	0
+ 2075 004d 03       		.uleb128 0x3
+ 2076 004e 0E       		.uleb128 0xe
+ 2077 004f 1C       		.uleb128 0x1c
+ 2078 0050 0D       		.uleb128 0xd
+ 2079 0051 00       		.byte	0
+ 2080 0052 00       		.byte	0
+ 2081 0053 08       		.uleb128 0x8
+ 2082 0054 04       		.uleb128 0x4
+ 2083 0055 01       		.byte	0x1
+ 2084 0056 0B       		.uleb128 0xb
+ 2085 0057 0B       		.uleb128 0xb
+ 2086 0058 3A       		.uleb128 0x3a
+ 2087 0059 0B       		.uleb128 0xb
+ 2088 005a 3B       		.uleb128 0x3b
+ 2089 005b 05       		.uleb128 0x5
+ 2090 005c 01       		.uleb128 0x1
+ 2091 005d 13       		.uleb128 0x13
+ 2092 005e 00       		.byte	0
+ 2093 005f 00       		.byte	0
+ 2094 0060 09       		.uleb128 0x9
+ 2095 0061 16       		.uleb128 0x16
+ 2096 0062 00       		.byte	0
+ 2097 0063 03       		.uleb128 0x3
+ 2098 0064 0E       		.uleb128 0xe
+ 2099 0065 3A       		.uleb128 0x3a
+ 2100 0066 0B       		.uleb128 0xb
+ 2101 0067 3B       		.uleb128 0x3b
+ 2102 0068 05       		.uleb128 0x5
+ 2103 0069 49       		.uleb128 0x49
+ 2104 006a 13       		.uleb128 0x13
+ 2105 006b 00       		.byte	0
+ 2106 006c 00       		.byte	0
+ 2107 006d 0A       		.uleb128 0xa
+ 2108 006e 13       		.uleb128 0x13
+ 2109 006f 01       		.byte	0x1
+ 2110 0070 0B       		.uleb128 0xb
+ 2111 0071 0B       		.uleb128 0xb
+ 2112 0072 3A       		.uleb128 0x3a
+ 2113 0073 0B       		.uleb128 0xb
+ 2114 0074 3B       		.uleb128 0x3b
+ 2115 0075 05       		.uleb128 0x5
+ 2116 0076 01       		.uleb128 0x1
+ 2117 0077 13       		.uleb128 0x13
+ 2118 0078 00       		.byte	0
+ 2119 0079 00       		.byte	0
+ 2120 007a 0B       		.uleb128 0xb
+ 2121 007b 0D       		.uleb128 0xd
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 44
+
+
+ 2122 007c 00       		.byte	0
+ 2123 007d 03       		.uleb128 0x3
+ 2124 007e 0E       		.uleb128 0xe
+ 2125 007f 3A       		.uleb128 0x3a
+ 2126 0080 0B       		.uleb128 0xb
+ 2127 0081 3B       		.uleb128 0x3b
+ 2128 0082 05       		.uleb128 0x5
+ 2129 0083 49       		.uleb128 0x49
+ 2130 0084 13       		.uleb128 0x13
+ 2131 0085 38       		.uleb128 0x38
+ 2132 0086 0B       		.uleb128 0xb
+ 2133 0087 00       		.byte	0
+ 2134 0088 00       		.byte	0
+ 2135 0089 0C       		.uleb128 0xc
+ 2136 008a 01       		.uleb128 0x1
+ 2137 008b 01       		.byte	0x1
+ 2138 008c 49       		.uleb128 0x49
+ 2139 008d 13       		.uleb128 0x13
+ 2140 008e 01       		.uleb128 0x1
+ 2141 008f 13       		.uleb128 0x13
+ 2142 0090 00       		.byte	0
+ 2143 0091 00       		.byte	0
+ 2144 0092 0D       		.uleb128 0xd
+ 2145 0093 21       		.uleb128 0x21
+ 2146 0094 00       		.byte	0
+ 2147 0095 49       		.uleb128 0x49
+ 2148 0096 13       		.uleb128 0x13
+ 2149 0097 2F       		.uleb128 0x2f
+ 2150 0098 0B       		.uleb128 0xb
+ 2151 0099 00       		.byte	0
+ 2152 009a 00       		.byte	0
+ 2153 009b 0E       		.uleb128 0xe
+ 2154 009c 0F       		.uleb128 0xf
+ 2155 009d 00       		.byte	0
+ 2156 009e 0B       		.uleb128 0xb
+ 2157 009f 0B       		.uleb128 0xb
+ 2158 00a0 49       		.uleb128 0x49
+ 2159 00a1 13       		.uleb128 0x13
+ 2160 00a2 00       		.byte	0
+ 2161 00a3 00       		.byte	0
+ 2162 00a4 0F       		.uleb128 0xf
+ 2163 00a5 13       		.uleb128 0x13
+ 2164 00a6 01       		.byte	0x1
+ 2165 00a7 0B       		.uleb128 0xb
+ 2166 00a8 0B       		.uleb128 0xb
+ 2167 00a9 3A       		.uleb128 0x3a
+ 2168 00aa 0B       		.uleb128 0xb
+ 2169 00ab 3B       		.uleb128 0x3b
+ 2170 00ac 0B       		.uleb128 0xb
+ 2171 00ad 01       		.uleb128 0x1
+ 2172 00ae 13       		.uleb128 0x13
+ 2173 00af 00       		.byte	0
+ 2174 00b0 00       		.byte	0
+ 2175 00b1 10       		.uleb128 0x10
+ 2176 00b2 0D       		.uleb128 0xd
+ 2177 00b3 00       		.byte	0
+ 2178 00b4 03       		.uleb128 0x3
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 45
+
+
+ 2179 00b5 0E       		.uleb128 0xe
+ 2180 00b6 3A       		.uleb128 0x3a
+ 2181 00b7 0B       		.uleb128 0xb
+ 2182 00b8 3B       		.uleb128 0x3b
+ 2183 00b9 0B       		.uleb128 0xb
+ 2184 00ba 49       		.uleb128 0x49
+ 2185 00bb 13       		.uleb128 0x13
+ 2186 00bc 38       		.uleb128 0x38
+ 2187 00bd 0B       		.uleb128 0xb
+ 2188 00be 00       		.byte	0
+ 2189 00bf 00       		.byte	0
+ 2190 00c0 11       		.uleb128 0x11
+ 2191 00c1 2E       		.uleb128 0x2e
+ 2192 00c2 01       		.byte	0x1
+ 2193 00c3 3F       		.uleb128 0x3f
+ 2194 00c4 19       		.uleb128 0x19
+ 2195 00c5 03       		.uleb128 0x3
+ 2196 00c6 0E       		.uleb128 0xe
+ 2197 00c7 3A       		.uleb128 0x3a
+ 2198 00c8 0B       		.uleb128 0xb
+ 2199 00c9 3B       		.uleb128 0x3b
+ 2200 00ca 0B       		.uleb128 0xb
+ 2201 00cb 27       		.uleb128 0x27
+ 2202 00cc 19       		.uleb128 0x19
+ 2203 00cd 11       		.uleb128 0x11
+ 2204 00ce 01       		.uleb128 0x1
+ 2205 00cf 12       		.uleb128 0x12
+ 2206 00d0 06       		.uleb128 0x6
+ 2207 00d1 40       		.uleb128 0x40
+ 2208 00d2 18       		.uleb128 0x18
+ 2209 00d3 9642     		.uleb128 0x2116
+ 2210 00d5 19       		.uleb128 0x19
+ 2211 00d6 01       		.uleb128 0x1
+ 2212 00d7 13       		.uleb128 0x13
+ 2213 00d8 00       		.byte	0
+ 2214 00d9 00       		.byte	0
+ 2215 00da 12       		.uleb128 0x12
+ 2216 00db 05       		.uleb128 0x5
+ 2217 00dc 00       		.byte	0
+ 2218 00dd 03       		.uleb128 0x3
+ 2219 00de 0E       		.uleb128 0xe
+ 2220 00df 3A       		.uleb128 0x3a
+ 2221 00e0 0B       		.uleb128 0xb
+ 2222 00e1 3B       		.uleb128 0x3b
+ 2223 00e2 0B       		.uleb128 0xb
+ 2224 00e3 49       		.uleb128 0x49
+ 2225 00e4 13       		.uleb128 0x13
+ 2226 00e5 02       		.uleb128 0x2
+ 2227 00e6 18       		.uleb128 0x18
+ 2228 00e7 00       		.byte	0
+ 2229 00e8 00       		.byte	0
+ 2230 00e9 13       		.uleb128 0x13
+ 2231 00ea 34       		.uleb128 0x34
+ 2232 00eb 00       		.byte	0
+ 2233 00ec 03       		.uleb128 0x3
+ 2234 00ed 08       		.uleb128 0x8
+ 2235 00ee 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 46
+
+
+ 2236 00ef 0B       		.uleb128 0xb
+ 2237 00f0 3B       		.uleb128 0x3b
+ 2238 00f1 0B       		.uleb128 0xb
+ 2239 00f2 49       		.uleb128 0x49
+ 2240 00f3 13       		.uleb128 0x13
+ 2241 00f4 02       		.uleb128 0x2
+ 2242 00f5 18       		.uleb128 0x18
+ 2243 00f6 00       		.byte	0
+ 2244 00f7 00       		.byte	0
+ 2245 00f8 14       		.uleb128 0x14
+ 2246 00f9 34       		.uleb128 0x34
+ 2247 00fa 00       		.byte	0
+ 2248 00fb 03       		.uleb128 0x3
+ 2249 00fc 0E       		.uleb128 0xe
+ 2250 00fd 3A       		.uleb128 0x3a
+ 2251 00fe 0B       		.uleb128 0xb
+ 2252 00ff 3B       		.uleb128 0x3b
+ 2253 0100 0B       		.uleb128 0xb
+ 2254 0101 49       		.uleb128 0x49
+ 2255 0102 13       		.uleb128 0x13
+ 2256 0103 02       		.uleb128 0x2
+ 2257 0104 18       		.uleb128 0x18
+ 2258 0105 00       		.byte	0
+ 2259 0106 00       		.byte	0
+ 2260 0107 15       		.uleb128 0x15
+ 2261 0108 2E       		.uleb128 0x2e
+ 2262 0109 01       		.byte	0x1
+ 2263 010a 3F       		.uleb128 0x3f
+ 2264 010b 19       		.uleb128 0x19
+ 2265 010c 03       		.uleb128 0x3
+ 2266 010d 0E       		.uleb128 0xe
+ 2267 010e 3A       		.uleb128 0x3a
+ 2268 010f 0B       		.uleb128 0xb
+ 2269 0110 3B       		.uleb128 0x3b
+ 2270 0111 0B       		.uleb128 0xb
+ 2271 0112 49       		.uleb128 0x49
+ 2272 0113 13       		.uleb128 0x13
+ 2273 0114 11       		.uleb128 0x11
+ 2274 0115 01       		.uleb128 0x1
+ 2275 0116 12       		.uleb128 0x12
+ 2276 0117 06       		.uleb128 0x6
+ 2277 0118 40       		.uleb128 0x40
+ 2278 0119 18       		.uleb128 0x18
+ 2279 011a 9642     		.uleb128 0x2116
+ 2280 011c 19       		.uleb128 0x19
+ 2281 011d 01       		.uleb128 0x1
+ 2282 011e 13       		.uleb128 0x13
+ 2283 011f 00       		.byte	0
+ 2284 0120 00       		.byte	0
+ 2285 0121 16       		.uleb128 0x16
+ 2286 0122 26       		.uleb128 0x26
+ 2287 0123 00       		.byte	0
+ 2288 0124 49       		.uleb128 0x49
+ 2289 0125 13       		.uleb128 0x13
+ 2290 0126 00       		.byte	0
+ 2291 0127 00       		.byte	0
+ 2292 0128 17       		.uleb128 0x17
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 47
+
+
+ 2293 0129 34       		.uleb128 0x34
+ 2294 012a 00       		.byte	0
+ 2295 012b 03       		.uleb128 0x3
+ 2296 012c 0E       		.uleb128 0xe
+ 2297 012d 3A       		.uleb128 0x3a
+ 2298 012e 0B       		.uleb128 0xb
+ 2299 012f 3B       		.uleb128 0x3b
+ 2300 0130 05       		.uleb128 0x5
+ 2301 0131 49       		.uleb128 0x49
+ 2302 0132 13       		.uleb128 0x13
+ 2303 0133 3F       		.uleb128 0x3f
+ 2304 0134 19       		.uleb128 0x19
+ 2305 0135 3C       		.uleb128 0x3c
+ 2306 0136 19       		.uleb128 0x19
+ 2307 0137 00       		.byte	0
+ 2308 0138 00       		.byte	0
+ 2309 0139 18       		.uleb128 0x18
+ 2310 013a 34       		.uleb128 0x34
+ 2311 013b 00       		.byte	0
+ 2312 013c 03       		.uleb128 0x3
+ 2313 013d 0E       		.uleb128 0xe
+ 2314 013e 3A       		.uleb128 0x3a
+ 2315 013f 0B       		.uleb128 0xb
+ 2316 0140 3B       		.uleb128 0x3b
+ 2317 0141 0B       		.uleb128 0xb
+ 2318 0142 49       		.uleb128 0x49
+ 2319 0143 13       		.uleb128 0x13
+ 2320 0144 3F       		.uleb128 0x3f
+ 2321 0145 19       		.uleb128 0x19
+ 2322 0146 02       		.uleb128 0x2
+ 2323 0147 18       		.uleb128 0x18
+ 2324 0148 00       		.byte	0
+ 2325 0149 00       		.byte	0
+ 2326 014a 00       		.byte	0
+ 2327              		.section	.debug_aranges,"",%progbits
+ 2328 0000 24000000 		.4byte	0x24
+ 2329 0004 0200     		.2byte	0x2
+ 2330 0006 00000000 		.4byte	.Ldebug_info0
+ 2331 000a 04       		.byte	0x4
+ 2332 000b 00       		.byte	0
+ 2333 000c 0000     		.2byte	0
+ 2334 000e 0000     		.2byte	0
+ 2335 0010 00000000 		.4byte	.LFB35
+ 2336 0014 7C020000 		.4byte	.LFE35-.LFB35
+ 2337 0018 00000000 		.4byte	.LFB36
+ 2338 001c FC000000 		.4byte	.LFE36-.LFB36
+ 2339 0020 00000000 		.4byte	0
+ 2340 0024 00000000 		.4byte	0
+ 2341              		.section	.debug_ranges,"",%progbits
+ 2342              	.Ldebug_ranges0:
+ 2343 0000 00000000 		.4byte	.LFB35
+ 2344 0004 7C020000 		.4byte	.LFE35
+ 2345 0008 00000000 		.4byte	.LFB36
+ 2346 000c FC000000 		.4byte	.LFE36
+ 2347 0010 00000000 		.4byte	0
+ 2348 0014 00000000 		.4byte	0
+ 2349              		.section	.debug_line,"",%progbits
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 48
+
+
+ 2350              	.Ldebug_line0:
+ 2351 0000 5D010000 		.section	.debug_str,"MS",%progbits,1
+ 2351      0200B700 
+ 2351      00000201 
+ 2351      FB0E0D00 
+ 2351      01010101 
+ 2352              	.LASF364:
+ 2353 0000 70656572 		.ascii	"peerDeviceAddr\000"
+ 2353      44657669 
+ 2353      63654164 
+ 2353      647200
+ 2354              	.LASF335:
+ 2355 000f 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_CHAR_RESPONSE\000"
+ 2355      455F4556 
+ 2355      545F5544 
+ 2355      53435F52 
+ 2355      4541445F 
+ 2356              	.LASF265:
+ 2357 0031 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_DISABLED\000"
+ 2357      455F4556 
+ 2357      545F4854 
+ 2357      53535F4E 
+ 2357      4F544946 
+ 2358              	.LASF111:
+ 2359 0056 4359424C 		.ascii	"CYBLE_GAPC_SCAN_RSP\000"
+ 2359      455F4741 
+ 2359      50435F53 
+ 2359      43414E5F 
+ 2359      52535000 
+ 2360              	.LASF143:
+ 2361 006a 4359424C 		.ascii	"CYBLE_DIS_CHAR_COUNT\000"
+ 2361      455F4449 
+ 2361      535F4348 
+ 2361      41525F43 
+ 2361      4F554E54 
+ 2362              	.LASF17:
+ 2363 007f 73697A65 		.ascii	"sizetype\000"
+ 2363      74797065 
+ 2363      00
+ 2364              	.LASF333:
+ 2365 0088 4359424C 		.ascii	"CYBLE_EVT_UDSC_INDICATION\000"
+ 2365      455F4556 
+ 2365      545F5544 
+ 2365      53435F49 
+ 2365      4E444943 
+ 2366              	.LASF192:
+ 2367 00a2 4359424C 		.ascii	"CYBLE_EVT_CGMSC_INDICATION\000"
+ 2367      455F4556 
+ 2367      545F4347 
+ 2367      4D53435F 
+ 2367      494E4449 
+ 2368              	.LASF210:
+ 2369 00bd 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_DESCR_RESPONSE\000"
+ 2369      455F4556 
+ 2369      545F4350 
+ 2369      53435F52 
+ 2369      4541445F 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 49
+
+
+ 2370              	.LASF313:
+ 2371 00e0 4359424C 		.ascii	"CYBLE_EVT_RTUSS_WRITE_CHAR_CMD\000"
+ 2371      455F4556 
+ 2371      545F5254 
+ 2371      5553535F 
+ 2371      57524954 
+ 2372              	.LASF127:
+ 2373 00ff 72616E67 		.ascii	"range\000"
+ 2373      6500
+ 2374              	.LASF221:
+ 2375 0105 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_CHAR_RESPONSE\000"
+ 2375      455F4556 
+ 2375      545F4353 
+ 2375      4353435F 
+ 2375      52454144 
+ 2376              	.LASF197:
+ 2377 0128 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_DESCR_RESPONSE\000"
+ 2377      455F4556 
+ 2377      545F4347 
+ 2377      4D53435F 
+ 2377      57524954 
+ 2378              	.LASF236:
+ 2379 014d 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_DISABLED\000"
+ 2379      455F4556 
+ 2379      545F474C 
+ 2379      53535F4E 
+ 2379      4F544946 
+ 2380              	.LASF352:
+ 2381 0172 6576656E 		.ascii	"eventParam\000"
+ 2381      74506172 
+ 2381      616D00
+ 2382              	.LASF183:
+ 2383 017d 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_CHAR_RESPONSE\000"
+ 2383      455F4556 
+ 2383      545F424C 
+ 2383      53435F52 
+ 2383      4541445F 
+ 2384              	.LASF31:
+ 2385 019f 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 2385      455F4556 
+ 2385      545F4741 
+ 2385      505F4445 
+ 2385      56494345 
+ 2386              	.LASF38:
+ 2387 01be 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 2387      455F4556 
+ 2387      545F4741 
+ 2387      54545F43 
+ 2387      4F4E4E45 
+ 2388              	.LASF241:
+ 2389 01d9 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_CHAR_RESPONSE\000"
+ 2389      455F4556 
+ 2389      545F474C 
+ 2389      53435F57 
+ 2389      52495445 
+ 2390              	.LASF11:
+ 2391 01fc 75696E74 		.ascii	"uint32\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 50
+
+
+ 2391      333200
+ 2392              	.LASF154:
+ 2393 0203 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DISCOVERY_FAILED\000"
+ 2393      455F4556 
+ 2393      545F4741 
+ 2393      5454435F 
+ 2393      44455343 
+ 2394              	.LASF312:
+ 2395 022a 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_DESCR_RESPONSE\000"
+ 2395      455F4556 
+ 2395      545F5253 
+ 2395      4353435F 
+ 2395      57524954 
+ 2396              	.LASF281:
+ 2397 024f 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_DISABLED\000"
+ 2397      455F4556 
+ 2397      545F4C4E 
+ 2397      53535F49 
+ 2397      4E444943 
+ 2398              	.LASF228:
+ 2399 0272 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_CHAR_RESPONSE\000"
+ 2399      455F4556 
+ 2399      545F4354 
+ 2399      53435F52 
+ 2399      4541445F 
+ 2400              	.LASF158:
+ 2401 0294 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_COMPLETE\000"
+ 2401      455F4556 
+ 2401      545F4741 
+ 2401      5454435F 
+ 2401      53525643 
+ 2402              	.LASF306:
+ 2403 02bc 4359424C 		.ascii	"CYBLE_EVT_RSCSS_CHAR_WRITE\000"
+ 2403      455F4556 
+ 2403      545F5253 
+ 2403      4353535F 
+ 2403      43484152 
+ 2404              	.LASF338:
+ 2405 02d7 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_DESCR_RESPONSE\000"
+ 2405      455F4556 
+ 2405      545F5544 
+ 2405      53435F57 
+ 2405      52495445 
+ 2406              	.LASF255:
+ 2407 02fb 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_DESCR_RESPONSE\000"
+ 2407      455F4556 
+ 2407      545F4849 
+ 2407      4453435F 
+ 2407      57524954 
+ 2408              	.LASF168:
+ 2409 0320 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_DESCR_RESPONSE\000"
+ 2409      455F4556 
+ 2409      545F414E 
+ 2409      53435F52 
+ 2409      4541445F 
+ 2410              	.LASF88:
+ 2411 0343 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CONNECTION_ENTITY_NOT_FOUND\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 51
+
+
+ 2411      455F4552 
+ 2411      524F525F 
+ 2411      4C324341 
+ 2411      505F434F 
+ 2412              	.LASF269:
+ 2413 0371 4359424C 		.ascii	"CYBLE_EVT_HTSS_CHAR_WRITE\000"
+ 2413      455F4556 
+ 2413      545F4854 
+ 2413      53535F43 
+ 2413      4841525F 
+ 2414              	.LASF94:
+ 2415 038b 4359424C 		.ascii	"CYBLE_ERROR_MIC_AUTH_FAILED\000"
+ 2415      455F4552 
+ 2415      524F525F 
+ 2415      4D49435F 
+ 2415      41555448 
+ 2416              	.LASF343:
+ 2417 03a7 4359424C 		.ascii	"CYBLE_STATE_SCANNING\000"
+ 2417      455F5354 
+ 2417      4154455F 
+ 2417      5343414E 
+ 2417      4E494E47 
+ 2418              	.LASF153:
+ 2419 03bc 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_FAILED\000"
+ 2419      455F4556 
+ 2419      545F4741 
+ 2419      5454435F 
+ 2419      43484152 
+ 2420              	.LASF15:
+ 2421 03e2 63686172 		.ascii	"char8\000"
+ 2421      3800
+ 2422              	.LASF67:
+ 2423 03e8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 2423      455F4556 
+ 2423      545F4C32 
+ 2423      4341505F 
+ 2423      43424643 
+ 2424              	.LASF208:
+ 2425 040b 4359424C 		.ascii	"CYBLE_EVT_CPSC_READ_CHAR_RESPONSE\000"
+ 2425      455F4556 
+ 2425      545F4350 
+ 2425      53435F52 
+ 2425      4541445F 
+ 2426              	.LASF215:
+ 2427 042d 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_ENABLED\000"
+ 2427      455F4556 
+ 2427      545F4353 
+ 2427      4353535F 
+ 2427      494E4449 
+ 2428              	.LASF286:
+ 2429 0450 4359424C 		.ascii	"CYBLE_EVT_LNSC_INDICATION\000"
+ 2429      455F4556 
+ 2429      545F4C4E 
+ 2429      53435F49 
+ 2429      4E444943 
+ 2430              	.LASF105:
+ 2431 046a 74797065 		.ascii	"type\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 52
+
+
+ 2431      00
+ 2432              	.LASF297:
+ 2433 046f 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_CHAR_RESPONSE\000"
+ 2433      455F4556 
+ 2433      545F5041 
+ 2433      5353435F 
+ 2433      52454144 
+ 2434              	.LASF176:
+ 2435 0492 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_ENABLED\000"
+ 2435      455F4556 
+ 2435      545F424C 
+ 2435      53535F49 
+ 2435      4E444943 
+ 2436              	.LASF182:
+ 2437 04b4 4359424C 		.ascii	"CYBLE_EVT_BLSC_NOTIFICATION\000"
+ 2437      455F4556 
+ 2437      545F424C 
+ 2437      53435F4E 
+ 2437      4F544946 
+ 2438              	.LASF220:
+ 2439 04d0 4359424C 		.ascii	"CYBLE_EVT_CSCSC_INDICATION\000"
+ 2439      455F4556 
+ 2439      545F4353 
+ 2439      4353435F 
+ 2439      494E4449 
+ 2440              	.LASF138:
+ 2441 04eb 4359424C 		.ascii	"CYBLE_DIS_FIRMWARE_REV\000"
+ 2441      455F4449 
+ 2441      535F4649 
+ 2441      524D5741 
+ 2441      52455F52 
+ 2442              	.LASF55:
+ 2443 0502 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 2443      455F4556 
+ 2443      545F4741 
+ 2443      5454435F 
+ 2443      48414E44 
+ 2444              	.LASF25:
+ 2445 0523 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 2445      455F4556 
+ 2445      545F4741 
+ 2445      505F4155 
+ 2445      54485F52 
+ 2446              	.LASF12:
+ 2447 053a 696E7438 		.ascii	"int8\000"
+ 2447      00
+ 2448              	.LASF160:
+ 2449 053f 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DISCOVERY_COMPLETE\000"
+ 2449      455F4556 
+ 2449      545F4741 
+ 2449      5454435F 
+ 2449      43484152 
+ 2450              	.LASF123:
+ 2451 0567 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 2451      455F434F 
+ 2451      4E4E5F48 
+ 2451      414E444C 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 53
+
+
+ 2451      455F5400 
+ 2452              	.LASF261:
+ 2453 057b 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_CHAR_RESPONSE\000"
+ 2453      455F4556 
+ 2453      545F4852 
+ 2453      53435F57 
+ 2453      52495445 
+ 2454              	.LASF83:
+ 2455 059e 4359424C 		.ascii	"CYBLE_ERROR_BT_ON_NOT_COMPLETED\000"
+ 2455      455F4552 
+ 2455      524F525F 
+ 2455      42545F4F 
+ 2455      4E5F4E4F 
+ 2456              	.LASF219:
+ 2457 05be 4359424C 		.ascii	"CYBLE_EVT_CSCSC_NOTIFICATION\000"
+ 2457      455F4556 
+ 2457      545F4353 
+ 2457      4353435F 
+ 2457      4E4F5449 
+ 2458              	.LASF121:
+ 2459 05db 62644861 		.ascii	"bdHandle\000"
+ 2459      6E646C65 
+ 2459      00
+ 2460              	.LASF188:
+ 2461 05e4 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_CONFIRMED\000"
+ 2461      455F4556 
+ 2461      545F4347 
+ 2461      4D53535F 
+ 2461      494E4449 
+ 2462              	.LASF110:
+ 2463 0609 4359424C 		.ascii	"CYBLE_GAPC_NON_CONN_UNDIRECTED_ADV\000"
+ 2463      455F4741 
+ 2463      50435F4E 
+ 2463      4F4E5F43 
+ 2463      4F4E4E5F 
+ 2464              	.LASF184:
+ 2465 062c 4359424C 		.ascii	"CYBLE_EVT_BLSC_READ_DESCR_RESPONSE\000"
+ 2465      455F4556 
+ 2465      545F424C 
+ 2465      53435F52 
+ 2465      4541445F 
+ 2466              	.LASF201:
+ 2467 064f 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_DISABLED\000"
+ 2467      455F4556 
+ 2467      545F4350 
+ 2467      53535F49 
+ 2467      4E444943 
+ 2468              	.LASF200:
+ 2469 0672 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_ENABLED\000"
+ 2469      455F4556 
+ 2469      545F4350 
+ 2469      53535F49 
+ 2469      4E444943 
+ 2470              	.LASF283:
+ 2471 0694 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_ENABLED\000"
+ 2471      455F4556 
+ 2471      545F4C4E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 54
+
+
+ 2471      53535F4E 
+ 2471      4F544946 
+ 2472              	.LASF51:
+ 2473 06b8 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 2473      455F4556 
+ 2473      545F4741 
+ 2473      5454535F 
+ 2473      57524954 
+ 2474              	.LASF211:
+ 2475 06d6 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_DESCR_RESPONSE\000"
+ 2475      455F4556 
+ 2475      545F4350 
+ 2475      53435F57 
+ 2475      52495445 
+ 2476              	.LASF107:
+ 2477 06fa 4359424C 		.ascii	"CYBLE_GAPC_CONN_UNDIRECTED_ADV\000"
+ 2477      455F4741 
+ 2477      50435F43 
+ 2477      4F4E4E5F 
+ 2477      554E4449 
+ 2478              	.LASF4:
+ 2479 0719 6C6F6E67 		.ascii	"long int\000"
+ 2479      20696E74 
+ 2479      00
+ 2480              	.LASF216:
+ 2481 0722 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_DISABLED\000"
+ 2481      455F4556 
+ 2481      545F4353 
+ 2481      4353535F 
+ 2481      494E4449 
+ 2482              	.LASF298:
+ 2483 0746 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_CHAR_RESPONSE\000"
+ 2483      455F4556 
+ 2483      545F5041 
+ 2483      5353435F 
+ 2483      57524954 
+ 2484              	.LASF116:
+ 2485 076a 64617461 		.ascii	"dataLen\000"
+ 2485      4C656E00 
+ 2486              	.LASF146:
+ 2487 0772 4359424C 		.ascii	"CYBLE_LONG_TERM_KEY_REQUEST_REPLY\000"
+ 2487      455F4C4F 
+ 2487      4E475F54 
+ 2487      45524D5F 
+ 2487      4B45595F 
+ 2488              	.LASF19:
+ 2489 0794 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 2489      455F4556 
+ 2489      545F5354 
+ 2489      41434B5F 
+ 2489      4F4E00
+ 2490              	.LASF90:
+ 2491 07a7 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE\000"
+ 2491      455F4552 
+ 2491      524F525F 
+ 2491      4C324341 
+ 2491      505F5053 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 55
+
+
+ 2492              	.LASF137:
+ 2493 07ca 4359424C 		.ascii	"CYBLE_DIS_HARDWARE_REV\000"
+ 2493      455F4449 
+ 2493      535F4841 
+ 2493      52445741 
+ 2493      52455F52 
+ 2494              	.LASF356:
+ 2495 07e1 6D61696E 		.ascii	"main\000"
+ 2495      00
+ 2496              	.LASF309:
+ 2497 07e6 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_CHAR_RESPONSE\000"
+ 2497      455F4556 
+ 2497      545F5253 
+ 2497      4353435F 
+ 2497      52454144 
+ 2498              	.LASF264:
+ 2499 0809 4359424C 		.ascii	"CYBLE_EVT_HTSS_NOTIFICATION_ENABLED\000"
+ 2499      455F4556 
+ 2499      545F4854 
+ 2499      53535F4E 
+ 2499      4F544946 
+ 2500              	.LASF101:
+ 2501 082d 4359424C 		.ascii	"CYBLE_ERROR_CHAR_IS_NOT_DISCOVERED\000"
+ 2501      455F4552 
+ 2501      524F525F 
+ 2501      43484152 
+ 2501      5F49535F 
+ 2502              	.LASF251:
+ 2503 0850 4359424C 		.ascii	"CYBLE_EVT_HIDSC_NOTIFICATION\000"
+ 2503      455F4556 
+ 2503      545F4849 
+ 2503      4453435F 
+ 2503      4E4F5449 
+ 2504              	.LASF61:
+ 2505 086d 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 2505      455F4556 
+ 2505      545F4C32 
+ 2505      4341505F 
+ 2505      434F4D4D 
+ 2506              	.LASF151:
+ 2507 0889 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DISCOVERY_FAILED\000"
+ 2507      455F4556 
+ 2507      545F4741 
+ 2507      5454435F 
+ 2507      53525643 
+ 2508              	.LASF248:
+ 2509 08af 4359424C 		.ascii	"CYBLE_EVT_HIDSS_SUSPEND\000"
+ 2509      455F4556 
+ 2509      545F4849 
+ 2509      4453535F 
+ 2509      53555350 
+ 2510              	.LASF91:
+ 2511 08c7 4359424C 		.ascii	"CYBLE_ERROR_GATT_DB_INVALID_ATTR_HANDLE\000"
+ 2511      455F4552 
+ 2511      524F525F 
+ 2511      47415454 
+ 2511      5F44425F 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 56
+
+
+ 2512              	.LASF0:
+ 2513 08ef 7369676E 		.ascii	"signed char\000"
+ 2513      65642063 
+ 2513      68617200 
+ 2514              	.LASF174:
+ 2515 08fb 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_DESCR_RESPONSE\000"
+ 2515      455F4556 
+ 2515      545F4241 
+ 2515      53435F52 
+ 2515      4541445F 
+ 2516              	.LASF21:
+ 2517 091e 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 2517      455F4556 
+ 2517      545F4841 
+ 2517      52445741 
+ 2517      52455F45 
+ 2518              	.LASF72:
+ 2519 0937 4359424C 		.ascii	"CYBLE_ERROR_OK\000"
+ 2519      455F4552 
+ 2519      524F525F 
+ 2519      4F4B00
+ 2520              	.LASF115:
+ 2521 0946 70656572 		.ascii	"peerBdAddr\000"
+ 2521      42644164 
+ 2521      647200
+ 2522              	.LASF42:
+ 2523 0951 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 2523      455F4556 
+ 2523      545F4741 
+ 2523      5454435F 
+ 2523      52454144 
+ 2524              	.LASF340:
+ 2525 0978 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 2525      455F5354 
+ 2525      4154455F 
+ 2525      53544F50 
+ 2525      50454400 
+ 2526              	.LASF303:
+ 2527 098c 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_ENABLED\000"
+ 2527      455F4556 
+ 2527      545F5253 
+ 2527      4353535F 
+ 2527      494E4449 
+ 2528              	.LASF1:
+ 2529 09af 756E7369 		.ascii	"unsigned char\000"
+ 2529      676E6564 
+ 2529      20636861 
+ 2529      7200
+ 2530              	.LASF41:
+ 2531 09bd 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 2531      455F4556 
+ 2531      545F4741 
+ 2531      5454435F 
+ 2531      5843484E 
+ 2532              	.LASF202:
+ 2533 09db 4359424C 		.ascii	"CYBLE_EVT_CPSS_INDICATION_CONFIRMED\000"
+ 2533      455F4556 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 57
+
+
+ 2533      545F4350 
+ 2533      53535F49 
+ 2533      4E444943 
+ 2534              	.LASF199:
+ 2535 09ff 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_DISABLED\000"
+ 2535      455F4556 
+ 2535      545F4350 
+ 2535      53535F4E 
+ 2535      4F544946 
+ 2536              	.LASF308:
+ 2537 0a24 4359424C 		.ascii	"CYBLE_EVT_RSCSC_INDICATION\000"
+ 2537      455F4556 
+ 2537      545F5253 
+ 2537      4353435F 
+ 2537      494E4449 
+ 2538              	.LASF68:
+ 2539 0a3f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 2539      455F4556 
+ 2539      545F4C32 
+ 2539      4341505F 
+ 2539      43424643 
+ 2540              	.LASF114:
+ 2541 0a62 70656572 		.ascii	"peerAddrType\000"
+ 2541      41646472 
+ 2541      54797065 
+ 2541      00
+ 2542              	.LASF150:
+ 2543 0a6f 4359424C 		.ascii	"CYBLE_EVT_GATTC_INDICATION\000"
+ 2543      455F4556 
+ 2543      545F4741 
+ 2543      5454435F 
+ 2543      494E4449 
+ 2544              	.LASF315:
+ 2545 0a8a 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_ENABLED\000"
+ 2545      455F4556 
+ 2545      545F5343 
+ 2545      5053535F 
+ 2545      4E4F5449 
+ 2546              	.LASF65:
+ 2547 0aaf 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 2547      455F4556 
+ 2547      545F4C32 
+ 2547      4341505F 
+ 2547      43424643 
+ 2548              	.LASF45:
+ 2549 0ad0 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 2549      455F4556 
+ 2549      545F4741 
+ 2549      5454435F 
+ 2549      46494E44 
+ 2550              	.LASF320:
+ 2551 0af7 4359424C 		.ascii	"CYBLE_EVT_SCPSC_WRITE_DESCR_RESPONSE\000"
+ 2551      455F4556 
+ 2551      545F5343 
+ 2551      5053435F 
+ 2551      57524954 
+ 2552              	.LASF16:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 58
+
+
+ 2553 0b1c 63686172 		.ascii	"char\000"
+ 2553      00
+ 2554              	.LASF323:
+ 2555 0b21 4359424C 		.ascii	"CYBLE_EVT_TPSC_NOTIFICATION\000"
+ 2555      455F4556 
+ 2555      545F5450 
+ 2555      53435F4E 
+ 2555      4F544946 
+ 2556              	.LASF48:
+ 2557 0b3d 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 2557      455F4556 
+ 2557      545F4741 
+ 2557      5454435F 
+ 2557      52454144 
+ 2558              	.LASF344:
+ 2559 0b5c 4359424C 		.ascii	"CYBLE_STATE_CONNECTING\000"
+ 2559      455F5354 
+ 2559      4154455F 
+ 2559      434F4E4E 
+ 2559      45435449 
+ 2560              	.LASF18:
+ 2561 0b73 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 2561      455F4556 
+ 2561      545F484F 
+ 2561      53545F49 
+ 2561      4E56414C 
+ 2562              	.LASF242:
+ 2563 0b8a 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_DESCR_RESPONSE\000"
+ 2563      455F4556 
+ 2563      545F474C 
+ 2563      53435F52 
+ 2563      4541445F 
+ 2564              	.LASF131:
+ 2565 0bad 4359424C 		.ascii	"CYBLE_TPS_CHAR_COUNT\000"
+ 2565      455F5450 
+ 2565      535F4348 
+ 2565      41525F43 
+ 2565      4F554E54 
+ 2566              	.LASF79:
+ 2567 0bc2 4359424C 		.ascii	"CYBLE_ERROR_NO_DEVICE_ENTITY\000"
+ 2567      455F4552 
+ 2567      524F525F 
+ 2567      4E4F5F44 
+ 2567      45564943 
+ 2568              	.LASF47:
+ 2569 0bdf 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 2569      455F4556 
+ 2569      545F4741 
+ 2569      5454435F 
+ 2569      52454144 
+ 2570              	.LASF267:
+ 2571 0bfd 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_DISABLED\000"
+ 2571      455F4556 
+ 2571      545F4854 
+ 2571      53535F49 
+ 2571      4E444943 
+ 2572              	.LASF314:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 59
+
+
+ 2573 0c20 4359424C 		.ascii	"CYBLE_EVT_RTUSC_READ_CHAR_RESPONSE\000"
+ 2573      455F4556 
+ 2573      545F5254 
+ 2573      5553435F 
+ 2573      52454144 
+ 2574              	.LASF54:
+ 2575 0c43 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 2575      455F4556 
+ 2575      545F4741 
+ 2575      5454435F 
+ 2575      45584543 
+ 2576              	.LASF359:
+ 2577 0c62 73657269 		.ascii	"serialNumber\000"
+ 2577      616C4E75 
+ 2577      6D626572 
+ 2577      00
+ 2578              	.LASF328:
+ 2579 0c6f 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_DISABLED\000"
+ 2579      455F4556 
+ 2579      545F5544 
+ 2579      53535F49 
+ 2579      4E444943 
+ 2580              	.LASF139:
+ 2581 0c92 4359424C 		.ascii	"CYBLE_DIS_SOFTWARE_REV\000"
+ 2581      455F4449 
+ 2581      535F534F 
+ 2581      46545741 
+ 2581      52455F52 
+ 2582              	.LASF205:
+ 2583 0ca9 4359424C 		.ascii	"CYBLE_EVT_CPSS_CHAR_WRITE\000"
+ 2583      455F4556 
+ 2583      545F4350 
+ 2583      53535F43 
+ 2583      4841525F 
+ 2584              	.LASF256:
+ 2585 0cc3 4359424C 		.ascii	"CYBLE_EVT_HRSS_ENERGY_EXPENDED_RESET\000"
+ 2585      455F4556 
+ 2585      545F4852 
+ 2585      53535F45 
+ 2585      4E455247 
+ 2586              	.LASF135:
+ 2587 0ce8 4359424C 		.ascii	"CYBLE_DIS_MODEL_NUMBER\000"
+ 2587      455F4449 
+ 2587      535F4D4F 
+ 2587      44454C5F 
+ 2587      4E554D42 
+ 2588              	.LASF179:
+ 2589 0cff 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_ENABLED\000"
+ 2589      455F4556 
+ 2589      545F424C 
+ 2589      53535F4E 
+ 2589      4F544946 
+ 2590              	.LASF140:
+ 2591 0d23 4359424C 		.ascii	"CYBLE_DIS_SYSTEM_ID\000"
+ 2591      455F4449 
+ 2591      535F5359 
+ 2591      5354454D 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 60
+
+
+ 2591      5F494400 
+ 2592              	.LASF73:
+ 2593 0d37 4359424C 		.ascii	"CYBLE_ERROR_INVALID_PARAMETER\000"
+ 2593      455F4552 
+ 2593      524F525F 
+ 2593      494E5641 
+ 2593      4C49445F 
+ 2594              	.LASF310:
+ 2595 0d55 4359424C 		.ascii	"CYBLE_EVT_RSCSC_WRITE_CHAR_RESPONSE\000"
+ 2595      455F4556 
+ 2595      545F5253 
+ 2595      4353435F 
+ 2595      57524954 
+ 2596              	.LASF257:
+ 2597 0d79 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_ENABLED\000"
+ 2597      455F4556 
+ 2597      545F4852 
+ 2597      53535F4E 
+ 2597      4F544946 
+ 2598              	.LASF326:
+ 2599 0d9d 4359424C 		.ascii	"CYBLE_EVT_TPSC_WRITE_DESCR_RESPONSE\000"
+ 2599      455F4556 
+ 2599      545F5450 
+ 2599      53435F57 
+ 2599      52495445 
+ 2600              	.LASF214:
+ 2601 0dc1 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_DISABLED\000"
+ 2601      455F4556 
+ 2601      545F4353 
+ 2601      4353535F 
+ 2601      4E4F5449 
+ 2602              	.LASF225:
+ 2603 0de7 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_ENABLED\000"
+ 2603      455F4556 
+ 2603      545F4354 
+ 2603      53535F4E 
+ 2603      4F544946 
+ 2604              	.LASF304:
+ 2605 0e0b 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_DISABLED\000"
+ 2605      455F4556 
+ 2605      545F5253 
+ 2605      4353535F 
+ 2605      494E4449 
+ 2606              	.LASF98:
+ 2607 0e2f 4359424C 		.ascii	"CYBLE_DESCR_DISC_DONE\000"
+ 2607      455F4445 
+ 2607      5343525F 
+ 2607      44495343 
+ 2607      5F444F4E 
+ 2608              	.LASF277:
+ 2609 0e45 4359424C 		.ascii	"CYBLE_EVT_LLSS_WRITE_CHAR_REQ\000"
+ 2609      455F4556 
+ 2609      545F4C4C 
+ 2609      53535F57 
+ 2609      52495445 
+ 2610              	.LASF75:
+ 2611 0e63 4359424C 		.ascii	"CYBLE_ERROR_MEMORY_ALLOCATION_FAILED\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 61
+
+
+ 2611      455F4552 
+ 2611      524F525F 
+ 2611      4D454D4F 
+ 2611      52595F41 
+ 2612              	.LASF262:
+ 2613 0e88 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_DESCR_RESPONSE\000"
+ 2613      455F4556 
+ 2613      545F4852 
+ 2613      53435F52 
+ 2613      4541445F 
+ 2614              	.LASF133:
+ 2615 0eab 4359424C 		.ascii	"CYBLE_TPS_DESCR_COUNT\000"
+ 2615      455F5450 
+ 2615      535F4445 
+ 2615      5343525F 
+ 2615      434F554E 
+ 2616              	.LASF213:
+ 2617 0ec1 4359424C 		.ascii	"CYBLE_EVT_CSCSS_NOTIFICATION_ENABLED\000"
+ 2617      455F4556 
+ 2617      545F4353 
+ 2617      4353535F 
+ 2617      4E4F5449 
+ 2618              	.LASF181:
+ 2619 0ee6 4359424C 		.ascii	"CYBLE_EVT_BLSC_INDICATION\000"
+ 2619      455F4556 
+ 2619      545F424C 
+ 2619      53435F49 
+ 2619      4E444943 
+ 2620              	.LASF250:
+ 2621 0f00 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_CHAR_WRITE\000"
+ 2621      455F4556 
+ 2621      545F4849 
+ 2621      4453535F 
+ 2621      5245504F 
+ 2622              	.LASF355:
+ 2623 0f22 53746163 		.ascii	"StackEventHandler\000"
+ 2623      6B457665 
+ 2623      6E744861 
+ 2623      6E646C65 
+ 2623      7200
+ 2624              	.LASF95:
+ 2625 0f34 4359424C 		.ascii	"CYBLE_ERROR_MAX\000"
+ 2625      455F4552 
+ 2625      524F525F 
+ 2625      4D415800 
+ 2626              	.LASF289:
+ 2627 0f44 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_CHAR_RESPONSE\000"
+ 2627      455F4556 
+ 2627      545F4C4E 
+ 2627      53435F57 
+ 2627      52495445 
+ 2628              	.LASF60:
+ 2629 0f67 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 2629      455F4556 
+ 2629      545F4C32 
+ 2629      4341505F 
+ 2629      434F4E4E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 62
+
+
+ 2630              	.LASF167:
+ 2631 0f8d 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_CHAR_RESPONSE\000"
+ 2631      455F4556 
+ 2631      545F414E 
+ 2631      53435F57 
+ 2631      52495445 
+ 2632              	.LASF331:
+ 2633 0fb0 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_DISABLED\000"
+ 2633      455F4556 
+ 2633      545F5544 
+ 2633      53535F4E 
+ 2633      4F544946 
+ 2634              	.LASF332:
+ 2635 0fd5 4359424C 		.ascii	"CYBLE_EVT_UDSS_WRITE_CHAR\000"
+ 2635      455F4556 
+ 2635      545F5544 
+ 2635      53535F57 
+ 2635      52495445 
+ 2636              	.LASF124:
+ 2637 0fef 73746172 		.ascii	"startHandle\000"
+ 2637      7448616E 
+ 2637      646C6500 
+ 2638              	.LASF348:
+ 2639 0ffb 4359424C 		.ascii	"CYBLE_SRVI_GATT\000"
+ 2639      455F5352 
+ 2639      56495F47 
+ 2639      41545400 
+ 2640              	.LASF28:
+ 2641 100b 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 2641      455F4556 
+ 2641      545F4741 
+ 2641      505F4155 
+ 2641      54485F43 
+ 2642              	.LASF299:
+ 2643 1027 4359424C 		.ascii	"CYBLE_EVT_PASSC_READ_DESCR_RESPONSE\000"
+ 2643      455F4556 
+ 2643      545F5041 
+ 2643      5353435F 
+ 2643      52454144 
+ 2644              	.LASF29:
+ 2645 104b 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 2645      455F4556 
+ 2645      545F4741 
+ 2645      505F4155 
+ 2645      54485F46 
+ 2646              	.LASF249:
+ 2647 1065 4359424C 		.ascii	"CYBLE_EVT_HIDSS_EXIT_SUSPEND\000"
+ 2647      455F4556 
+ 2647      545F4849 
+ 2647      4453535F 
+ 2647      45584954 
+ 2648              	.LASF96:
+ 2649 1082 4359424C 		.ascii	"CYBLE_INCL_DISC_DONE\000"
+ 2649      455F494E 
+ 2649      434C5F44 
+ 2649      4953435F 
+ 2649      444F4E45 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 63
+
+
+ 2650              	.LASF230:
+ 2651 1097 4359424C 		.ascii	"CYBLE_EVT_CTSC_WRITE_DESCR_RESPONSE\000"
+ 2651      455F4556 
+ 2651      545F4354 
+ 2651      53435F57 
+ 2651      52495445 
+ 2652              	.LASF76:
+ 2653 10bb 4359424C 		.ascii	"CYBLE_ERROR_INSUFFICIENT_RESOURCES\000"
+ 2653      455F4552 
+ 2653      524F525F 
+ 2653      494E5355 
+ 2653      46464943 
+ 2654              	.LASF302:
+ 2655 10de 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_DISABLED\000"
+ 2655      455F4556 
+ 2655      545F5253 
+ 2655      4353535F 
+ 2655      4E4F5449 
+ 2656              	.LASF253:
+ 2657 1104 4359424C 		.ascii	"CYBLE_EVT_HIDSC_WRITE_CHAR_RESPONSE\000"
+ 2657      455F4556 
+ 2657      545F4849 
+ 2657      4453435F 
+ 2657      57524954 
+ 2658              	.LASF5:
+ 2659 1128 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2659      20756E73 
+ 2659      69676E65 
+ 2659      6420696E 
+ 2659      7400
+ 2660              	.LASF276:
+ 2661 113a 4359424C 		.ascii	"CYBLE_EVT_IASS_WRITE_CHAR_CMD\000"
+ 2661      455F4556 
+ 2661      545F4941 
+ 2661      53535F57 
+ 2661      52495445 
+ 2662              	.LASF293:
+ 2663 1158 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_ENABLED\000"
+ 2663      455F4556 
+ 2663      545F5041 
+ 2663      5353535F 
+ 2663      4E4F5449 
+ 2664              	.LASF296:
+ 2665 117d 4359424C 		.ascii	"CYBLE_EVT_PASSC_NOTIFICATION\000"
+ 2665      455F4556 
+ 2665      545F5041 
+ 2665      5353435F 
+ 2665      4E4F5449 
+ 2666              	.LASF166:
+ 2667 119a 4359424C 		.ascii	"CYBLE_EVT_ANSC_READ_CHAR_RESPONSE\000"
+ 2667      455F4556 
+ 2667      545F414E 
+ 2667      53435F52 
+ 2667      4541445F 
+ 2668              	.LASF86:
+ 2669 11bc 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED\000"
+ 2669      455F4552 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 64
+
+
+ 2669      524F525F 
+ 2669      4C324341 
+ 2669      505F5053 
+ 2670              	.LASF130:
+ 2671 11e5 4359424C 		.ascii	"CYBLE_TPS_TX_POWER_LEVEL\000"
+ 2671      455F5450 
+ 2671      535F5458 
+ 2671      5F504F57 
+ 2671      45525F4C 
+ 2672              	.LASF170:
+ 2673 11fe 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_ENABLED\000"
+ 2673      455F4556 
+ 2673      545F4241 
+ 2673      53535F4E 
+ 2673      4F544946 
+ 2674              	.LASF295:
+ 2675 1222 4359424C 		.ascii	"CYBLE_EVT_PASSS_WRITE_CHAR\000"
+ 2675      455F4556 
+ 2675      545F5041 
+ 2675      5353535F 
+ 2675      57524954 
+ 2676              	.LASF209:
+ 2677 123d 4359424C 		.ascii	"CYBLE_EVT_CPSC_WRITE_CHAR_RESPONSE\000"
+ 2677      455F4556 
+ 2677      545F4350 
+ 2677      53435F57 
+ 2677      52495445 
+ 2678              	.LASF136:
+ 2679 1260 4359424C 		.ascii	"CYBLE_DIS_SERIAL_NUMBER\000"
+ 2679      455F4449 
+ 2679      535F5345 
+ 2679      5249414C 
+ 2679      5F4E554D 
+ 2680              	.LASF34:
+ 2681 1278 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 2681      455F4556 
+ 2681      545F4741 
+ 2681      505F434F 
+ 2681      4E4E4543 
+ 2682              	.LASF194:
+ 2683 12a1 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_CHAR_RESPONSE\000"
+ 2683      455F4556 
+ 2683      545F4347 
+ 2683      4D53435F 
+ 2683      52454144 
+ 2684              	.LASF341:
+ 2685 12c4 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 2685      455F5354 
+ 2685      4154455F 
+ 2685      494E4954 
+ 2685      49414C49 
+ 2686              	.LASF222:
+ 2687 12dd 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_CHAR_RESPONSE\000"
+ 2687      455F4556 
+ 2687      545F4353 
+ 2687      4353435F 
+ 2687      57524954 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 65
+
+
+ 2688              	.LASF64:
+ 2689 1301 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 2689      455F4556 
+ 2689      545F4C32 
+ 2689      4341505F 
+ 2689      43424643 
+ 2690              	.LASF218:
+ 2691 1322 4359424C 		.ascii	"CYBLE_EVT_CSCSS_CHAR_WRITE\000"
+ 2691      455F4556 
+ 2691      545F4353 
+ 2691      4353535F 
+ 2691      43484152 
+ 2692              	.LASF26:
+ 2693 133d 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 2693      455F4556 
+ 2693      545F4741 
+ 2693      505F5041 
+ 2693      53534B45 
+ 2694              	.LASF284:
+ 2695 1361 4359424C 		.ascii	"CYBLE_EVT_LNSS_NOTIFICATION_DISABLED\000"
+ 2695      455F4556 
+ 2695      545F4C4E 
+ 2695      53535F4E 
+ 2695      4F544946 
+ 2696              	.LASF203:
+ 2697 1386 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_ENABLED\000"
+ 2697      455F4556 
+ 2697      545F4350 
+ 2697      53535F42 
+ 2697      524F4144 
+ 2698              	.LASF270:
+ 2699 13a7 4359424C 		.ascii	"CYBLE_EVT_HTSC_NOTIFICATION\000"
+ 2699      455F4556 
+ 2699      545F4854 
+ 2699      53435F4E 
+ 2699      4F544946 
+ 2700              	.LASF6:
+ 2701 13c3 6C6F6E67 		.ascii	"long long int\000"
+ 2701      206C6F6E 
+ 2701      6720696E 
+ 2701      7400
+ 2702              	.LASF324:
+ 2703 13d1 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_CHAR_RESPONSE\000"
+ 2703      455F4556 
+ 2703      545F5450 
+ 2703      53435F52 
+ 2703      4541445F 
+ 2704              	.LASF142:
+ 2705 13f3 4359424C 		.ascii	"CYBLE_DIS_PNP_ID\000"
+ 2705      455F4449 
+ 2705      535F504E 
+ 2705      505F4944 
+ 2705      00
+ 2706              	.LASF156:
+ 2707 1404 4359424C 		.ascii	"CYBLE_EVT_GATTC_CHAR_DUPLICATION\000"
+ 2707      455F4556 
+ 2707      545F4741 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 66
+
+
+ 2707      5454435F 
+ 2707      43484152 
+ 2708              	.LASF235:
+ 2709 1425 4359424C 		.ascii	"CYBLE_EVT_GLSS_NOTIFICATION_ENABLED\000"
+ 2709      455F4556 
+ 2709      545F474C 
+ 2709      53535F4E 
+ 2709      4F544946 
+ 2710              	.LASF87:
+ 2711 1449 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_REGISTERED\000"
+ 2711      455F4552 
+ 2711      524F525F 
+ 2711      4C324341 
+ 2711      505F5053 
+ 2712              	.LASF77:
+ 2713 146e 4359424C 		.ascii	"CYBLE_ERROR_OOB_NOT_AVAILABLE\000"
+ 2713      455F4552 
+ 2713      524F525F 
+ 2713      4F4F425F 
+ 2713      4E4F545F 
+ 2714              	.LASF186:
+ 2715 148c 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_ENABLED\000"
+ 2715      455F4556 
+ 2715      545F4347 
+ 2715      4D53535F 
+ 2715      494E4449 
+ 2716              	.LASF363:
+ 2717 14af 64657669 		.ascii	"deviceDetected\000"
+ 2717      63654465 
+ 2717      74656374 
+ 2717      656400
+ 2718              	.LASF14:
+ 2719 14be 646F7562 		.ascii	"double\000"
+ 2719      6C6500
+ 2720              	.LASF92:
+ 2721 14c5 4359424C 		.ascii	"CYBLE_ERROR_DEVICE_ALREADY_EXISTS\000"
+ 2721      455F4552 
+ 2721      524F525F 
+ 2721      44455649 
+ 2721      43455F41 
+ 2722              	.LASF70:
+ 2723 14e7 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 2723      455F4556 
+ 2723      545F5045 
+ 2723      4E44494E 
+ 2723      475F464C 
+ 2724              	.LASF159:
+ 2725 1505 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_COMPLETE\000"
+ 2725      455F4556 
+ 2725      545F4741 
+ 2725      5454435F 
+ 2725      494E434C 
+ 2726              	.LASF291:
+ 2727 152d 4359424C 		.ascii	"CYBLE_EVT_LNSC_WRITE_DESCR_RESPONSE\000"
+ 2727      455F4556 
+ 2727      545F4C4E 
+ 2727      53435F57 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 67
+
+
+ 2727      52495445 
+ 2728              	.LASF278:
+ 2729 1551 4359424C 		.ascii	"CYBLE_EVT_LLSC_READ_CHAR_RESPONSE\000"
+ 2729      455F4556 
+ 2729      545F4C4C 
+ 2729      53435F52 
+ 2729      4541445F 
+ 2730              	.LASF217:
+ 2731 1573 4359424C 		.ascii	"CYBLE_EVT_CSCSS_INDICATION_CONFIRMATION\000"
+ 2731      455F4556 
+ 2731      545F4353 
+ 2731      4353535F 
+ 2731      494E4449 
+ 2732              	.LASF89:
+ 2733 159b 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CHANNEL_NOT_FOUND\000"
+ 2733      455F4552 
+ 2733      524F525F 
+ 2733      4C324341 
+ 2733      505F4348 
+ 2734              	.LASF80:
+ 2735 15bf 4359424C 		.ascii	"CYBLE_ERROR_REPEATED_ATTEMPTS\000"
+ 2735      455F4552 
+ 2735      524F525F 
+ 2735      52455045 
+ 2735      41544544 
+ 2736              	.LASF13:
+ 2737 15dd 666C6F61 		.ascii	"float\000"
+ 2737      7400
+ 2738              	.LASF318:
+ 2739 15e3 4359424C 		.ascii	"CYBLE_EVT_SCPSC_NOTIFICATION\000"
+ 2739      455F4556 
+ 2739      545F5343 
+ 2739      5053435F 
+ 2739      4E4F5449 
+ 2740              	.LASF247:
+ 2741 1600 4359424C 		.ascii	"CYBLE_EVT_HIDSS_REPORT_MODE_ENTER\000"
+ 2741      455F4556 
+ 2741      545F4849 
+ 2741      4453535F 
+ 2741      5245504F 
+ 2742              	.LASF93:
+ 2743 1622 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED\000"
+ 2743      455F4552 
+ 2743      524F525F 
+ 2743      464C4153 
+ 2743      485F5752 
+ 2744              	.LASF245:
+ 2745 1647 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_DISABLED\000"
+ 2745      455F4556 
+ 2745      545F4849 
+ 2745      4453535F 
+ 2745      4E4F5449 
+ 2746              	.LASF351:
+ 2747 166d 6576656E 		.ascii	"event\000"
+ 2747      7400
+ 2748              	.LASF334:
+ 2749 1673 4359424C 		.ascii	"CYBLE_EVT_UDSC_NOTIFICATION\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 68
+
+
+ 2749      455F4556 
+ 2749      545F5544 
+ 2749      53435F4E 
+ 2749      4F544946 
+ 2750              	.LASF128:
+ 2751 168f 75756964 		.ascii	"uuid\000"
+ 2751      00
+ 2752              	.LASF8:
+ 2753 1694 756E7369 		.ascii	"unsigned int\000"
+ 2753      676E6564 
+ 2753      20696E74 
+ 2753      00
+ 2754              	.LASF52:
+ 2755 16a1 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 2755      455F4556 
+ 2755      545F4741 
+ 2755      5454535F 
+ 2755      50524550 
+ 2756              	.LASF349:
+ 2757 16c0 4359424C 		.ascii	"CYBLE_SRVI_TPS\000"
+ 2757      455F5352 
+ 2757      56495F54 
+ 2757      505300
+ 2758              	.LASF226:
+ 2759 16cf 4359424C 		.ascii	"CYBLE_EVT_CTSS_NOTIFICATION_DISABLED\000"
+ 2759      455F4556 
+ 2759      545F4354 
+ 2759      53535F4E 
+ 2759      4F544946 
+ 2760              	.LASF177:
+ 2761 16f4 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_DISABLED\000"
+ 2761      455F4556 
+ 2761      545F424C 
+ 2761      53535F49 
+ 2761      4E444943 
+ 2762              	.LASF141:
+ 2763 1717 4359424C 		.ascii	"CYBLE_DIS_REG_CERT_DATA\000"
+ 2763      455F4449 
+ 2763      535F5245 
+ 2763      475F4345 
+ 2763      52545F44 
+ 2764              	.LASF316:
+ 2765 172f 4359424C 		.ascii	"CYBLE_EVT_SCPSS_NOTIFICATION_DISABLED\000"
+ 2765      455F4556 
+ 2765      545F5343 
+ 2765      5053535F 
+ 2765      4E4F5449 
+ 2766              	.LASF365:
+ 2767 1755 474E5520 		.ascii	"GNU C 4.8.4 20140526 (release) [ARM/embedded-4_8-br"
+ 2767      4320342E 
+ 2767      382E3420 
+ 2767      32303134 
+ 2767      30353236 
+ 2768 1788 616E6368 		.ascii	"anch revision 211358] -mcpu=cortex-m0 -mthumb -g -O"
+ 2768      20726576 
+ 2768      6973696F 
+ 2768      6E203231 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 69
+
+
+ 2768      31333538 
+ 2769 17bb 30202D66 		.ascii	"0 -ffunction-sections\000"
+ 2769      66756E63 
+ 2769      74696F6E 
+ 2769      2D736563 
+ 2769      74696F6E 
+ 2770              	.LASF129:
+ 2771 17d1 4359424C 		.ascii	"CYBLE_DISC_SRVC_INFO_T\000"
+ 2771      455F4449 
+ 2771      53435F53 
+ 2771      5256435F 
+ 2771      494E464F 
+ 2772              	.LASF144:
+ 2773 17e8 4359424C 		.ascii	"CYBLE_AUTHENTICATION_REQUEST_REPLY\000"
+ 2773      455F4155 
+ 2773      5448454E 
+ 2773      54494341 
+ 2773      54494F4E 
+ 2774              	.LASF85:
+ 2775 180b 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING\000"
+ 2775      455F4552 
+ 2775      524F525F 
+ 2775      4C324341 
+ 2775      505F5053 
+ 2776              	.LASF180:
+ 2777 1830 4359424C 		.ascii	"CYBLE_EVT_BLSS_NOTIFICATION_DISABLED\000"
+ 2777      455F4556 
+ 2777      545F424C 
+ 2777      53535F4E 
+ 2777      4F544946 
+ 2778              	.LASF273:
+ 2779 1855 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_CHAR_RESPONSE\000"
+ 2779      455F4556 
+ 2779      545F4854 
+ 2779      53435F57 
+ 2779      52495445 
+ 2780              	.LASF362:
+ 2781 1878 6379426C 		.ascii	"cyBle_serverInfo\000"
+ 2781      655F7365 
+ 2781      72766572 
+ 2781      496E666F 
+ 2781      00
+ 2782              	.LASF71:
+ 2783 1889 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 2783      455F4556 
+ 2783      545F4D41 
+ 2783      5800
+ 2784              	.LASF35:
+ 2785 1897 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 2785      455F4556 
+ 2785      545F4741 
+ 2785      50435F53 
+ 2785      43414E5F 
+ 2786              	.LASF162:
+ 2787 18b6 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_ENABLED\000"
+ 2787      455F4556 
+ 2787      545F414E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 70
+
+
+ 2787      53535F4E 
+ 2787      4F544946 
+ 2788              	.LASF49:
+ 2789 18da 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 2789      455F4556 
+ 2789      545F4741 
+ 2789      5454535F 
+ 2789      57524954 
+ 2790              	.LASF58:
+ 2791 18f4 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 2791      455F4556 
+ 2791      545F4741 
+ 2791      5454535F 
+ 2791      44415441 
+ 2792              	.LASF336:
+ 2793 1918 4359424C 		.ascii	"CYBLE_EVT_UDSC_WRITE_CHAR_RESPONSE\000"
+ 2793      455F4556 
+ 2793      545F5544 
+ 2793      53435F57 
+ 2793      52495445 
+ 2794              	.LASF27:
+ 2795 193b 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 2795      455F4556 
+ 2795      545F4741 
+ 2795      505F5041 
+ 2795      53534B45 
+ 2796              	.LASF100:
+ 2797 1961 4359424C 		.ascii	"CYBLE_ERROR_IND_DISABLED\000"
+ 2797      455F4552 
+ 2797      524F525F 
+ 2797      494E445F 
+ 2797      44495341 
+ 2798              	.LASF99:
+ 2799 197a 4359424C 		.ascii	"CYBLE_ERROR_NTF_DISABLED\000"
+ 2799      455F4552 
+ 2799      524F525F 
+ 2799      4E54465F 
+ 2799      44495341 
+ 2800              	.LASF46:
+ 2801 1993 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 2801      455F4556 
+ 2801      545F4741 
+ 2801      5454435F 
+ 2801      52454144 
+ 2802              	.LASF207:
+ 2803 19ac 4359424C 		.ascii	"CYBLE_EVT_CPSC_INDICATION\000"
+ 2803      455F4556 
+ 2803      545F4350 
+ 2803      53435F49 
+ 2803      4E444943 
+ 2804              	.LASF231:
+ 2805 19c6 4359424C 		.ascii	"CYBLE_EVT_DISC_READ_CHAR_RESPONSE\000"
+ 2805      455F4556 
+ 2805      545F4449 
+ 2805      53435F52 
+ 2805      4541445F 
+ 2806              	.LASF63:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 71
+
+
+ 2807 19e8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 2807      455F4556 
+ 2807      545F4C32 
+ 2807      4341505F 
+ 2807      43424643 
+ 2808              	.LASF274:
+ 2809 1a06 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_DESCR_RESPONSE\000"
+ 2809      455F4556 
+ 2809      545F4854 
+ 2809      53435F52 
+ 2809      4541445F 
+ 2810              	.LASF339:
+ 2811 1a29 4359424C 		.ascii	"CYBLE_DEBUG_EVT_BLESS_INT\000"
+ 2811      455F4445 
+ 2811      4255475F 
+ 2811      4556545F 
+ 2811      424C4553 
+ 2812              	.LASF237:
+ 2813 1a43 4359424C 		.ascii	"CYBLE_EVT_GLSS_WRITE_CHAR\000"
+ 2813      455F4556 
+ 2813      545F474C 
+ 2813      53535F57 
+ 2813      52495445 
+ 2814              	.LASF189:
+ 2815 1a5d 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_ENABLED\000"
+ 2815      455F4556 
+ 2815      545F4347 
+ 2815      4D53535F 
+ 2815      4E4F5449 
+ 2816              	.LASF259:
+ 2817 1a82 4359424C 		.ascii	"CYBLE_EVT_HRSC_NOTIFICATION\000"
+ 2817      455F4556 
+ 2817      545F4852 
+ 2817      53435F4E 
+ 2817      4F544946 
+ 2818              	.LASF305:
+ 2819 1a9e 4359424C 		.ascii	"CYBLE_EVT_RSCSS_INDICATION_CONFIRMATION\000"
+ 2819      455F4556 
+ 2819      545F5253 
+ 2819      4353535F 
+ 2819      494E4449 
+ 2820              	.LASF254:
+ 2821 1ac6 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_DESCR_RESPONSE\000"
+ 2821      455F4556 
+ 2821      545F4849 
+ 2821      4453435F 
+ 2821      52454144 
+ 2822              	.LASF260:
+ 2823 1aea 4359424C 		.ascii	"CYBLE_EVT_HRSC_READ_CHAR_RESPONSE\000"
+ 2823      455F4556 
+ 2823      545F4852 
+ 2823      53435F52 
+ 2823      4541445F 
+ 2824              	.LASF33:
+ 2825 1b0c 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 2825      455F4556 
+ 2825      545F4741 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 72
+
+
+ 2825      505F454E 
+ 2825      43525950 
+ 2826              	.LASF329:
+ 2827 1b29 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_CONFIRMED\000"
+ 2827      455F4556 
+ 2827      545F5544 
+ 2827      53535F49 
+ 2827      4E444943 
+ 2828              	.LASF292:
+ 2829 1b4d 4359424C 		.ascii	"CYBLE_EVT_NDCSC_READ_CHAR_RESPONSE\000"
+ 2829      455F4556 
+ 2829      545F4E44 
+ 2829      4353435F 
+ 2829      52454144 
+ 2830              	.LASF157:
+ 2831 1b70 4359424C 		.ascii	"CYBLE_EVT_GATTC_DESCR_DUPLICATION\000"
+ 2831      455F4556 
+ 2831      545F4741 
+ 2831      5454435F 
+ 2831      44455343 
+ 2832              	.LASF40:
+ 2833 1b92 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 2833      455F4556 
+ 2833      545F4741 
+ 2833      5454535F 
+ 2833      58434E48 
+ 2834              	.LASF330:
+ 2835 1bb0 4359424C 		.ascii	"CYBLE_EVT_UDSS_NOTIFICATION_ENABLED\000"
+ 2835      455F4556 
+ 2835      545F5544 
+ 2835      53535F4E 
+ 2835      4F544946 
+ 2836              	.LASF282:
+ 2837 1bd4 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_CONFIRMED\000"
+ 2837      455F4556 
+ 2837      545F4C4E 
+ 2837      53535F49 
+ 2837      4E444943 
+ 2838              	.LASF169:
+ 2839 1bf8 4359424C 		.ascii	"CYBLE_EVT_ANSC_WRITE_DESCR_RESPONSE\000"
+ 2839      455F4556 
+ 2839      545F414E 
+ 2839      53435F57 
+ 2839      52495445 
+ 2840              	.LASF288:
+ 2841 1c1c 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_CHAR_RESPONSE\000"
+ 2841      455F4556 
+ 2841      545F4C4E 
+ 2841      53435F52 
+ 2841      4541445F 
+ 2842              	.LASF134:
+ 2843 1c3e 4359424C 		.ascii	"CYBLE_DIS_MANUFACTURER_NAME\000"
+ 2843      455F4449 
+ 2843      535F4D41 
+ 2843      4E554641 
+ 2843      43545552 
+ 2844              	.LASF234:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 73
+
+
+ 2845 1c5a 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_CONFIRMED\000"
+ 2845      455F4556 
+ 2845      545F474C 
+ 2845      53535F49 
+ 2845      4E444943 
+ 2846              	.LASF148:
+ 2847 1c7e 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_ENABLED\000"
+ 2847      455F4556 
+ 2847      545F4741 
+ 2847      5454535F 
+ 2847      494E4449 
+ 2848              	.LASF7:
+ 2849 1ca1 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2849      206C6F6E 
+ 2849      6720756E 
+ 2849      7369676E 
+ 2849      65642069 
+ 2850              	.LASF20:
+ 2851 1cb8 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 2851      455F4556 
+ 2851      545F5449 
+ 2851      4D454F55 
+ 2851      5400
+ 2852              	.LASF229:
+ 2853 1cca 4359424C 		.ascii	"CYBLE_EVT_CTSC_READ_DESCR_RESPONSE\000"
+ 2853      455F4556 
+ 2853      545F4354 
+ 2853      53435F52 
+ 2853      4541445F 
+ 2854              	.LASF102:
+ 2855 1ced 4359424C 		.ascii	"CYBLE_ERROR_INVALID_STATE\000"
+ 2855      455F4552 
+ 2855      524F525F 
+ 2855      494E5641 
+ 2855      4C49445F 
+ 2856              	.LASF120:
+ 2857 1d07 4359424C 		.ascii	"CYBLE_GATT_DB_ATTR_HANDLE_T\000"
+ 2857      455F4741 
+ 2857      54545F44 
+ 2857      425F4154 
+ 2857      54525F48 
+ 2858              	.LASF367:
+ 2859 1d23 433A5C55 		.ascii	"C:\\Users\\msuro\\Documents\\Manhattan College\\Fal"
+ 2859      73657273 
+ 2859      5C6D7375 
+ 2859      726F5C44 
+ 2859      6F63756D 
+ 2860 1d51 6C203230 		.ascii	"l 2016\\Embedded Systems\\Project\\Project Files\\C"
+ 2860      31365C45 
+ 2860      6D626564 
+ 2860      64656420 
+ 2860      53797374 
+ 2861 1d80 6C69656E 		.ascii	"lient and Server-Central\\Client and Server-Central"
+ 2861      7420616E 
+ 2861      64205365 
+ 2861      72766572 
+ 2861      2D43656E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 74
+
+
+ 2862 1db2 2E637964 		.ascii	".cydsn\000"
+ 2862      736E00
+ 2863              	.LASF66:
+ 2864 1db9 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 2864      455F4556 
+ 2864      545F4C32 
+ 2864      4341505F 
+ 2864      43424643 
+ 2865              	.LASF357:
+ 2866 1dd8 76616C75 		.ascii	"value\000"
+ 2866      6500
+ 2867              	.LASF206:
+ 2868 1dde 4359424C 		.ascii	"CYBLE_EVT_CPSC_NOTIFICATION\000"
+ 2868      455F4556 
+ 2868      545F4350 
+ 2868      53435F4E 
+ 2868      4F544946 
+ 2869              	.LASF185:
+ 2870 1dfa 4359424C 		.ascii	"CYBLE_EVT_BLSC_WRITE_DESCR_RESPONSE\000"
+ 2870      455F4556 
+ 2870      545F424C 
+ 2870      53435F57 
+ 2870      52495445 
+ 2871              	.LASF287:
+ 2872 1e1e 4359424C 		.ascii	"CYBLE_EVT_LNSC_NOTIFICATION\000"
+ 2872      455F4556 
+ 2872      545F4C4E 
+ 2872      53435F4E 
+ 2872      4F544946 
+ 2873              	.LASF227:
+ 2874 1e3a 4359424C 		.ascii	"CYBLE_EVT_CTSC_NOTIFICATION\000"
+ 2874      455F4556 
+ 2874      545F4354 
+ 2874      53435F4E 
+ 2874      4F544946 
+ 2875              	.LASF233:
+ 2876 1e56 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_DISABLED\000"
+ 2876      455F4556 
+ 2876      545F474C 
+ 2876      53535F49 
+ 2876      4E444943 
+ 2877              	.LASF108:
+ 2878 1e79 4359424C 		.ascii	"CYBLE_GAPC_CONN_DIRECTED_ADV\000"
+ 2878      455F4741 
+ 2878      50435F43 
+ 2878      4F4E4E5F 
+ 2878      44495245 
+ 2879              	.LASF155:
+ 2880 1e96 4359424C 		.ascii	"CYBLE_EVT_GATTC_SRVC_DUPLICATION\000"
+ 2880      455F4556 
+ 2880      545F4741 
+ 2880      5454435F 
+ 2880      53525643 
+ 2881              	.LASF280:
+ 2882 1eb7 4359424C 		.ascii	"CYBLE_EVT_LNSS_INDICATION_ENABLED\000"
+ 2882      455F4556 
+ 2882      545F4C4E 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 75
+
+
+ 2882      53535F49 
+ 2882      4E444943 
+ 2883              	.LASF106:
+ 2884 1ed9 4359424C 		.ascii	"CYBLE_GAP_BD_ADDR_T\000"
+ 2884      455F4741 
+ 2884      505F4244 
+ 2884      5F414444 
+ 2884      525F5400 
+ 2885              	.LASF224:
+ 2886 1eed 4359424C 		.ascii	"CYBLE_EVT_CSCSC_WRITE_DESCR_RESPONSE\000"
+ 2886      455F4556 
+ 2886      545F4353 
+ 2886      4353435F 
+ 2886      57524954 
+ 2887              	.LASF171:
+ 2888 1f12 4359424C 		.ascii	"CYBLE_EVT_BASS_NOTIFICATION_DISABLED\000"
+ 2888      455F4556 
+ 2888      545F4241 
+ 2888      53535F4E 
+ 2888      4F544946 
+ 2889              	.LASF198:
+ 2890 1f37 4359424C 		.ascii	"CYBLE_EVT_CPSS_NOTIFICATION_ENABLED\000"
+ 2890      455F4556 
+ 2890      545F4350 
+ 2890      53535F4E 
+ 2890      4F544946 
+ 2891              	.LASF325:
+ 2892 1f5b 4359424C 		.ascii	"CYBLE_EVT_TPSC_READ_DESCR_RESPONSE\000"
+ 2892      455F4556 
+ 2892      545F5450 
+ 2892      53435F52 
+ 2892      4541445F 
+ 2893              	.LASF347:
+ 2894 1f7e 4359424C 		.ascii	"CYBLE_SRVI_GAP\000"
+ 2894      455F5352 
+ 2894      56495F47 
+ 2894      415000
+ 2895              	.LASF44:
+ 2896 1f8d 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 2896      455F4556 
+ 2896      545F4741 
+ 2896      5454435F 
+ 2896      46494E44 
+ 2897              	.LASF43:
+ 2898 1fab 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 2898      455F4556 
+ 2898      545F4741 
+ 2898      5454435F 
+ 2898      52454144 
+ 2899              	.LASF294:
+ 2900 1fcc 4359424C 		.ascii	"CYBLE_EVT_PASSS_NOTIFICATION_DISABLED\000"
+ 2900      455F4556 
+ 2900      545F5041 
+ 2900      5353535F 
+ 2900      4E4F5449 
+ 2901              	.LASF196:
+ 2902 1ff2 4359424C 		.ascii	"CYBLE_EVT_CGMSC_READ_DESCR_RESPONSE\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 76
+
+
+ 2902      455F4556 
+ 2902      545F4347 
+ 2902      4D53435F 
+ 2902      52454144 
+ 2903              	.LASF252:
+ 2904 2016 4359424C 		.ascii	"CYBLE_EVT_HIDSC_READ_CHAR_RESPONSE\000"
+ 2904      455F4556 
+ 2904      545F4849 
+ 2904      4453435F 
+ 2904      52454144 
+ 2905              	.LASF354:
+ 2906 2039 61706952 		.ascii	"apiResult\000"
+ 2906      6573756C 
+ 2906      7400
+ 2907              	.LASF360:
+ 2908 2043 6379426C 		.ascii	"cyBle_state\000"
+ 2908      655F7374 
+ 2908      61746500 
+ 2909              	.LASF322:
+ 2910 204f 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_DISABLED\000"
+ 2910      455F4556 
+ 2910      545F5450 
+ 2910      53535F4E 
+ 2910      4F544946 
+ 2911              	.LASF319:
+ 2912 2074 4359424C 		.ascii	"CYBLE_EVT_SCPSC_READ_DESCR_RESPONSE\000"
+ 2912      455F4556 
+ 2912      545F5343 
+ 2912      5053435F 
+ 2912      52454144 
+ 2913              	.LASF263:
+ 2914 2098 4359424C 		.ascii	"CYBLE_EVT_HRSC_WRITE_DESCR_RESPONSE\000"
+ 2914      455F4556 
+ 2914      545F4852 
+ 2914      53435F57 
+ 2914      52495445 
+ 2915              	.LASF285:
+ 2916 20bc 4359424C 		.ascii	"CYBLE_EVT_LNSS_WRITE_CHAR\000"
+ 2916      455F4556 
+ 2916      545F4C4E 
+ 2916      53535F57 
+ 2916      52495445 
+ 2917              	.LASF50:
+ 2918 20d6 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 2918      455F4556 
+ 2918      545F4741 
+ 2918      5454435F 
+ 2918      57524954 
+ 2919              	.LASF345:
+ 2920 20f0 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 2920      455F5354 
+ 2920      4154455F 
+ 2920      44495343 
+ 2920      4F4E4E45 
+ 2921              	.LASF240:
+ 2922 2109 4359424C 		.ascii	"CYBLE_EVT_GLSC_READ_CHAR_RESPONSE\000"
+ 2922      455F4556 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 77
+
+
+ 2922      545F474C 
+ 2922      53435F52 
+ 2922      4541445F 
+ 2923              	.LASF307:
+ 2924 212b 4359424C 		.ascii	"CYBLE_EVT_RSCSC_NOTIFICATION\000"
+ 2924      455F4556 
+ 2924      545F5253 
+ 2924      4353435F 
+ 2924      4E4F5449 
+ 2925              	.LASF30:
+ 2926 2148 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 2926      455F4556 
+ 2926      545F4741 
+ 2926      50505F41 
+ 2926      44564552 
+ 2927              	.LASF178:
+ 2928 2170 4359424C 		.ascii	"CYBLE_EVT_BLSS_INDICATION_CONFIRMED\000"
+ 2928      455F4556 
+ 2928      545F424C 
+ 2928      53535F49 
+ 2928      4E444943 
+ 2929              	.LASF195:
+ 2930 2194 4359424C 		.ascii	"CYBLE_EVT_CGMSC_WRITE_CHAR_RESPONSE\000"
+ 2930      455F4556 
+ 2930      545F4347 
+ 2930      4D53435F 
+ 2930      57524954 
+ 2931              	.LASF9:
+ 2932 21b8 75696E74 		.ascii	"uint8\000"
+ 2932      3800
+ 2933              	.LASF272:
+ 2934 21be 4359424C 		.ascii	"CYBLE_EVT_HTSC_READ_CHAR_RESPONSE\000"
+ 2934      455F4556 
+ 2934      545F4854 
+ 2934      53435F52 
+ 2934      4541445F 
+ 2935              	.LASF300:
+ 2936 21e0 4359424C 		.ascii	"CYBLE_EVT_PASSC_WRITE_DESCR_RESPONSE\000"
+ 2936      455F4556 
+ 2936      545F5041 
+ 2936      5353435F 
+ 2936      57524954 
+ 2937              	.LASF361:
+ 2938 2205 6379426C 		.ascii	"cyBle_connHandle\000"
+ 2938      655F636F 
+ 2938      6E6E4861 
+ 2938      6E646C65 
+ 2938      00
+ 2939              	.LASF358:
+ 2940 2216 636F6D6D 		.ascii	"command\000"
+ 2940      616E6400 
+ 2941              	.LASF2:
+ 2942 221e 73686F72 		.ascii	"short int\000"
+ 2942      7420696E 
+ 2942      7400
+ 2943              	.LASF149:
+ 2944 2228 4359424C 		.ascii	"CYBLE_EVT_GATTS_INDICATION_DISABLED\000"
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 78
+
+
+ 2944      455F4556 
+ 2944      545F4741 
+ 2944      5454535F 
+ 2944      494E4449 
+ 2945              	.LASF109:
+ 2946 224c 4359424C 		.ascii	"CYBLE_GAPC_SCAN_UNDIRECTED_ADV\000"
+ 2946      455F4741 
+ 2946      50435F53 
+ 2946      43414E5F 
+ 2946      554E4449 
+ 2947              	.LASF132:
+ 2948 226b 4359424C 		.ascii	"CYBLE_TPS_CCCD\000"
+ 2948      455F5450 
+ 2948      535F4343 
+ 2948      434400
+ 2949              	.LASF193:
+ 2950 227a 4359424C 		.ascii	"CYBLE_EVT_CGMSC_NOTIFICATION\000"
+ 2950      455F4556 
+ 2950      545F4347 
+ 2950      4D53435F 
+ 2950      4E4F5449 
+ 2951              	.LASF37:
+ 2952 2297 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 2952      455F4556 
+ 2952      545F4741 
+ 2952      5454435F 
+ 2952      4552524F 
+ 2953              	.LASF126:
+ 2954 22b1 4359424C 		.ascii	"CYBLE_GATT_ATTR_HANDLE_RANGE_T\000"
+ 2954      455F4741 
+ 2954      54545F41 
+ 2954      5454525F 
+ 2954      48414E44 
+ 2955              	.LASF346:
+ 2956 22d0 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 2956      455F5354 
+ 2956      4154455F 
+ 2956      5400
+ 2957              	.LASF172:
+ 2958 22de 4359424C 		.ascii	"CYBLE_EVT_BASC_NOTIFICATION\000"
+ 2958      455F4556 
+ 2958      545F4241 
+ 2958      53435F4E 
+ 2958      4F544946 
+ 2959              	.LASF175:
+ 2960 22fa 4359424C 		.ascii	"CYBLE_EVT_BASC_WRITE_DESCR_RESPONSE\000"
+ 2960      455F4556 
+ 2960      545F4241 
+ 2960      53435F57 
+ 2960      52495445 
+ 2961              	.LASF232:
+ 2962 231e 4359424C 		.ascii	"CYBLE_EVT_GLSS_INDICATION_ENABLED\000"
+ 2962      455F4556 
+ 2962      545F474C 
+ 2962      53535F49 
+ 2962      4E444943 
+ 2963              	.LASF164:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 79
+
+
+ 2964 2340 4359424C 		.ascii	"CYBLE_EVT_ANSS_CHAR_WRITE\000"
+ 2964      455F4556 
+ 2964      545F414E 
+ 2964      53535F43 
+ 2964      4841525F 
+ 2965              	.LASF350:
+ 2966 235a 4359424C 		.ascii	"CYBLE_SRVI_COUNT\000"
+ 2966      455F5352 
+ 2966      56495F43 
+ 2966      4F554E54 
+ 2966      00
+ 2967              	.LASF62:
+ 2968 236b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 2968      455F4556 
+ 2968      545F4C32 
+ 2968      4341505F 
+ 2968      43424643 
+ 2969              	.LASF53:
+ 2970 2389 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 2970      455F4556 
+ 2970      545F4741 
+ 2970      5454535F 
+ 2970      45584543 
+ 2971              	.LASF24:
+ 2972 23a8 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 2972      455F4556 
+ 2972      545F4741 
+ 2972      50435F53 
+ 2972      43414E5F 
+ 2973              	.LASF327:
+ 2974 23cc 4359424C 		.ascii	"CYBLE_EVT_UDSS_INDICATION_ENABLED\000"
+ 2974      455F4556 
+ 2974      545F5544 
+ 2974      53535F49 
+ 2974      4E444943 
+ 2975              	.LASF81:
+ 2976 23ee 4359424C 		.ascii	"CYBLE_ERROR_GAP_ROLE\000"
+ 2976      455F4552 
+ 2976      524F525F 
+ 2976      4741505F 
+ 2976      524F4C45 
+ 2977              	.LASF266:
+ 2978 2403 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_ENABLED\000"
+ 2978      455F4556 
+ 2978      545F4854 
+ 2978      53535F49 
+ 2978      4E444943 
+ 2979              	.LASF337:
+ 2980 2425 4359424C 		.ascii	"CYBLE_EVT_UDSC_READ_DESCR_RESPONSE\000"
+ 2980      455F4556 
+ 2980      545F5544 
+ 2980      53435F52 
+ 2980      4541445F 
+ 2981              	.LASF125:
+ 2982 2448 656E6448 		.ascii	"endHandle\000"
+ 2982      616E646C 
+ 2982      6500
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 80
+
+
+ 2983              	.LASF173:
+ 2984 2452 4359424C 		.ascii	"CYBLE_EVT_BASC_READ_CHAR_RESPONSE\000"
+ 2984      455F4556 
+ 2984      545F4241 
+ 2984      53435F52 
+ 2984      4541445F 
+ 2985              	.LASF239:
+ 2986 2474 4359424C 		.ascii	"CYBLE_EVT_GLSC_NOTIFICATION\000"
+ 2986      455F4556 
+ 2986      545F474C 
+ 2986      53435F4E 
+ 2986      4F544946 
+ 2987              	.LASF104:
+ 2988 2490 62644164 		.ascii	"bdAddr\000"
+ 2988      647200
+ 2989              	.LASF317:
+ 2990 2497 4359424C 		.ascii	"CYBLE_EVT_SCPSS_SCAN_INT_WIN_CHAR_WRITE\000"
+ 2990      455F4556 
+ 2990      545F5343 
+ 2990      5053535F 
+ 2990      5343414E 
+ 2991              	.LASF279:
+ 2992 24bf 4359424C 		.ascii	"CYBLE_EVT_LLSC_WRITE_CHAR_RESPONSE\000"
+ 2992      455F4556 
+ 2992      545F4C4C 
+ 2992      53435F57 
+ 2992      52495445 
+ 2993              	.LASF112:
+ 2994 24e2 4359424C 		.ascii	"CYBLE_GAPC_ADV_EVENT_T\000"
+ 2994      455F4741 
+ 2994      50435F41 
+ 2994      44565F45 
+ 2994      56454E54 
+ 2995              	.LASF78:
+ 2996 24f9 4359424C 		.ascii	"CYBLE_ERROR_NO_CONNECTION\000"
+ 2996      455F4552 
+ 2996      524F525F 
+ 2996      4E4F5F43 
+ 2996      4F4E4E45 
+ 2997              	.LASF103:
+ 2998 2513 4359424C 		.ascii	"CYBLE_API_RESULT_T\000"
+ 2998      455F4150 
+ 2998      495F5245 
+ 2998      53554C54 
+ 2998      5F5400
+ 2999              	.LASF187:
+ 3000 2526 4359424C 		.ascii	"CYBLE_EVT_CGMSS_INDICATION_DISABLED\000"
+ 3000      455F4556 
+ 3000      545F4347 
+ 3000      4D53535F 
+ 3000      494E4449 
+ 3001              	.LASF161:
+ 3002 254a 4359424C 		.ascii	"CYBLE_EVT_GATTC_DISCOVERY_COMPLETE\000"
+ 3002      455F4556 
+ 3002      545F4741 
+ 3002      5454435F 
+ 3002      44495343 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 81
+
+
+ 3003              	.LASF191:
+ 3004 256d 4359424C 		.ascii	"CYBLE_EVT_CGMSS_WRITE_CHAR\000"
+ 3004      455F4556 
+ 3004      545F4347 
+ 3004      4D53535F 
+ 3004      57524954 
+ 3005              	.LASF243:
+ 3006 2588 4359424C 		.ascii	"CYBLE_EVT_GLSC_WRITE_DESCR_RESPONSE\000"
+ 3006      455F4556 
+ 3006      545F474C 
+ 3006      53435F57 
+ 3006      52495445 
+ 3007              	.LASF113:
+ 3008 25ac 6576656E 		.ascii	"eventType\000"
+ 3008      74547970 
+ 3008      6500
+ 3009              	.LASF56:
+ 3010 25b6 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 3010      455F4556 
+ 3010      545F4741 
+ 3010      5454435F 
+ 3010      48414E44 
+ 3011              	.LASF212:
+ 3012 25d7 4359424C 		.ascii	"CYBLE_EVT_CPSC_SCAN_PROGRESS_RESULT\000"
+ 3012      455F4556 
+ 3012      545F4350 
+ 3012      53435F53 
+ 3012      43414E5F 
+ 3013              	.LASF311:
+ 3014 25fb 4359424C 		.ascii	"CYBLE_EVT_RSCSC_READ_DESCR_RESPONSE\000"
+ 3014      455F4556 
+ 3014      545F5253 
+ 3014      4353435F 
+ 3014      52454144 
+ 3015              	.LASF84:
+ 3016 261f 4359424C 		.ascii	"CYBLE_ERROR_SEC_FAILED\000"
+ 3016      455F4552 
+ 3016      524F525F 
+ 3016      5345435F 
+ 3016      4641494C 
+ 3017              	.LASF23:
+ 3018 2636 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 3018      455F4556 
+ 3018      545F5354 
+ 3018      41434B5F 
+ 3018      42555359 
+ 3019              	.LASF353:
+ 3020 2652 7363616E 		.ascii	"scanReport\000"
+ 3020      5265706F 
+ 3020      727400
+ 3021              	.LASF275:
+ 3022 265d 4359424C 		.ascii	"CYBLE_EVT_HTSC_WRITE_DESCR_RESPONSE\000"
+ 3022      455F4556 
+ 3022      545F4854 
+ 3022      53435F57 
+ 3022      52495445 
+ 3023              	.LASF36:
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 82
+
+
+ 3024 2681 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 3024      455F4556 
+ 3024      545F4741 
+ 3024      505F4B45 
+ 3024      59494E46 
+ 3025              	.LASF59:
+ 3026 26a5 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 3026      455F4556 
+ 3026      545F4C32 
+ 3026      4341505F 
+ 3026      434F4E4E 
+ 3027              	.LASF190:
+ 3028 26cb 4359424C 		.ascii	"CYBLE_EVT_CGMSS_NOTIFICATION_DISABLED\000"
+ 3028      455F4556 
+ 3028      545F4347 
+ 3028      4D53535F 
+ 3028      4E4F5449 
+ 3029              	.LASF366:
+ 3030 26f1 2E5C6D61 		.ascii	".\\main.c\000"
+ 3030      696E2E63 
+ 3030      00
+ 3031              	.LASF97:
+ 3032 26fa 4359424C 		.ascii	"CYBLE_CHAR_DISC_DONE\000"
+ 3032      455F4348 
+ 3032      41525F44 
+ 3032      4953435F 
+ 3032      444F4E45 
+ 3033              	.LASF152:
+ 3034 270f 4359424C 		.ascii	"CYBLE_EVT_GATTC_INCL_DISCOVERY_FAILED\000"
+ 3034      455F4556 
+ 3034      545F4741 
+ 3034      5454435F 
+ 3034      494E434C 
+ 3035              	.LASF3:
+ 3036 2735 73686F72 		.ascii	"short unsigned int\000"
+ 3036      7420756E 
+ 3036      7369676E 
+ 3036      65642069 
+ 3036      6E7400
+ 3037              	.LASF290:
+ 3038 2748 4359424C 		.ascii	"CYBLE_EVT_LNSC_READ_DESCR_RESPONSE\000"
+ 3038      455F4556 
+ 3038      545F4C4E 
+ 3038      53435F52 
+ 3038      4541445F 
+ 3039              	.LASF342:
+ 3040 276b 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 3040      455F5354 
+ 3040      4154455F 
+ 3040      434F4E4E 
+ 3040      45435445 
+ 3041              	.LASF321:
+ 3042 2781 4359424C 		.ascii	"CYBLE_EVT_TPSS_NOTIFICATION_ENABLED\000"
+ 3042      455F4556 
+ 3042      545F5450 
+ 3042      53535F4E 
+ 3042      4F544946 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 83
+
+
+ 3043              	.LASF238:
+ 3044 27a5 4359424C 		.ascii	"CYBLE_EVT_GLSC_INDICATION\000"
+ 3044      455F4556 
+ 3044      545F474C 
+ 3044      53435F49 
+ 3044      4E444943 
+ 3045              	.LASF204:
+ 3046 27bf 4359424C 		.ascii	"CYBLE_EVT_CPSS_BROADCAST_DISABLED\000"
+ 3046      455F4556 
+ 3046      545F4350 
+ 3046      53535F42 
+ 3046      524F4144 
+ 3047              	.LASF122:
+ 3048 27e1 61747449 		.ascii	"attId\000"
+ 3048      6400
+ 3049              	.LASF74:
+ 3050 27e7 4359424C 		.ascii	"CYBLE_ERROR_INVALID_OPERATION\000"
+ 3050      455F4552 
+ 3050      524F525F 
+ 3050      494E5641 
+ 3050      4C49445F 
+ 3051              	.LASF22:
+ 3052 2805 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 3052      455F4556 
+ 3052      545F4843 
+ 3052      495F5354 
+ 3052      41545553 
+ 3053              	.LASF39:
+ 3054 281a 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 3054      455F4556 
+ 3054      545F4741 
+ 3054      54545F44 
+ 3054      4953434F 
+ 3055              	.LASF147:
+ 3056 2838 4359424C 		.ascii	"CYBLE_KEY_EXCHANGE_INFO_REQUEST_REPLY\000"
+ 3056      455F4B45 
+ 3056      595F4558 
+ 3056      4348414E 
+ 3056      47455F49 
+ 3057              	.LASF69:
+ 3058 285e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 3058      455F4556 
+ 3058      545F4C32 
+ 3058      4341505F 
+ 3058      43424643 
+ 3059              	.LASF145:
+ 3060 2882 4359424C 		.ascii	"CYBLE_PASSKEY_ENTRY_REQUEST_REPLY\000"
+ 3060      455F5041 
+ 3060      53534B45 
+ 3060      595F454E 
+ 3060      5452595F 
+ 3061              	.LASF118:
+ 3062 28a4 72737369 		.ascii	"rssi\000"
+ 3062      00
+ 3063              	.LASF117:
+ 3064 28a9 64617461 		.ascii	"data\000"
+ 3064      00
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 84
+
+
+ 3065              	.LASF165:
+ 3066 28ae 4359424C 		.ascii	"CYBLE_EVT_ANSC_NOTIFICATION\000"
+ 3066      455F4556 
+ 3066      545F414E 
+ 3066      53435F4E 
+ 3066      4F544946 
+ 3067              	.LASF32:
+ 3068 28ca 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 3068      455F4556 
+ 3068      545F4741 
+ 3068      505F4445 
+ 3068      56494345 
+ 3069              	.LASF246:
+ 3070 28ec 4359424C 		.ascii	"CYBLE_EVT_HIDSS_BOOT_MODE_ENTER\000"
+ 3070      455F4556 
+ 3070      545F4849 
+ 3070      4453535F 
+ 3070      424F4F54 
+ 3071              	.LASF57:
+ 3072 290c 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 3072      455F4556 
+ 3072      545F4741 
+ 3072      5454535F 
+ 3072      48414E44 
+ 3073              	.LASF223:
+ 3074 292d 4359424C 		.ascii	"CYBLE_EVT_CSCSC_READ_DESCR_RESPONSE\000"
+ 3074      455F4556 
+ 3074      545F4353 
+ 3074      4353435F 
+ 3074      52454144 
+ 3075              	.LASF119:
+ 3076 2951 4359424C 		.ascii	"CYBLE_GAPC_ADV_REPORT_T\000"
+ 3076      455F4741 
+ 3076      50435F41 
+ 3076      44565F52 
+ 3076      45504F52 
+ 3077              	.LASF10:
+ 3078 2969 75696E74 		.ascii	"uint16\000"
+ 3078      313600
+ 3079              	.LASF82:
+ 3080 2970 4359424C 		.ascii	"CYBLE_ERROR_TX_POWER_READ\000"
+ 3080      455F4552 
+ 3080      524F525F 
+ 3080      54585F50 
+ 3080      4F574552 
+ 3081              	.LASF301:
+ 3082 298a 4359424C 		.ascii	"CYBLE_EVT_RSCSS_NOTIFICATION_ENABLED\000"
+ 3082      455F4556 
+ 3082      545F5253 
+ 3082      4353535F 
+ 3082      4E4F5449 
+ 3083              	.LASF163:
+ 3084 29af 4359424C 		.ascii	"CYBLE_EVT_ANSS_NOTIFICATION_DISABLED\000"
+ 3084      455F4556 
+ 3084      545F414E 
+ 3084      53535F4E 
+ 3084      4F544946 
+ARM GAS  C:\Users\msuro\AppData\Local\Temp\ccVNp37g.s 			page 85
+
+
+ 3085              	.LASF271:
+ 3086 29d4 4359424C 		.ascii	"CYBLE_EVT_HTSC_INDICATION\000"
+ 3086      455F4556 
+ 3086      545F4854 
+ 3086      53435F49 
+ 3086      4E444943 
+ 3087              	.LASF244:
+ 3088 29ee 4359424C 		.ascii	"CYBLE_EVT_HIDSS_NOTIFICATION_ENABLED\000"
+ 3088      455F4556 
+ 3088      545F4849 
+ 3088      4453535F 
+ 3088      4E4F5449 
+ 3089              	.LASF268:
+ 3090 2a13 4359424C 		.ascii	"CYBLE_EVT_HTSS_INDICATION_CONFIRMED\000"
+ 3090      455F4556 
+ 3090      545F4854 
+ 3090      53535F49 
+ 3090      4E444943 
+ 3091              	.LASF258:
+ 3092 2a37 4359424C 		.ascii	"CYBLE_EVT_HRSS_NOTIFICATION_DISABLED\000"
+ 3092      455F4556 
+ 3092      545F4852 
+ 3092      53535F4E 
+ 3092      4F544946 
+ 3093              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.8.4 20140526 (release) [ARM/embedded-4_8-br
